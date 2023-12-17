@@ -1,0 +1,391 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
+import 'package:ecommerce_app/features/notification/data/models/notification.dart';
+import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
+import 'package:ecommerce_app/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
+import 'package:ecommerce_app/theme/color.dart';
+import 'package:ecommerce_app/widgets/my_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
+
+class DetailScreen extends StatefulWidget {
+  DetailScreen({super.key, required this.product});
+
+  final ProductModel product;
+  var quantity = 1;
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  @override
+  Widget build(BuildContext context) {
+    var cart = context.read<CartRepositoryImpl>();
+    var cartWatch = context.watch<CartRepositoryImpl>();
+    var notify = context.watch<NotifyRepositoryImpl>();
+    var notifyRead = context.read<NotifyRepositoryImpl>();
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          actions: [
+            Stack(
+              children: [
+                if (cartWatch.cartLists().length > 0)
+                  Positioned(
+                      left: 27,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle
+                        ),
+                        child: Text('${cartWatch.cartLists().length}',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10)),
+                      )),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const CartScreen()));
+                    },
+                    icon: Icon(
+                      Icons.shopping_cart_outlined,
+                      color: cart.cartLists().length > 0
+                          ? primaryButton
+                          : Colors.black,
+                    )),
+              ],
+            ),
+            Stack(
+              children: [
+                if (notify.notifyCounter() > 0)
+                  Positioned(
+                      left: 27,
+                      top: 5,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          notify.notifyCounter() > 9
+                              ? '9+'
+                              : '${notify.notifyCounter()}',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10),
+                        ),
+                      )),
+                Padding(
+                  padding: EdgeInsets.all(2.0),
+                  child: Positioned(
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => NotificationScreen()));
+                        notify.resetNotify();
+                      },
+                      icon: Icon(
+                          notify.notifyCounter() > 0
+                              ? Icons.notifications
+                              : Icons.notifications_outlined,
+                          color: notify.notifyCounter() > 0
+                              ? primaryButton
+                              : Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          backgroundColor: secondaryBackground,
+        ),
+        body: SingleChildScrollView(
+          child: Column(children: [
+            _ImageSlider(product: widget.product),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.product.name,
+                    style: const TextStyle(
+                        color: primaryText,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24),
+                  ),
+                  _AddFavorite(
+                    product: widget.product,
+                  )
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('${widget.product.unit}, Price'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            widget.quantity--;
+                          },
+                          icon: const Icon(Icons.remove)),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                                Border.all(width: 1, color: secondaryButton),
+                            shape: BoxShape.rectangle),
+                        child: Text('${widget.quantity}'),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              widget.quantity++;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.add,
+                            color: primaryButton,
+                          ))
+                    ],
+                  ),
+                  Text('\$${widget.product.price}',
+                      style: const TextStyle(
+                          color: primaryText,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24))
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ExpansionTile(
+                trailing: Icon(Icons.keyboard_arrow_down),
+                title: Text('Product Detail'),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                        'Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.'),
+                  )
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ExpansionTile(
+                trailing: Icon(Icons.keyboard_arrow_right),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('Nutritions'), Text('100gr')],
+                ),
+              ),
+            ),
+            const _ProductRatingBar(),
+          ]),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: EcommerceButton(
+            title: 'Thêm vào giỏ hàng',
+            onTap: () {
+              cart.addToCart(widget.product, widget.quantity);
+              notifyRead.addNotification(NotificationModel(
+                  title: 'Added ${widget.product.name} to cart',
+                  isReaded: false));
+            },
+          ),
+        ));
+  }
+}
+
+class _AddFavorite extends StatelessWidget {
+  const _AddFavorite({
+    super.key,
+    required this.product,
+  });
+
+  final ProductModel product;
+
+  @override
+  Widget build(BuildContext context) {
+    var favorite = context.read<FavoriteRepositoryImpl>();
+    return Selector<FavoriteRepositoryImpl, bool>(
+      builder: (context, isInFavorite, child) => IconButton(
+        onPressed: () {
+          if (isInFavorite) {
+            favorite.removeProductFromFavorite(product);
+          } else {
+            favorite.addProductToFavorite(product);
+          }
+        },
+        icon: Icon(isInFavorite ? Icons.favorite : Icons.favorite_outline),
+        color: primaryButton,
+      ),
+      selector: (_, favorite) =>
+          favorite.productLists.any((f) => f.id == product.id),
+    );
+  }
+}
+
+class _ProductRatingBar extends StatefulWidget {
+  const _ProductRatingBar({
+    super.key,
+  });
+
+  @override
+  State<_ProductRatingBar> createState() => _ProductRatingBarState();
+}
+
+class _ProductRatingBarState extends State<_ProductRatingBar> {
+  late final _ratingController;
+  late double _rating;
+
+  double _userRating = 3.0;
+  int _ratingBarMode = 1;
+  double _initialRating = 2.0;
+  bool _isRTLMode = false;
+  bool _isVertical = false;
+
+  IconData? _selectedIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    _ratingController = TextEditingController(text: '3.0');
+    _rating = _initialRating;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        trailing: const Icon(Icons.keyboard_arrow_right),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Review'),
+            RatingBar.builder(
+              itemSize: 20,
+              initialRating: 3,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.redAccent,
+              ),
+              onRatingUpdate: (rating) {
+                print(rating);
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ImageSlider extends StatefulWidget {
+  const _ImageSlider({super.key, required this.product});
+
+  final ProductModel product;
+
+  @override
+  State<_ImageSlider> createState() => _ImageSliderState();
+}
+
+class _ImageSliderState extends State<_ImageSlider> {
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> thumbnails = [
+      widget.product.thumbnail,
+      widget.product.thumbnail,
+    ];
+    return Container(
+      height: 300,
+      decoration: const BoxDecoration(
+          color: secondaryBackground,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.elliptical(25, 25),
+              bottomRight: Radius.elliptical(25, 25))),
+      padding: const EdgeInsets.all(24),
+      width: double.infinity,
+      child: Column(
+        children: [
+          Expanded(
+            child: CarouselSlider(
+              carouselController: _controller,
+              options: CarouselOptions(
+                  enlargeCenterPage: true,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _current = index;
+                    });
+                  }),
+              items: thumbnails
+                  .map((img) => Image.asset(
+                        img,
+                        fit: BoxFit.fitHeight,
+                      ))
+                  .toList(),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: thumbnails.asMap().entries.map((e) {
+              return GestureDetector(
+                child: Container(
+                  width: 8.0,
+                  height: 8.0,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : primaryButton)
+                          .withOpacity(_current == e.key ? 0.9 : 0.4)),
+                ),
+              );
+            }).toList(),
+          )
+        ],
+      ),
+    );
+  }
+}
