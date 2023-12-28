@@ -1,5 +1,5 @@
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
-import 'package:ecommerce_app/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/theme/theme.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';

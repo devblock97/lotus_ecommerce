@@ -1,7 +1,8 @@
-import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/theme/color.dart';
-import 'package:ecommerce_app/widgets/my_product_card.dart';
 import 'package:flutter/material.dart';
+
+import '../features/home/presentation/widgets/product_card.dart';
 
 class CategoryDetail extends StatelessWidget {
   CategoryDetail({super.key, required this.categoryName, this.productLists});

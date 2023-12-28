@@ -1,9 +1,9 @@
 import 'package:ecommerce_app/core/models/category_model.dart';
-import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/core/models/product_model_core.dart';
 import 'package:flutter/material.dart';
 
-List<ProductModel> allProducts = const [
-  ProductModel(
+List<ProductModelCore> allProducts = const [
+  ProductModelCore(
       id: 'SH123',
       name: 'Beef Bone',
       price: 121.99,
@@ -11,7 +11,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_2.png',
       category: 'Frash Fruits & Vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 4.99,
@@ -19,7 +19,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Meat & Fish',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Coke Sai Gon - Eggs White',
       price: 4.4,
@@ -27,7 +27,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Bakery & Snacks',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Coke Sai Gon - Egg Noodies',
       price: 4.99,
@@ -35,7 +35,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 12.99,
@@ -43,7 +43,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Beverages',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs Chicken White',
       price: 55.99,
@@ -51,7 +51,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Cooking Oil & Ghee',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Egg Noodies',
       price: 4.99,
@@ -59,7 +59,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs Checken Red',
       price: 40.99,
@@ -67,7 +67,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_6.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH123',
       name: 'Beef Bone',
       price: 121.99,
@@ -75,7 +75,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_2.png',
       category: 'Frash Fruits & Vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 4.99,
@@ -83,7 +83,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Meat & Fish',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Coke Sai Gon - Eggs White',
       price: 4.4,
@@ -91,7 +91,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Bakery & Snacks',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Coke Sai Gon - Egg Noodies',
       price: 4.99,
@@ -99,7 +99,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 12.99,
@@ -107,7 +107,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Beverages',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs Chicken White',
       price: 55.99,
@@ -115,7 +115,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Cooking Oil & Ghee',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Egg Noodies',
       price: 4.99,
@@ -123,7 +123,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs Checken Red',
       price: 40.99,
@@ -131,7 +131,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_6.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH123',
       name: 'Beef Bone',
       price: 121.99,
@@ -139,7 +139,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_2.png',
       category: 'Frash Fruits & Vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 4.99,
@@ -147,7 +147,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Meat & Fish',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Coke Sai Gon - Eggs White',
       price: 4.4,
@@ -155,7 +155,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Bakery & Snacks',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Coke Sai Gon - Egg Noodies',
       price: 4.99,
@@ -163,7 +163,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 12.99,
@@ -171,7 +171,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Beverages',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs Chicken White',
       price: 55.99,
@@ -179,7 +179,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Cooking Oil & Ghee',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Egg Noodies',
       price: 4.99,
@@ -187,7 +187,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs Checken Red',
       price: 40.99,
@@ -198,7 +198,7 @@ List<ProductModel> allProducts = const [
 
   ///
   ///
-  ProductModel(
+  ProductModelCore(
       id: 'SH123',
       name: 'Beef Bone',
       price: 121.99,
@@ -206,7 +206,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_2.png',
       category: 'Frash Fruits & Vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 4.99,
@@ -214,7 +214,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Meat & Fish',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Coke Sai Gon - Eggs White',
       price: 4.4,
@@ -222,7 +222,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Bakery & Snacks',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Coke Sai Gon - Egg Noodies',
       price: 4.99,
@@ -230,7 +230,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 12.99,
@@ -238,7 +238,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Beverages',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs Chicken White',
       price: 55.99,
@@ -246,7 +246,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Cooking Oil & Ghee',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Egg Noodies',
       price: 4.99,
@@ -254,7 +254,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs Checken Red',
       price: 40.99,
@@ -262,7 +262,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_6.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH123',
       name: 'Beef Bone',
       price: 121.99,
@@ -270,7 +270,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_2.png',
       category: 'Frash Fruits & Vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 4.99,
@@ -278,7 +278,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Meat & Fish',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Coke Sai Gon - Eggs White',
       price: 4.4,
@@ -286,7 +286,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Bakery & Snacks',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Coke Sai Gon - Egg Noodies',
       price: 4.99,
@@ -294,7 +294,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 12.99,
@@ -302,7 +302,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Beverages',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs Chicken White',
       price: 55.99,
@@ -310,7 +310,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Cooking Oil & Ghee',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Egg Noodies',
       price: 4.99,
@@ -318,7 +318,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs Checken Red',
       price: 40.99,
@@ -326,7 +326,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_6.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH123',
       name: 'Beef Bone',
       price: 121.99,
@@ -334,7 +334,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_2.png',
       category: 'Frash Fruits & Vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 4.99,
@@ -342,7 +342,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Meat & Fish',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Coke Sai Gon - Eggs White',
       price: 4.4,
@@ -350,7 +350,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Bakery & Snacks',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Coke Sai Gon - Egg Noodies',
       price: 4.99,
@@ -358,7 +358,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 12.99,
@@ -366,7 +366,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'Beverages',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs Chicken White',
       price: 55.99,
@@ -374,7 +374,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'Cooking Oil & Ghee',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Egg Noodies',
       price: 4.99,
@@ -382,7 +382,7 @@ List<ProductModel> allProducts = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'Dairy & Eggs',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs Checken Red',
       price: 40.99,
@@ -392,8 +392,8 @@ List<ProductModel> allProducts = const [
       imgDetails: ['assets/products/apple.png']),
 ];
 
-List<ProductModel> bestSelling = const [
-  ProductModel(
+List<ProductModelCore> bestSelling = const [
+  ProductModelCore(
       id: 'SH131',
       name: 'Banana Sai Gon',
       price: 4.99,
@@ -401,7 +401,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_1.png',
       category: 'vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs White',
       price: 4.99,
@@ -409,7 +409,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Eggs Noodies',
       price: 4.99,
@@ -417,7 +417,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs',
       price: 4.99,
@@ -425,7 +425,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_6.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH131',
       name: 'Banana Sai Gon',
       price: 4.99,
@@ -433,7 +433,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_1.png',
       category: 'vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs White',
       price: 4.99,
@@ -441,7 +441,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Eggs Noodies',
       price: 4.99,
@@ -449,7 +449,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs',
       price: 4.99,
@@ -457,7 +457,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_6.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH131',
       name: 'Banana Sai Gon',
       price: 4.99,
@@ -465,7 +465,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_1.png',
       category: 'vegetable',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs White',
       price: 4.99,
@@ -473,7 +473,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Eggs Noodies',
       price: 4.99,
@@ -481,7 +481,7 @@ List<ProductModel> bestSelling = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs',
       price: 4.99,
@@ -491,8 +491,8 @@ List<ProductModel> bestSelling = const [
       imgDetails: ['assets/products/apple.png']),
 ];
 
-List<ProductModel> exclusiveOffer = const [
-  ProductModel(
+List<ProductModelCore> exclusiveOffer = const [
+  ProductModelCore(
       id: 'SH124',
       name: 'Coke Sai Gon',
       price: 12.99,
@@ -500,7 +500,7 @@ List<ProductModel> exclusiveOffer = const [
       thumbnail: 'assets/products/product_4.png',
       category: 'beverage',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH125',
       name: 'Eggs Chicken White',
       price: 55.99,
@@ -508,7 +508,7 @@ List<ProductModel> exclusiveOffer = const [
       thumbnail: 'assets/products/product_8.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH126',
       name: 'Egg Noodies',
       price: 4.99,
@@ -516,7 +516,7 @@ List<ProductModel> exclusiveOffer = const [
       thumbnail: 'assets/products/product_5.png',
       category: 'egg',
       imgDetails: ['assets/products/apple.png']),
-  ProductModel(
+  ProductModelCore(
       id: 'SH130',
       name: 'Eggs Checken Red',
       price: 40.99,

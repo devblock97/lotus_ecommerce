@@ -1,13 +1,14 @@
 import 'package:ecommerce_app/app.dart';
-import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/screens/product_detail_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+
+import '../data/repositories/favorite_repository_impl.dart';
 
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
@@ -113,7 +114,7 @@ class FavoriteMessageDialog extends StatelessWidget {
 class FavoriteItem extends StatelessWidget {
   const FavoriteItem({super.key, required this.product});
 
-  final ProductModel product;
+  final ProductModel? product;
 
   @override
   Widget build(BuildContext context) {
@@ -125,17 +126,17 @@ class FavoriteItem extends StatelessWidget {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => DetailScreen(product: product))),
+                    builder: (_) => DetailScreen(product: product!))),
             leading: Container(
-                width: 80, height: 80, child: Image.asset(product.thumbnail)),
+                width: 80, height: 80, child: Image.network(product!.images![0].src!)),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: Text(product.name)),
-                Text('\$${product.price}')
+                Expanded(child: Text(product!.name!)),
+                Text('\$${product!.price}')
               ],
             ),
-            subtitle: Text('${product.unit}, Price'),
+            subtitle: Text('${'cai'}, Price'),
             trailing: const Icon(Icons.keyboard_arrow_right),
           ),
           const Gap(10),

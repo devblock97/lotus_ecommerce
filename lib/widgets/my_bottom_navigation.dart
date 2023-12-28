@@ -1,8 +1,8 @@
 import 'package:ecommerce_app/screens/account_screen.dart';
-import 'package:ecommerce_app/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
 import 'package:ecommerce_app/screens/explore_screen.dart';
-import 'package:ecommerce_app/screens/favorite_screen.dart';
-import 'package:ecommerce_app/screens/home_screen.dart';
+import 'package:ecommerce_app/features/favorite/presentation/favorite_screen.dart';
+import 'package:ecommerce_app/features/home/presentation/view/home_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
