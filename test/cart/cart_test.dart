@@ -1,37 +1,25 @@
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const product1 = ProductModel(
-    id: 'SH123',
+  var product1 = ProductModel(
+    id: 123,
     name: 'Banana 1',
-    price: 4.99,
-    unit: 'kg',
-    thumbnail: 'assets/icons/product_1.png',
-    category: 'Eggs',
-    imgDetails: [],
+    price: '21000',
   );
 
-  const product2 = ProductModel(
-    id: 'SH122',
+  var product2 = ProductModel(
+    id: 122,
     name: 'Banana 2',
-    price: 4.99,
-    unit: 'kg',
-    thumbnail: 'assets/icons/product_1.png',
-    category: 'Eggs',
-    imgDetails: [],
+    price: '21000',
   );
 
-  const product3 = ProductModel(
-    id: 'SH124',
+  final product3 = ProductModel(
+    id: 124,
     name: 'Banana 3',
-    price: 4.99,
-    unit: 'kg',
-    thumbnail: 'assets/icons/product_1.png',
-    category: 'Eggs',
-    imgDetails: [],
+    price: '21000',
   );
 
   List<CartItemModel> output1 = [];

@@ -1,5 +1,5 @@
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -24,6 +24,7 @@ class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
     var cart = context.read<CartRepositoryImpl>();
+    final image = widget.product.images![0].src!.replaceAll('localhost', '192.168.110.47');
     return Column(
       children: [
         Row(
@@ -31,8 +32,8 @@ class _CartItemState extends State<CartItem> {
           children: [
             Flexible(
                 flex: 1,
-                child: Image.asset(
-                  widget.product.thumbnail,
+                child: Image.network(
+                  image,
                   fit: BoxFit.contain,
                 )),
             const Gap(10),
@@ -42,8 +43,8 @@ class _CartItemState extends State<CartItem> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ListTile(
-                      title: Text(widget.product.name),
-                      subtitle: Text('${widget.product.unit}, Price'),
+                      title: Text(widget.product!.name!),
+                      subtitle: const Text('${'cai'}, Price'),
                       trailing: IconButton(
                         onPressed: () => cart.removeItemToCart(widget.product),
                         icon: const Icon(Icons.cancel_outlined),

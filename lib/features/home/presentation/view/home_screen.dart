@@ -1,16 +1,17 @@
-import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_app/features/cart/data/datasource/datasource.dart';
-import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
+import 'package:ecommerce_app/features/home/data/repositories/product_repository_impl.dart';
 import 'package:ecommerce_app/theme/color.dart';
-import 'package:ecommerce_app/widgets/my_product_card.dart';
+import 'package:ecommerce_app/features/home/presentation/widgets/product_card.dart' as home;
 import 'package:ecommerce_app/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart' as product;
 
-import 'package:http/http.dart' as http;
+import '../widgets/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,9 +22,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
+
+  late ProductRepositoryImpl productRepositoryImpl;
   @override
   void initState() {
     super.initState();
+    productRepositoryImpl = ProductRepositoryImpl();
   }
 
   @override
@@ -56,11 +60,11 @@ class _HomeScreenState extends State<HomeScreen>
             child: _CarouselHome(),
           ),
 
-          /// Ecommerce [Best Selling] this section include title [Best Selling]
+          /// Ecommerce [Recommended for you] this section include title [Best Selling]
           /// and product lists [Best Selling]
           SliverToBoxAdapter(
             child: _CategorySingleListView(
-                categoryName: 'Recommended for you', productList: bestSelling),
+                categoryName: 'Recommended for you', productList: null),
           ),
 
           const SliverToBoxAdapter(
@@ -69,9 +73,9 @@ class _HomeScreenState extends State<HomeScreen>
               child: _TitleSection(title: 'Best Selling'),
             ),
           ),
-          _SliverCategroyGrid(productLists: bestSelling),
+          _SliverCategoryGrid(productRepositoryImpl: productRepositoryImpl,),
 
-          /// Ecommerce [Exclusive Offer]; this section include title [Exclusive Offer]
+          /// Ecommerce [_SliverCategoryGrid]; this section include title [Exclusive Offer]
           /// and product lists [Exclusive Offer]
           const SliverToBoxAdapter(
             child: Padding(
@@ -79,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: _TitleSection(title: 'Exclusive Offer'),
             ),
           ),
-          _SliverCategroyGrid(productLists: exclusiveOffer),
+          _SliverCategoryGrid(productRepositoryImpl: productRepositoryImpl,),
 
           /// Ecommerce [All Products]; this section include title [All Products]
           /// and product lists [All Products]
@@ -89,9 +93,10 @@ class _HomeScreenState extends State<HomeScreen>
               child: _TitleSection(title: 'All Products'),
             ),
           ),
-          _SliverCategroyGrid(productLists: allProducts)
+          _SliverCategoryGrid(productRepositoryImpl: productRepositoryImpl,)
         ],
       ),
+      // body: _AllProducts(),
     );
   }
 
@@ -187,8 +192,11 @@ class _SliverAppBar extends StatelessWidget {
 }
 
 class _CategorySingleListView extends StatefulWidget {
-  const _CategorySingleListView(
-      {super.key, this.categoryName, this.productList});
+  const _CategorySingleListView({
+    super.key,
+    this.categoryName,
+    this.productList
+  });
 
   final String? categoryName;
   final List<ProductModel>? productList;
@@ -210,10 +218,12 @@ class __CategoryListViewState extends State<_CategorySingleListView> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: widget.productList!.map((e) {
+            children: widget.productList != null
+                ? widget.productList!.map((e) {
               return SizedBox(
                   height: 300, width: 200, child: ProductCard(product: e));
-            }).toList(),
+            }).toList()
+                : [const Center(child: CircularProgressIndicator(),)]
           ),
         ),
       ],
@@ -221,28 +231,61 @@ class __CategoryListViewState extends State<_CategorySingleListView> {
   }
 }
 
-class _SliverCategroyGrid extends StatelessWidget {
-  const _SliverCategroyGrid({
+class _SliverCategoryGrid extends StatelessWidget {
+  const _SliverCategoryGrid({
     super.key,
-    required this.productLists,
+    required this.productRepositoryImpl,
   });
 
-  final List<ProductModel> productLists;
+  final ProductRepositoryImpl productRepositoryImpl;
 
   @override
   Widget build(BuildContext context) {
-    return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200.0,
-        mainAxisSpacing: 4.0,
-        childAspectRatio: 0.60,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return ProductCard(product: productLists[index]);
-        },
-        childCount: productLists.length,
-      ),
+    return FutureBuilder<List<product.ProductModel>>(
+      future: productRepositoryImpl.getAllProducts(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            final productLists = snapshot.data!.map((e) {
+              return product.ProductModel(
+                id: e.id,
+                name: e.name,
+                slug: e.slug,
+                permalink: e.permalink,
+                description: e.description,
+                shortDescription: e.shortDescription,
+                sku: e.sku,
+                price: e.price,
+                regularPrice: e.regularPrice,
+                salePrice: e.salePrice,
+                onSale: e.onSale,
+                totalSales: e.totalSales,
+                stockQuantity: e.stockQuantity,
+                ratingCount: e.ratingCount,
+                images: e.images
+              );
+            }).toList();
+            return SliverGrid(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200.0,
+                mainAxisSpacing: 2.0,
+                childAspectRatio: 0.55,
+              ),
+              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                  return home.ProductCard(product: productLists[index]);
+                },
+                childCount: productLists.length,
+              ),
+            );
+          } else {
+            return const SliverToBoxAdapter(child: Center(child: Text('Failed to loading data from server'),));
+          }
+
+        }
+        else {
+          return const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator(),));
+        }
+      },
     );
   }
 }

@@ -1,35 +1,23 @@
-import 'package:ecommerce_app/core/models/product_model.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const List<ProductModel> favoriteLists = [
+  List<ProductModel> favoriteLists = [
     ProductModel(
-      id: '1',
+      id: 1,
       name: 'Product 1',
-      price: 19.99,
-      unit: 'pcs',
-      thumbnail: 'product1_thumbnail.jpg',
-      category: 'Electronics',
-      imgDetails: ['product1_detail1.jpg', 'product1_detail2.jpg'],
+      price: '199000',
     ),
     ProductModel(
-      id: '2',
+      id: 2,
       name: 'Product 2',
-      price: 29.99,
-      unit: 'kg',
-      thumbnail: 'product2_thumbnail.jpg',
-      category: 'Clothing',
-      imgDetails: ['product2_detail1.jpg', 'product2_detail2.jpg'],
+      price: '30000',
     ),
     ProductModel(
-      id: '3',
+      id: 3,
       name: 'Product 3',
-      price: 39.99,
-      unit: 'pcs',
-      thumbnail: 'product3_thumbnail.jpg',
-      category: 'Home',
-      imgDetails: ['product3_detail1.jpg', 'product3_detail2.jpg'],
+      price: '40000',
     ),
   ];
 
@@ -44,7 +32,6 @@ void main() {
       favoriteRepositoryImpl.addProductToFavorite(favoriteLists[0]);
       favoriteRepositoryImpl.addProductToFavorite(favoriteLists[0]);
       favoriteRepositoryImpl.addProductToFavorite(favoriteLists[0]);
-
 
     });
   });

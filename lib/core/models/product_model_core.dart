@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
 
-class ProductModel {
+class ProductModelCore {
   final String id;
   final String name;
   final double price;
@@ -9,7 +8,7 @@ class ProductModel {
   final List<String> imgDetails;
   final String category;
 
-  const ProductModel({
+  const ProductModelCore({
     required this.id,
     required this.name,
     required this.price,
@@ -18,4 +17,5 @@ class ProductModel {
     required this.category,
     required this.imgDetails,
   });
+
 }

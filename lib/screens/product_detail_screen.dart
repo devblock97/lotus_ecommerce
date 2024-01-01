@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/core/models/product_model.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/models/notification.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
-import 'package:ecommerce_app/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
@@ -124,7 +124,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.product.name,
+                    widget.product!.name!,
                     style: const TextStyle(
                         color: primaryText,
                         fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class _DetailScreenState extends State<DetailScreen> {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('${widget.product.unit}, Price'),
+                child: Text('${'cai'}, Price'),
               ),
             ),
             Padding(
@@ -333,8 +333,8 @@ class _ImageSliderState extends State<_ImageSlider> {
   @override
   Widget build(BuildContext context) {
     List<String> thumbnails = [
-      widget.product.thumbnail,
-      widget.product.thumbnail,
+      widget.product.images![0].src!,
+      widget.product.images![0].src!,
     ];
     return Container(
       height: 300,
@@ -358,7 +358,7 @@ class _ImageSliderState extends State<_ImageSlider> {
                     });
                   }),
               items: thumbnails
-                  .map((img) => Image.asset(
+                  .map((img) => Image.network(
                         img,
                         fit: BoxFit.fitHeight,
                       ))
