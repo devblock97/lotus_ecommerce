@@ -62,7 +62,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                         MaterialPageRoute(
                             builder: (_) => CategoryDetail(
                                   categoryName: categories[index].title,
-                                  productLists: allProducts,
+                                  productLists: null,
                                 )));
                   },
                   child: CategoryCard(

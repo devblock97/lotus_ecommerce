@@ -1,8 +1,6 @@
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
-import 'package:ecommerce_app/core/models/product_model.dart';
-// ignore: unused_import
-import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class CartRepositoryImpl extends ChangeNotifier implements CartRepository {
@@ -70,7 +68,7 @@ class CartRepositoryImpl extends ChangeNotifier implements CartRepository {
       .fold<double>(
           0,
           (previousValue, cart) =>
-              previousValue + (cart.product.price * cart.quantity))
+              previousValue + (double.parse(cart.product.price!) * cart.quantity))
       .toStringAsPrecision(6);
 
   @override

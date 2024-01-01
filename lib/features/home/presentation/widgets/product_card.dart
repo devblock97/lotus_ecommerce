@@ -1,16 +1,14 @@
-import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
-import 'package:ecommerce_app/features/cart/domain/use_cases/add_to_cart.dart';
+
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
-import 'package:ecommerce_app/features/notification/data/models/notification.dart';
-import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/screens/product_detail_screen.dart';
-import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-
-import '../core/models/product_model.dart';
+import '../../../../theme/color.dart';
+import '../../../cart/data/repositories/cart_repository_impl.dart';
+import '../../../notification/data/models/notification.dart';
+import '../../../notification/data/repositories/notify_repository_impl.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
@@ -23,16 +21,15 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DetailScreen(product: product))),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(product: product)));
+      },
       child: Container(
         height: 150,
         width: 100,
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+            color: Theme.of(context).cardColor,
             border: Border.all(color: secondaryText),
             borderRadius: BorderRadius.circular(18)),
         padding: const EdgeInsets.all(5),
@@ -45,13 +42,13 @@ class ProductCard extends StatelessWidget {
               children: [
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
                     color: primaryButton,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Off \$${(product.price * 0.15).toStringAsPrecision(3)}',
+                    'Off ${product.price}',
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
@@ -60,16 +57,16 @@ class ProductCard extends StatelessWidget {
             ),
             const Gap(5),
             Center(
-              child: Image.asset(
-                product.thumbnail,
+              child: Image.network(
+                product.images![0].src!,
               ),
             ),
             Text(
-              product.name,
+              product.name!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
-              '${product.unit}, Price',
+              '1cai/ Price',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Row(
@@ -141,7 +138,7 @@ class _AddProductButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8),
           backgroundColor: primaryButton,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
       child: const Icon(Icons.add),
     );
   }
