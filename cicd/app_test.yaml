@@ -1,0 +1,21 @@
+name: SenHong Unit Tests
+
+on:
+  pull_request:
+    branches:
+      - development
+      - master
+  push:
+    branches:
+      - development
+      - master
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter test
