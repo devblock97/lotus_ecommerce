@@ -1,16 +1,20 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ecommerce_app/features/cart/data/datasource/datasource.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/home/data/repositories/product_repository_impl.dart';
+import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ecommerce_app/features/home/presentation/bloc/home_event.dart';
+import 'package:ecommerce_app/features/home/presentation/bloc/home_state.dart';
+import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/features/home/presentation/widgets/product_card.dart' as home;
-import 'package:ecommerce_app/widgets/my_search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart' as product;
 
+import '../../../../widgets/my_search_bar.dart';
 import '../widgets/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -62,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
 
           /// Ecommerce [Recommended for you] this section include title [Best Selling]
           /// and product lists [Best Selling]
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: _CategorySingleListView(
                 categoryName: 'Recommended for you', productList: null),
           ),
@@ -79,21 +83,21 @@ class _HomeScreenState extends State<HomeScreen>
           /// and product lists [Exclusive Offer]
           const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(18.0),
+              padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 6),
               child: _TitleSection(title: 'Exclusive Offer'),
             ),
           ),
-          _SliverCategoryGrid(productRepositoryImpl: productRepositoryImpl,),
+          const SliverToBoxAdapter(child: ProductsList(),),
 
           /// Ecommerce [All Products]; this section include title [All Products]
           /// and product lists [All Products]
           const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(18.0),
+              padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 6),
               child: _TitleSection(title: 'All Products'),
             ),
           ),
-          _SliverCategoryGrid(productRepositoryImpl: productRepositoryImpl,)
+          const SliverToBoxAdapter(child: ProductsList()),
         ],
       ),
       // body: _AllProducts(),
@@ -102,6 +106,41 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class ProductsList extends StatelessWidget {
+  const ProductsList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => HomeBloc(sl())..add(const GetProduct()),
+      child: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          if (state is ProductInitial || state is ProductLoading) {
+            return const Center(child: CircularProgressIndicator(),);
+          }
+          if (state is ProductSuccess) {
+            return GridView.builder(
+              physics: const ClampingScrollPhysics(),
+              shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.55
+                ),
+                itemCount: state.productList.length,
+                itemBuilder: (_, index) {
+                  return ProductCard(product: state.productList[index]);
+                }
+            );
+          }
+          return const SizedBox();
+        },
+      ),
+    );
+  }
 }
 
 class _TitleSection extends StatelessWidget {
@@ -215,17 +254,28 @@ class __CategoryListViewState extends State<_CategorySingleListView> {
             padding: const EdgeInsets.all(18.0),
             child: _TitleSection(title: widget.categoryName!),
           ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: widget.productList != null
-                ? widget.productList!.map((e) {
-              return SizedBox(
-                  height: 300, width: 200, child: ProductCard(product: e));
-            }).toList()
-                : [const Center(child: CircularProgressIndicator(),)]
+        BlocProvider(
+          create: (_) => HomeBloc(sl())..add(const GetProduct()),
+          child: BlocBuilder<HomeBloc, HomeState>(
+            builder: (_, state) {
+              if (state is ProductInitial || state is ProductLoading) {
+                return const Center(child: CircularProgressIndicator(),);
+              }
+              if (state is ProductSuccess) {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children: state.productList.map((e) {
+                        return SizedBox(
+                            height: 320, width: 200, child: ProductCard(product: e));
+                      }).toList()
+                  )
+                );
+              }
+              return const SizedBox();
+            },
           ),
-        ),
+        )
       ],
     );
   }

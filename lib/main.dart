@@ -1,12 +1,16 @@
 import 'dart:io';
 
+import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
+import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ecommerce_app/features/home/presentation/bloc/home_state.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
+import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/screens/login_screen.dart';
 import 'package:ecommerce_app/theme/theme.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -14,8 +18,31 @@ void main() async {
 
   HttpOverrides.global = MyHttpOverrides();
 
+  await init();
+
+  Bloc.observer = SimpleBlocObserver();
+
   runApp(const EcommerceApp());
 }
+
+class SimpleBlocObserver extends BlocObserver {
+
+  @override
+  void onEvent(Bloc bloc, Object? event) {
+    super.onEvent(bloc, event);
+  }
+
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+  }
+
+  @override
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    super.onError(bloc, error, stackTrace);
+  }
+}
+
 
 class EcommerceApp extends StatelessWidget {
   const EcommerceApp({super.key});
