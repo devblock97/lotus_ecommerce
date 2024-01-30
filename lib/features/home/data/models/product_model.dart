@@ -1,4 +1,6 @@
 
+import 'package:ecommerce_app/core/constants/api_config.dart';
+
 class ProductModel {
 
   int? id;
@@ -59,22 +61,22 @@ class ProductModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['slug'] = this.slug;
-    data['permalink'] = this.permalink;
-    data['description'] = this.description;
-    data['short_description'] = this.shortDescription;
-    data['sku'] = this.sku;
-    data['price'] = this.price;
-    data['regular_price'] = this.regularPrice;
-    data['sale_price'] = this.salePrice;
-    data['on_sale'] = this.onSale;
-    data['total_sales'] = this.totalSales;
-    data['stock_quantity'] = this.stockQuantity;
-    data['rating_count'] = this.ratingCount;
-    data['images'] = this.images;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['slug'] = slug;
+    data['permalink'] = permalink;
+    data['description'] = description;
+    data['short_description'] = shortDescription;
+    data['sku'] = sku;
+    data['price'] = price;
+    data['regular_price'] = regularPrice;
+    data['sale_price'] = salePrice;
+    data['on_sale'] = onSale;
+    data['total_sales'] = totalSales;
+    data['stock_quantity'] = stockQuantity;
+    data['rating_count'] = ratingCount;
+    data['images'] = images;
     return data;
   }
 }
@@ -87,7 +89,7 @@ class ImageModel {
 
   factory ImageModel.fromJson(Map<String, dynamic> json) {
     var image = json['src'] as String;
-    image = image.replaceAll('localhost', '192.168.110.47');
+    image = image.replaceAll('localhost', ApiConfig.IP_ADDRESS);
     return ImageModel(json['id'], image);
   }
 }

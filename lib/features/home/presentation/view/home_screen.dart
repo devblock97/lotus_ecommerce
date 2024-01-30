@@ -145,7 +145,6 @@ class ProductsList extends StatelessWidget {
 
 class _TitleSection extends StatelessWidget {
   const _TitleSection({
-    super.key,
     required this.title,
   });
 
@@ -170,7 +169,7 @@ class _TitleSection extends StatelessWidget {
 }
 
 class _CarouselHome extends StatelessWidget {
-  const _CarouselHome({super.key});
+  const _CarouselHome();
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +199,7 @@ class _CarouselHome extends StatelessWidget {
 }
 
 class _SliverAppBar extends StatelessWidget {
-  const _SliverAppBar({super.key});
+  const _SliverAppBar();
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +231,6 @@ class _SliverAppBar extends StatelessWidget {
 
 class _CategorySingleListView extends StatefulWidget {
   const _CategorySingleListView({
-    super.key,
     this.categoryName,
     this.productList
   });
@@ -283,7 +281,6 @@ class __CategoryListViewState extends State<_CategorySingleListView> {
 
 class _SliverCategoryGrid extends StatelessWidget {
   const _SliverCategoryGrid({
-    super.key,
     required this.productRepositoryImpl,
   });
 

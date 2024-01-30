@@ -42,7 +42,7 @@ class EcommerceTheme {
       // useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: black900,
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Colors.white
       ),
       appBarTheme: AppBarTheme(

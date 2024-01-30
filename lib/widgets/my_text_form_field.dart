@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 @immutable
 class TextFormWidget extends StatelessWidget {
-  TextFormWidget(
+  const TextFormWidget(
       {super.key,
       required this.label,
       this.leadingIcon,
@@ -19,6 +19,7 @@ class TextFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
           label: Text(label),
           prefixIcon: leadingIcon,

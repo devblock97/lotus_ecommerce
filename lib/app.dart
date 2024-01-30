@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/screens/account_screen.dart';
 import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
@@ -9,7 +9,8 @@ import 'package:ecommerce_app/features/favorite/presentation/favorite_screen.dar
 import 'package:ecommerce_app/features/home/presentation/view/home_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
@@ -49,8 +50,8 @@ class _EcommerceAppState extends State<GroceryApp> {
 
     return Scaffold(
         body: IndexedStack(
-          children: screens,
           index: _selectedIndex,
+          children: screens,
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
@@ -70,19 +71,19 @@ class _EcommerceAppState extends State<GroceryApp> {
             BottomNavigationBarItem(
                 icon: Stack(
                   children: [
-                    if (cart.cartLists().length > 0)
+                    if (cart.cartLists().isNotEmpty)
                       Positioned(
                           left: 10,
                           bottom: 10,
                           child: Container(
                             padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle
                             ),
                             child: Text(
                               '${cart.cartLists().length}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold),
@@ -116,17 +117,3 @@ class _EcommerceAppState extends State<GroceryApp> {
         ));
   }
 }
-
-Future<void> fetchData() async {
-  String url = 'https://192.168.110.47/senhong/wp-json/wc/v3/products?consumer_key=ck_27711f499d97c090120b9dcef1e1f40af1778570&consumer_secret=cs_f62d5e2ce67c8bc1be8cd46a915e36adcb5f1aa2';
-  var response = await http.get(Uri.parse(url));
-  print('status code: ${response.statusCode}');
-  if (response.statusCode == 200) {
-    var jsonResponse = jsonDecode(response.body);
-    print('loading success');
-    print(jsonResponse);
-  } else {
-    throw Exception('Failed to loading data');
-  }
-}
-

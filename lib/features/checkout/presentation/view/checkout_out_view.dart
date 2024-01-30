@@ -4,12 +4,130 @@ import 'dart:convert';
 import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../screens/order_success_screen.dart';
 import '../../../../widgets/my_button.dart';
 import '../../../cart/data/repositories/cart_repository_impl.dart';
 import 'package:http/http.dart' as http;
+
+class CheckOutScreen extends StatelessWidget {
+  const CheckOutScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Thanh toán'),
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.grey[200],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Địa chỉ giao hàng'),
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.white
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('John Nguyen'),
+                      Text('Change')
+                    ],
+                  ),
+                  Text('Shipping address 1'),
+                  Text('Shipping address 2')
+                ],
+              ),
+            ),
+            Text('Phương thức thanh toán'),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.white
+              ),
+              padding: const EdgeInsets.all(8),
+              child: SvgPicture.asset('assets/icons/mastercard.svg'),
+            ),
+            Text('Phương thức giao hàng'),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.white
+              ),
+              margin: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  RadioListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: 1, groupValue: 2, onChanged: (value) {}, title: const Text('Giao hàng tiết kiệm'),),
+                  RadioListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: 1, groupValue: 2, onChanged: (value) {}, title: const Text('Giao hàng hỏa tốc'),),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8)
+              ),
+              child: const Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Tạm tính'),
+                      Text('5.136.789đ')
+                    ],
+                  ),
+                  Gap(5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Phí vận chuyển'),
+                      Text('189.000đ')
+                    ],
+                  ),
+                  Gap(5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Khuyến mãi vận chuyển'),
+                      Text('136.789đ')
+                    ],
+                  ),
+                  Gap(5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Giảm giá'),
+                      Text('136.789đ')
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class PlaceOrder extends StatelessWidget {
   const PlaceOrder({
@@ -19,10 +137,7 @@ class PlaceOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cart = context.read<CartRepositoryImpl>();
-    // final textPrimaryStyle = TextStyle(
-    //     color: primaryText, fontSize: 23, fontWeight: FontWeight.bold);
-    // final textSecondaryStyle = TextStyle(
-    //     color: primaryText, fontSize: 16, fontWeight: FontWeight.bold);
+
     return Container(
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -204,24 +319,24 @@ class PlaceOrder extends StatelessWidget {
                   // print('response order: ${response.statusCode}');
                   // print('response order: ${response.body}');
 
-                  final response = await http.post(
-                    Uri.parse(ApiConfig.URL + ApiConfig.ORDERS),
-                    body: jsonEncode(data),
-                    headers: ApiConfig.HEADER
-                  );
-                  print('create order status code: ${response.statusCode}');
-
-                  if (response.statusCode == 201) {
-                    print('create order response: ${response.body}');
-                  } else {
-                    print('create order error: ${response.request?.url}');
-                  }
+                  // final response = await http.post(
+                  //   Uri.parse(ApiConfig.URL + ApiConfig.ORDERS),
+                  //   body: jsonEncode(data),
+                  //   headers: ApiConfig.HEADER
+                  // );
+                  // print('create order status code: ${response.statusCode}');
+                  //
+                  // if (response.statusCode == 201) {
+                  //   print('create order response: ${response.body}');
+                  // } else {
+                  //   print('create order error: ${response.request?.url}');
+                  // }
 
                   cart.clearItemAllItemToCart();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => OrderSuccessScreen()));
+                          builder: (context) => const OrderSuccessScreen()));
                 }),
           )
         ]),

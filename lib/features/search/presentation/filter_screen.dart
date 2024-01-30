@@ -85,9 +85,7 @@ class _FilterScreenState extends State<FilterScreen> {
 }
 
 class _ItemFilter extends StatelessWidget {
-  const _ItemFilter({
-    super.key,
-  });
+  const _ItemFilter();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +96,7 @@ class _ItemFilter extends StatelessWidget {
             value: index % 2 == 0,
             onChanged: (value) {},
             autofocus: true,
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
             splashRadius: 8,
             activeColor: primaryButton,
             title: Text('checkbox at $index'),

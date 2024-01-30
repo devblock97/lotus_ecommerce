@@ -6,7 +6,7 @@ class GetCartList {
 
   GetCartList(this._cartRepository);
 
-  CartRepository _cartRepository;
+  final CartRepository _cartRepository;
 
   Future<List<CartItemModel>> getCartLists() async {
     return _cartRepository.cartLists();

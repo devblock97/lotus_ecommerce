@@ -32,6 +32,7 @@ class HomeState extends Equatable {
 class ProductInitial extends HomeState {
 
   final HomeStatus homeStatus;
+  @override
   final List<ProductModel> productList;
 
   const ProductInitial({this.homeStatus = HomeStatus.initial, this.productList = const <ProductModel>[]});
@@ -43,6 +44,7 @@ class ProductInitial extends HomeState {
 class ProductSuccess extends HomeState {
   const ProductSuccess({required this.productList});
 
+  @override
   final List<ProductModel> productList;
 
   @override
@@ -51,6 +53,7 @@ class ProductSuccess extends HomeState {
 
 class ProductLoading extends HomeState {
   const ProductLoading({this.status = HomeStatus.loading});
+  @override
   final HomeStatus status;
 }
 

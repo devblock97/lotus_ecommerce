@@ -1,28 +1,40 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:ecommerce_app/app.dart';
+import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
-import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
-import 'package:ecommerce_app/features/home/presentation/bloc/home_state.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
 import 'package:ecommerce_app/inject_container.dart';
-import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart';
 import 'package:ecommerce_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   HttpOverrides.global = MyHttpOverrides();
 
+  /// Local DB with Hive
+  await Hive.initFlutter();
+
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final userCached = sharedPreferences.getString(CACHED_USER_INFO);
+
+  /// Dependencies injection
   await init();
 
   Bloc.observer = SimpleBlocObserver();
-
   runApp(const EcommerceApp());
+
 }
 
 class SimpleBlocObserver extends BlocObserver {
@@ -44,8 +56,21 @@ class SimpleBlocObserver extends BlocObserver {
 }
 
 
-class EcommerceApp extends StatelessWidget {
+class EcommerceApp extends StatefulWidget {
   const EcommerceApp({super.key});
+
+  @override
+  State<EcommerceApp> createState() => _EcommerceAppState();
+}
+
+class _EcommerceAppState extends State<EcommerceApp> {
+
+  late bool userLogged = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +89,7 @@ class EcommerceApp extends StatelessWidget {
         ChangeNotifierProxyProvider(
             create: (context) => FavoriteRepositoryImpl(),
             update: (context, value, FavoriteRepositoryImpl? favorite) {
-              if (favorite == null) throw ArgumentError('Favortie');
+              if (favorite == null) throw ArgumentError('Favorite');
               return favorite;
             }),
 
@@ -87,7 +112,7 @@ class EcommerceApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: EcommerceTheme.buildLightTheme(context),
               darkTheme: EcommerceTheme.buildDarkTheme(context),
-              home: LoginScreen(),
+              home: userLogged ? const GroceryApp() : const LoginScreen(),
           );
         },
         selector: (context, theme) => theme.themeMode

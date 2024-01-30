@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:ecommerce_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
 import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
@@ -6,6 +10,10 @@ import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../features/auth/data/models/sign_in_model.dart';
+import '../inject_container.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -17,6 +25,11 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   bool selected = false;
   late ThemeMode _themeMode;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +98,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 title: const Text('Đơn hàng'),
                 textColor: primaryText,
                 initiallyExpanded: true,
-                trailing: Icon(Icons.keyboard_arrow_right),
+                trailing: const Icon(Icons.keyboard_arrow_right),
               ),
               const ExpansionTile(
                 leading: Icon(Icons.credit_card_outlined),
@@ -114,12 +127,12 @@ class _AccountScreenState extends State<AccountScreen> {
               ExpansionTile(
                 onExpansionChanged: (value) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => NotificationScreen()));
+                      MaterialPageRoute(builder: (_) => const NotificationScreen()));
                 },
                 leading: const Icon(Icons.notifications_outlined),
                 title: const Text('Thông báo'),
                 initiallyExpanded: true,
-                trailing: Icon(Icons.keyboard_arrow_right),
+                trailing: const Icon(Icons.keyboard_arrow_right),
               ),
               const ExpansionTile(
                 leading: Icon(Icons.help_outline),
@@ -154,7 +167,10 @@ class _AccountScreenState extends State<AccountScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: EcommerceButton(
                   title: 'Đăng xuất',
-                  onTap: () {},
+                  onTap: () async {
+                    SharedPreferences pref = await SharedPreferences.getInstance();
+                    pref.remove(CACHED_USER_INFO);
+                  },
                 ),
               ),
             ],
