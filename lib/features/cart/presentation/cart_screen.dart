@@ -1,7 +1,5 @@
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/screens/order_success_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
-import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:ecommerce_app/widgets/my_cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,11 +50,7 @@ class CartScreen extends StatelessWidget {
             )
             : ElevatedButton(
                 onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return const PlaceOrder();
-                      });
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckOutScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryButton,

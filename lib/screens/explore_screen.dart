@@ -15,10 +15,6 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen>
     with AutomaticKeepAliveClientMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -43,7 +39,7 @@ class _ExploreScreenState extends State<ExploreScreen>
       body: ListView(
         children: [
           ListTile(
-              leading: Text('Filter Categories'),
+              leading: const Text('Filter Categories'),
               trailing: GestureDetector(
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const FilterScreen())),

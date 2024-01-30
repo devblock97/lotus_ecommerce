@@ -75,7 +75,7 @@ class FavoriteMessageDialog extends StatelessWidget {
       title: Align(
         alignment: Alignment.topLeft,
         child: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -106,7 +106,7 @@ class FavoriteMessageDialog extends StatelessWidget {
           ],
         ),
       ),
-      actions: [],
+      actions: const [],
     );
   }
 }
@@ -127,7 +127,7 @@ class FavoriteItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (_) => DetailScreen(product: product!))),
-            leading: Container(
+            leading: SizedBox(
                 width: 80, height: 80, child: Image.network(product!.images![0].src!)),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,7 +136,7 @@ class FavoriteItem extends StatelessWidget {
                 Text('\$${product!.price}')
               ],
             ),
-            subtitle: Text('${'cai'}, Price'),
+            subtitle: const Text('${'cai'}, Price'),
             trailing: const Icon(Icons.keyboard_arrow_right),
           ),
           const Gap(10),

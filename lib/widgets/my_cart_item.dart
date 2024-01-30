@@ -43,7 +43,7 @@ class _CartItemState extends State<CartItem> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ListTile(
-                      title: Text(widget.product!.name!),
+                      title: Text(widget.product.name!),
                       subtitle: const Text('${'cai'}, Price'),
                       trailing: IconButton(
                         onPressed: () => cart.removeItemToCart(widget.product),

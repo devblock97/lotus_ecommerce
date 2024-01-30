@@ -4,7 +4,7 @@ import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class CartRepositoryImpl extends ChangeNotifier implements CartRepository {
-  List<CartItemModel> _cartLists = [];
+  final List<CartItemModel> _cartLists = [];
 
   @override
   void addToCart(ProductModel product, int quantity) {

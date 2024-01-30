@@ -2,7 +2,7 @@ import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/favorite/domain/repositories/favorite_repository.dart';
 
 class RemoveFavorite {
-  FavoriteRepository _favoriteRepository;
+  final FavoriteRepository _favoriteRepository;
 
   RemoveFavorite(this._favoriteRepository);
 

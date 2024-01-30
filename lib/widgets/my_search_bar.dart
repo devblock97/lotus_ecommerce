@@ -1,7 +1,6 @@
 import 'package:ecommerce_app/features/cart/data/datasource/datasource.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class EcommerceSearchBar extends StatefulWidget {
   const EcommerceSearchBar({super.key});
@@ -30,7 +29,7 @@ class _EcommerceSearchBarState extends State<EcommerceSearchBar> {
         );
       }, suggestionsBuilder: (context, suggestor) {
         return List<ListTile>.generate(allProducts.length, (index) {
-          final String item = allProducts![index].name!;
+          final String item = allProducts[index].name;
           return ListTile(
             title: Text(item),
             onTap: () {
