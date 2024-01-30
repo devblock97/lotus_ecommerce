@@ -86,7 +86,6 @@ class ProductCard extends StatelessWidget {
 
 class _AddFavorite extends StatelessWidget {
   const _AddFavorite({
-    super.key,
     required this.product,
   });
 
@@ -115,7 +114,6 @@ class _AddFavorite extends StatelessWidget {
 
 class _AddProductButton extends StatelessWidget {
   const _AddProductButton({
-    super.key,
     required this.product,
   });
 

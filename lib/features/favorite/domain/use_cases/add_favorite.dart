@@ -2,7 +2,7 @@ import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/favorite/domain/repositories/favorite_repository.dart';
 
 class AddFavorite {
-  FavoriteRepository _favoriteRepository;
+  final FavoriteRepository _favoriteRepository;
 
   AddFavorite(this._favoriteRepository);
 

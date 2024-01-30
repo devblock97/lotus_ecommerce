@@ -534,23 +534,23 @@ List<CategoryModel> categories = [
   CategoryModel(
       title: 'Frash Fruits & Vegetable',
       image: 'assets/categories/category_7.png',
-      background: Color(0xFFF8A44C)),
+      background: const Color(0xFFF8A44C)),
   CategoryModel(
       title: 'Meat & Fish',
       image: 'assets/categories/category_3.png',
-      background: Color(0xFFF7A593)),
+      background: const Color(0xFFF7A593)),
   CategoryModel(
       title: 'Bakery & Snacks',
       image: 'assets/categories/category_6.png',
-      background: Color(0xFFD3B0E0)),
+      background: const Color(0xFFD3B0E0)),
   CategoryModel(
       title: 'Dairy & Eggs',
       image: 'assets/categories/category_2.png',
-      background: Color(0xFFFDE598)),
+      background: const Color(0xFFFDE598)),
   CategoryModel(
       title: 'Beverages',
       image: 'assets/categories/category_1.png',
-      background: Color(0xFFB7DFF5)),
+      background: const Color(0xFFB7DFF5)),
   CategoryModel(
       title: 'Cooking Oil & Ghee',
       image: 'assets/categories/category_4.png',
@@ -558,23 +558,23 @@ List<CategoryModel> categories = [
   CategoryModel(
       title: 'Frash Fruits & Vegetable',
       image: 'assets/categories/category_7.png',
-      background: Color(0xFFF8A44C)),
+      background: const Color(0xFFF8A44C)),
   CategoryModel(
       title: 'Meat & Fish',
       image: 'assets/categories/category_3.png',
-      background: Color(0xFFF7A593)),
+      background: const Color(0xFFF7A593)),
   CategoryModel(
       title: 'Bakery & Snacks',
       image: 'assets/categories/category_6.png',
-      background: Color(0xFFD3B0E0)),
+      background: const Color(0xFFD3B0E0)),
   CategoryModel(
       title: 'Dairy & Eggs',
       image: 'assets/categories/category_2.png',
-      background: Color(0xFFFDE598)),
+      background: const Color(0xFFFDE598)),
   CategoryModel(
       title: 'Beverages',
       image: 'assets/categories/category_1.png',
-      background: Color(0xFFB7DFF5)),
+      background: const Color(0xFFB7DFF5)),
   CategoryModel(
       title: 'Cooking Oil & Ghee',
       image: 'assets/categories/category_4.png',
@@ -582,21 +582,21 @@ List<CategoryModel> categories = [
   CategoryModel(
       title: 'Frash Fruits & Vegetable',
       image: 'assets/categories/category_7.png',
-      background: Color(0xFFF8A44C)),
+      background: const Color(0xFFF8A44C)),
   CategoryModel(
       title: 'Meat & Fish',
       image: 'assets/categories/category_3.png',
-      background: Color(0xFFF7A593)),
+      background: const Color(0xFFF7A593)),
   CategoryModel(
       title: 'Bakery & Snacks',
       image: 'assets/categories/category_6.png',
-      background: Color(0xFFD3B0E0)),
+      background: const Color(0xFFD3B0E0)),
   CategoryModel(
       title: 'Dairy & Eggs',
       image: 'assets/categories/category_2.png',
-      background: Color(0xFFFDE598)),
+      background: const Color(0xFFFDE598)),
   CategoryModel(
       title: 'Beverages',
       image: 'assets/categories/category_1.png',
-      background: Color(0xFFB7DFF5)),
+      background: const Color(0xFFB7DFF5)),
 ];

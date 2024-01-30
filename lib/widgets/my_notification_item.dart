@@ -32,7 +32,7 @@ class NotificationItem extends StatelessWidget {
               ? Icons.mark_chat_read
               : Icons.mark_unread_chat_alt_rounded),
           title: Text(
-            '${notification.title}',
+            notification.title,
             style: TextStyle(
                 color: notification.isReaded ? primaryText : Colors.white),
           )),

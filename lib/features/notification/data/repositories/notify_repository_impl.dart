@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class NotifyRepositoryImpl extends ChangeNotifier implements NotifyRepository {
   int _counter = 0;
 
-  List<NotificationModel> _listNotify = [];
+  final List<NotificationModel> _listNotify = [];
 
   @override
   void cartNotify() {

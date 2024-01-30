@@ -1,28 +1,41 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
-import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
-import 'package:ecommerce_app/features/home/presentation/bloc/home_state.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
 import 'package:ecommerce_app/inject_container.dart';
-import 'package:ecommerce_app/screens/login_screen.dart';
+import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart';
 import 'package:ecommerce_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:hive/hive.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   HttpOverrides.global = MyHttpOverrides();
 
+  /// Local DB with Hive
+  await Hive.initFlutter();
+  var user = await Hive.openBox('userBox');
+
+  /// Dependencies injection
   await init();
 
-  Bloc.observer = SimpleBlocObserver();
 
-  runApp(const EcommerceApp());
+  // Bloc.observer = SimpleBlocObserver();
+  // if (user.isNotEmpty) {
+  //   runApp(const EcommerceApp());
+  // } else {
+  //   runApp(const MaterialApp(home: LoginScreen(),));
+  // }
+
+  runApp(const MaterialApp(home: EcommerceApp(),));
+
 }
 
 class SimpleBlocObserver extends BlocObserver {
@@ -49,6 +62,8 @@ class EcommerceApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var user = Hive.openBox('userBox');
+
     return MultiProvider(
       providers: [
         /// Use Clean Architecture
@@ -64,7 +79,7 @@ class EcommerceApp extends StatelessWidget {
         ChangeNotifierProxyProvider(
             create: (context) => FavoriteRepositoryImpl(),
             update: (context, value, FavoriteRepositoryImpl? favorite) {
-              if (favorite == null) throw ArgumentError('Favortie');
+              if (favorite == null) throw ArgumentError('Favorite');
               return favorite;
             }),
 

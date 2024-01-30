@@ -85,7 +85,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 title: const Text('Đơn hàng'),
                 textColor: primaryText,
                 initiallyExpanded: true,
-                trailing: Icon(Icons.keyboard_arrow_right),
+                trailing: const Icon(Icons.keyboard_arrow_right),
               ),
               const ExpansionTile(
                 leading: Icon(Icons.credit_card_outlined),
@@ -114,12 +114,12 @@ class _AccountScreenState extends State<AccountScreen> {
               ExpansionTile(
                 onExpansionChanged: (value) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => NotificationScreen()));
+                      MaterialPageRoute(builder: (_) => const NotificationScreen()));
                 },
                 leading: const Icon(Icons.notifications_outlined),
                 title: const Text('Thông báo'),
                 initiallyExpanded: true,
-                trailing: Icon(Icons.keyboard_arrow_right),
+                trailing: const Icon(Icons.keyboard_arrow_right),
               ),
               const ExpansionTile(
                 leading: Icon(Icons.help_outline),
