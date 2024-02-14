@@ -107,7 +107,7 @@ void main() {
       // Arrange
       final cart = CartRepositoryImpl(); // Replace with the actual class name
       final product = product1;
-      final quantity = 2;
+      const quantity = 2;
 
       // Act
       cart.addToCart(product, quantity);
@@ -122,8 +122,8 @@ void main() {
       // Arrange
       final cart = CartRepositoryImpl(); // Replace with the actual class name
       final product = product2;
-      final initialQuantity = 2;
-      final updatedQuantity = 5;
+      const initialQuantity = 2;
+      const updatedQuantity = 5;
 
       // Act
       cart.addToCart(product, initialQuantity);

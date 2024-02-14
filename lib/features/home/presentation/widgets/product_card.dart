@@ -32,7 +32,7 @@ class ProductCard extends StatelessWidget {
             color: Theme.of(context).cardColor,
             border: Border.all(color: secondaryText),
             borderRadius: BorderRadius.circular(18)),
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class ProductCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                product.onSale! ? Container(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
@@ -48,10 +48,12 @@ class ProductCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Off ${product.price}',
-                    style: const TextStyle(color: Colors.white),
+                    'Giá gốc ${product.regularPrice}đ',
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
                   ),
-                ),
+                )
+                : const SizedBox(),
+
                 _AddFavorite(product: product)
               ],
             ),
@@ -65,15 +67,11 @@ class ProductCard extends StatelessWidget {
               product.name!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            Text(
-              '1cai/ Price',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '\$${product.price}',
+                  '${product.price}đ',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 _AddProductButton(product: product)
@@ -88,7 +86,6 @@ class ProductCard extends StatelessWidget {
 
 class _AddFavorite extends StatelessWidget {
   const _AddFavorite({
-    super.key,
     required this.product,
   });
 
@@ -117,7 +114,6 @@ class _AddFavorite extends StatelessWidget {
 
 class _AddProductButton extends StatelessWidget {
   const _AddProductButton({
-    super.key,
     required this.product,
   });
 
@@ -137,9 +133,8 @@ class _AddProductButton extends StatelessWidget {
           minimumSize: const Size(40, 40),
           padding: const EdgeInsets.symmetric(vertical: 8),
           backgroundColor: primaryButton,
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-      child: const Icon(Icons.add),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+      child: const Icon(Icons.add, color: Colors.white,),
     );
   }
 }

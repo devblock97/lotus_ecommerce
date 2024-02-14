@@ -39,12 +39,12 @@ class _DetailScreenState extends State<DetailScreen> {
           actions: [
             Stack(
               children: [
-                if (cartWatch.cartLists().length > 0)
+                if (cartWatch.cartLists().isNotEmpty)
                   Positioned(
                       left: 27,
                       child: Container(
                         padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle
                         ),
@@ -61,7 +61,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     },
                     icon: Icon(
                       Icons.shopping_cart_outlined,
-                      color: cart.cartLists().length > 0
+                      color: cart.cartLists().isNotEmpty
                           ? primaryButton
                           : Colors.black,
                     )),
@@ -75,7 +75,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       top: 5,
                       child: Container(
                         padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle,
                         ),
@@ -90,14 +90,14 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                       )),
                 Padding(
-                  padding: EdgeInsets.all(2.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: Positioned(
                     child: IconButton(
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => NotificationScreen()));
+                                builder: (_) => const NotificationScreen()));
                         notify.resetNotify();
                       },
                       icon: Icon(
@@ -124,7 +124,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.product!.name!,
+                    widget.product.name!,
                     style: const TextStyle(
                         color: primaryText,
                         fontWeight: FontWeight.bold,
@@ -136,10 +136,10 @@ class _DetailScreenState extends State<DetailScreen> {
                 ],
               ),
             ),
-            Align(
+            const Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Text('${'cai'}, Price'),
               ),
             ),
@@ -229,7 +229,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
 class _AddFavorite extends StatelessWidget {
   const _AddFavorite({
-    super.key,
     required this.product,
   });
 
@@ -257,9 +256,7 @@ class _AddFavorite extends StatelessWidget {
 }
 
 class _ProductRatingBar extends StatefulWidget {
-  const _ProductRatingBar({
-    super.key,
-  });
+  const _ProductRatingBar();
 
   @override
   State<_ProductRatingBar> createState() => _ProductRatingBarState();
@@ -269,11 +266,11 @@ class _ProductRatingBarState extends State<_ProductRatingBar> {
   late final _ratingController;
   late double _rating;
 
-  double _userRating = 3.0;
-  int _ratingBarMode = 1;
-  double _initialRating = 2.0;
-  bool _isRTLMode = false;
-  bool _isVertical = false;
+  final double _userRating = 3.0;
+  final int _ratingBarMode = 1;
+  final double _initialRating = 2.0;
+  final bool _isRTLMode = false;
+  final bool _isVertical = false;
 
   IconData? _selectedIcon;
 
@@ -318,7 +315,7 @@ class _ProductRatingBarState extends State<_ProductRatingBar> {
 }
 
 class _ImageSlider extends StatefulWidget {
-  const _ImageSlider({super.key, required this.product});
+  const _ImageSlider({required this.product});
 
   final ProductModel product;
 

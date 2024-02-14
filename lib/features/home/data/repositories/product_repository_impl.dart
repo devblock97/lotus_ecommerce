@@ -13,9 +13,9 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<List<ProductModel>> getAllProducts() async {
-    var url = Uri.parse(ApiConfig.URL + ApiConfig.PRODUCS);
+    var url = Uri.parse(ApiConfig.URL + ApiConfig.PRODUCTS);
     var header = {
-      'Authorization': 'Basic ' + base64Encode(utf8.encode('${ApiConfig.CONSUMER_KEY}:${ApiConfig.CONSUMER_SECRECT}'))
+      'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.CONSUMER_KEY}:${ApiConfig.CONSUMER_SECRECT}'))}'
     };
     var response = await client.get(url, headers: header);
     print('status code: ${response.statusCode}');
