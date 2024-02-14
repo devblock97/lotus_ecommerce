@@ -1,4 +1,6 @@
 
+import 'package:ecommerce_app/core/constants/api_config.dart';
+
 class ProductModel {
 
   int? id;
@@ -87,7 +89,7 @@ class ImageModel {
 
   factory ImageModel.fromJson(Map<String, dynamic> json) {
     var image = json['src'] as String;
-    image = image.replaceAll('localhost', '192.168.110.48');
+    image = image.replaceAll('localhost', ApiConfig.IP_ADDRESS);
     return ImageModel(json['id'], image);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:ecommerce_app/core/network/network_info.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
@@ -11,41 +12,55 @@ import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
 import 'package:ecommerce_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../datasources/auth_local_datasource.dart';
+import '../datasources/auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
 
   final NetworkInfo networkInfo;
+  final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
 
-  AuthRepositoryImpl(this.networkInfo);
+  AuthRepositoryImpl(this.remoteDataSource, this.localDataSource, this.networkInfo);
+
+  late SharedPreferences sharedPreferences;
 
   @override
   Future<Either<Failure, AuthResponseModel>> signIn(AuthModel body) async {
 
+    sharedPreferences = await SharedPreferences.getInstance();
     var isConnected = await networkInfo.inConnected;
 
     if (isConnected) {
       try {
-        final response = await http.post(
-          Uri.parse(ApiConfig.AUTH),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: json.encode({
-            'username': body.username,
-            'password': body.password,
-          }),
-        );
-
-        if (response.statusCode == 200) {
-          return Right(AuthResponseModel.fromJson(json.decode(response.body)));
-        } else {
-          return Left(ServerFailure('Failed to loading data from server [statusCode: ${response.statusCode}]'));
+        final response = await remoteDataSource.signIn(body);
+        if (response.statusCode == 403) {
+          return Left(InputInvalid(error: response.message));
         }
-      } catch (e) {
-        return Left(ServerFailure('Server unreachable [errorMessage: $e]'));
+
+        await localDataSource.cacheUserInfo(response);
+        localDataSource.getUserInfo()!.then((value) => print('checking value: ${value.data!.token}'));
+        return Right(response);
+      } on ServerException catch(err) {
+        return Left(ServerFailure('Server Failure [error: $err]]'));
+      } on InputInvalid catch (err) {
+        return Left(InputInvalid(error: 'Username or password incorrect'));
       }
     } else {
       return Left(ConnectionFailure('Internet connection failure!!!'));
+    }
+  }
+
+
+  @override
+  Future<Either<Failure, AuthResponseModel>> getUserInfo() async {
+    try {
+      final user = await localDataSource.getUserInfo();
+      return Right(user!);
+    } on CacheException {
+      return Left(CacheFailure('Cache Failure'));
     }
   }
 
@@ -60,7 +75,7 @@ class AuthRepositoryImpl implements AuthRepository {
     if (isConnected) {
       try {
         final response = await http.post(
-          Uri.parse('https://192.168.110.47/senhong/wp-json/wc/v3/customers'),
+          Uri.parse('${ApiConfig.URL}${ApiConfig.SIGN_UP}'),
           headers: ApiConfig.HEADER,
           body: jsonEncode({
             "first_name": body.firstName,

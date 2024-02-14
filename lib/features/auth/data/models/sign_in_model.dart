@@ -21,14 +21,30 @@ class AuthResponseModel extends Equatable {
   final bool success;
   final int statusCode;
   final String message;
-  final Data data;
+  final Data? data;
 
   const AuthResponseModel(
       this.success, this.statusCode, this.message, this.data);
 
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
-    return AuthResponseModel(json['success'], json['statusCode'],
-        json['message'], Data.fromJson(json['data']));
+    // When login failure then "data" field will be return []
+    // if successful login then "data" return json value
+    bool isLoginFailure = (json['data'] is List);
+    return AuthResponseModel(
+        json['success'] as bool,
+        json['statusCode'] as int,
+        json['message'] as String,
+        isLoginFailure ? null : Data.fromJson(json['data'])
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'statusCode': statusCode,
+      'message': message,
+      'data': data!.toJson()
+    };
   }
 
   @override
@@ -56,5 +72,17 @@ class Data {
         json['firstName'] as String,
         json['lastName'] as String,
         json['displayName'] as String);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'token': token,
+      'id': id,
+      'email': email,
+      'nicename': nicename,
+      'firstName': firstName,
+      'lastName': lastName,
+      'displayName': displayName
+    };
   }
 }

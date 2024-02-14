@@ -30,10 +30,16 @@ class SignUpSuccess extends AuthState {
 
 class AuthenticationError extends AuthState {
   final String error;
-  const AuthenticationError(this.error);
+  final int code;
+  const AuthenticationError(this.error, {required this.code});
 
   @override
   List<Object?> get props => [error];
+}
+
+class AuthenticationInvalid extends AuthState {
+  final String error;
+  const AuthenticationInvalid({required this.error});
 }
 
 class AuthenticationLoading extends AuthState {

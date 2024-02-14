@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
@@ -25,13 +27,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onSignInRequest(SignInRequest event, Emitter<AuthState> emit) async {
     emit(const AuthenticationLoading());
     final response = await postSignIn!(ParamPostSignIn(event.authModel));
+    print('auth bloc response: $response');
     response.fold(
       (l) {
+        print('checking left: $l');
         if (l is ServerFailure) {
-          emit(const AuthenticationError('Failed to response from server'));
+          emit(const AuthenticationError(code: 500, 'Failed to response from server'));
         }
         if (l is ConnectionFailure) {
-          emit(const AuthenticationError('Internet connection failure!'));
+          emit(const AuthenticationError(code: 503, 'Internet connection failure!'));
+        }
+        if (l is InputInvalid) {
+          print('user invalid emit');
+          emit(const AuthenticationInvalid(error: 'Tên đăng nhập hoặc mật khẩu không hợp lệ'));
         }
       },
       (r) => emit(AuthenticationSuccess(r))
@@ -45,10 +53,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     response.fold(
       (l) {
         if (l is ServerFailure) {
-          emit(const AuthenticationError('Failed to response from server'));
+          emit(const AuthenticationError(code: 500, 'Failed to response from server'));
         }
         if (l is ConnectionFailure) {
-          emit(const AuthenticationError('Internet connection failure'));
+          emit(const AuthenticationError(code: 503, 'Internet connection failure'));
         }
       },
       (r) => emit(SignUpSuccess(r))
