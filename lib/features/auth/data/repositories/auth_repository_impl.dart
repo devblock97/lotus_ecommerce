@@ -75,7 +75,7 @@ class AuthRepositoryImpl implements AuthRepository {
     if (isConnected) {
       try {
         final response = await http.post(
-          Uri.parse('${ApiConfig.URL}${ApiConfig.SIGN_UP}'),
+          Uri.parse('${ApiConfig.URL}${ApiConfig.CUSTOMERS}'),
           headers: ApiConfig.HEADER,
           body: jsonEncode({
             "first_name": body.firstName,

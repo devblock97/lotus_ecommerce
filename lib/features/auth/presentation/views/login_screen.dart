@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       create: (_) => authBloc,
       child: BlocListener<AuthBloc, AuthState>(
         listener: (_, state) {
-          if (state is AuthenticationSuccess) {
+          if (state is AuthenticationSuccess || state is Authenticated) {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const GroceryApp()),
                   (route) => false,
@@ -69,6 +69,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 animationController = controller;
               }
             );
+          }
+          if (state is AuthenticationError) {
+              Navigator.pop(context);
+              showTopSnackBar(
+                  Overlay.of(context),
+                  CustomSnackBar.error(message: state.error),
+                onAnimationControllerInit: (controller) {
+                    animationController = controller;
+                }
+              );
           }
         },
         child: Scaffold(

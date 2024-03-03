@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/features/cart/data/datasource/datasource.dart';
 import 'package:ecommerce_app/screens/category_detail_screen.dart';
 import 'package:ecommerce_app/features/search/presentation/filter_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
@@ -44,28 +43,6 @@ class _ExploreScreenState extends State<ExploreScreen>
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const FilterScreen())),
                   child: SvgPicture.asset('assets/icons/filter.svg'))),
-          GridView.builder(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: categories.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 0.8),
-              itemBuilder: (_, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => CategoryDetail(
-                                  categoryName: categories[index].title,
-                                  productLists: null,
-                                )));
-                  },
-                  child: CategoryCard(
-                    category: categories[index],
-                  ),
-                );
-              })
         ],
       ),
     );

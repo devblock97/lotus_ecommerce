@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
+import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
@@ -66,10 +67,12 @@ class EcommerceApp extends StatefulWidget {
 class _EcommerceAppState extends State<EcommerceApp> {
 
   late bool userLogged = false;
+  final authBloc = sl<AuthBloc>();
 
   @override
   void initState() {
     super.initState();
+    authBloc.add(CheckSignedIn());
   }
 
   @override
@@ -112,7 +115,29 @@ class _EcommerceAppState extends State<EcommerceApp> {
               debugShowCheckedModeBanner: false,
               theme: EcommerceTheme.buildLightTheme(context),
               darkTheme: EcommerceTheme.buildDarkTheme(context),
-              home: userLogged ? const GroceryApp() : const LoginScreen(),
+              // home: userLogged ? const GroceryApp() : const LoginScreen(),
+              home: BlocProvider(
+                create: (_) => authBloc,
+                child: BlocConsumer<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    print('bloc consumer listener: ${state}');
+                    if (state is Authenticated) {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (_)
+                          => const GroceryApp()), (route) => false);
+                    } else {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (_)
+                          => const LoginScreen()), (route) => false);
+                    }
+                  },
+                  builder: (context, state) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator(),),
+                    );
+                  },
+                ),
+              ),
           );
         },
         selector: (context, theme) => theme.themeMode
