@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class ApiConfig {
-  static String IP_ADDRESS = '192.168.110.46';
+  static String IP_ADDRESS = '192.168.110.47';
   static String MOBILE_URL = 'https://$IP_ADDRESS/senhong/wp-json/wc/v3';
   static String WEB_URL = 'https://localhost/senhong/wp-json/wc/v3';
   static String URL = kIsWeb ? WEB_URL : MOBILE_URL;
@@ -13,7 +13,7 @@ class ApiConfig {
 
   static String PRODUCTS = '/products';
   static String ORDERS = '/orders';
-  static String SIGN_UP = '/customers';
+  static String CUSTOMERS = '/customers';
   static String AUTH = 'https://$IP_ADDRESS/senhong/wp-json/jwt-auth/v1/token';
 
   static Map<String, String> HEADER = {

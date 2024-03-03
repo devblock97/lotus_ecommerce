@@ -12,6 +12,15 @@ class AuthenticationInitialize extends AuthState {
   const AuthenticationInitialize();
 }
 
+class Authenticated extends AuthState {
+  final AuthResponseModel authResponseModel;
+  const Authenticated(this.authResponseModel);
+}
+
+class UnAuthenticated extends AuthState {
+  const UnAuthenticated();
+}
+
 class AuthenticationSuccess extends AuthState {
   final AuthResponseModel authResponseModel;
   const AuthenticationSuccess(this.authResponseModel);
