@@ -4,16 +4,17 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart';
+import 'package:ecommerce_app/localizations/app_localizations.dart';
 import 'package:ecommerce_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
@@ -115,7 +116,16 @@ class _EcommerceAppState extends State<EcommerceApp> {
               debugShowCheckedModeBanner: false,
               theme: EcommerceTheme.buildLightTheme(context),
               darkTheme: EcommerceTheme.buildDarkTheme(context),
-              // home: userLogged ? const GroceryApp() : const LoginScreen(),
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate
+              ],
+              supportedLocales: const [
+                Locale('vn', 'VN'),
+                Locale('en', 'US')
+              ],
               home: BlocProvider(
                 create: (_) => authBloc,
                 child: BlocConsumer<AuthBloc, AuthState>(
