@@ -8,7 +8,7 @@ import '../models/sign_in_model.dart';
 
 abstract class AuthLocalDataSource {
   Future<AuthResponseModel>? getUserInfo() => throw UnimplementedError('Stub!');
-  Future<void>? cacheUserInfo(AuthResponseModel userInfo) => throw UnimplementedError('Stub!');
+  Future<bool>? cacheUserInfo(AuthResponseModel? userInfo) => throw UnimplementedError('Stub!');
 }
 
 const CACHED_USER_INFO = 'CACHED_USER_INFO';
@@ -21,8 +21,15 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   AuthLocalDataSourceImpl({required this.sharedPreferences});
 
   @override
-  Future<void>? cacheUserInfo(AuthResponseModel userInfo) {
-    return sharedPreferences.setString(CACHED_USER_INFO, jsonEncode(userInfo.toJson()));
+  Future<bool>? cacheUserInfo(AuthResponseModel? userInfo) async {
+    print('user info: $userInfo');
+    if (userInfo != null) {
+      await sharedPreferences.setString(CACHED_USER_INFO, jsonEncode(userInfo.toJson()));
+      return true;
+    }
+    await sharedPreferences.remove(CACHED_USER_INFO);
+    print('remove done');
+    return false;
   }
 
   @override

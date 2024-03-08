@@ -7,6 +7,7 @@ import 'package:ecommerce_app/core/usecase/usecase.dart';
 import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
+import 'package:ecommerce_app/features/auth/domain/usecases/post_sign_out.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,12 +23,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   final PostSignIn? postSignIn;
   final PostSignUp? postSignUp;
+  final PostSignOut? postSignOut;
   final GetLastUserInfo? getLastUserInfo;
 
-  AuthBloc(this.postSignIn, this.postSignUp, this.getLastUserInfo) : super(const AuthenticationInitialize())  {
+  AuthBloc(
+      this.postSignIn,
+      this.postSignUp,
+      this.getLastUserInfo,
+      this.postSignOut) : super(const AuthenticationInitialize())  {
     on<CheckSignedIn>(_checkSignedIn);
     on<SignInRequest>(_onSignInRequest);
     on<SignUpRequest>(_onSignUpRequest);
+    on<SignOutRequest>(_onSignOutRequest);
   }
 
   void _checkSignedIn(CheckSignedIn event, Emitter<AuthState> emit) async {
@@ -75,6 +82,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       },
       (r) => emit(SignUpSuccess(r))
+    );
+  }
+
+  void _onSignOutRequest(SignOutRequest event, Emitter<AuthState> emit) async {
+    emit(const AuthenticationLoading());
+    final response = await postSignOut!(NoParams());
+    response.fold(
+            (l) => emit(const AuthenticationError('', code: 400)),
+            (r) => emit(const UnAuthenticated())
     );
   }
 
