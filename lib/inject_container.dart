@@ -5,6 +5,7 @@ import 'package:ecommerce_app/features/auth/data/repositories/auth_repository_im
 import 'package:ecommerce_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:ecommerce_app/features/auth/domain/usecases/get_last_auth.dart';
 import 'package:ecommerce_app/features/auth/domain/usecases/post_sign_in.dart';
+import 'package:ecommerce_app/features/auth/domain/usecases/post_sign_out.dart';
 import 'package:ecommerce_app/features/auth/domain/usecases/post_sign_up.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/checkout/data/datasources/order_remote_datasource.dart';
@@ -37,7 +38,7 @@ Future<void> init() async {
   /// Main home screen
   sl.registerFactory<HomeBloc>(() => HomeBloc(sl()));
   /// Auth
-  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl()));
+  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
   /// Check Out
   sl.registerFactory<ShipmentBloc>(() => ShipmentBloc(getLocalCustomer: sl(), getRemoteCustomer: sl()));
   sl.registerFactory<OrderBloc>(() => OrderBloc(createOrder: sl()));
@@ -48,6 +49,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => PostSignIn(authRepository: sl()));
   /// Sign Up
   sl.registerLazySingleton(() => PostSignUp(sl()));
+  /// Sign Out
+  sl.registerLazySingleton(() => PostSignOut(authRepository: sl()));
   /// Get last user info (used to sign in again with enter form)
   sl.registerLazySingleton(() => GetLastUserInfo(sl()));
   sl.registerLazySingleton(() => CreateOrder(orderRepository: sl()));

@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:ecommerce_app/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
 import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/theme/theme.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../features/auth/data/models/sign_in_model.dart';
 import '../inject_container.dart';
@@ -165,12 +169,33 @@ class _AccountScreenState extends State<AccountScreen> {
               const Gap(10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: EcommerceButton(
-                  title: 'Đăng xuất',
-                  onTap: () async {
-                    SharedPreferences pref = await SharedPreferences.getInstance();
-                    pref.remove(CACHED_USER_INFO);
-                  },
+                child: BlocProvider(
+                  create: (_) => sl<AuthBloc>(),
+                  child: BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthenticationLoading) {
+                        showDialog(context: context, builder: (_) {
+                          return const Center(child: CircularProgressIndicator(),);
+                        });
+                      }
+                      if (state is UnAuthenticated) {
+                        Navigator.pop(context);
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.success(message: 'Sign out successful!')
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return EcommerceButton(
+                        title: 'Đăng xuất',
+                        onTap: () {
+                          print('on tap logout');
+                          context.read<AuthBloc>().add(SignOutRequest());
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
@@ -65,8 +66,20 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> signOut() {
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> signOut() async {
+    try {
+      final user = await localDataSource.getUserInfo();
+      if (user != null) {
+        final isUnAuthenticated = await localDataSource.cacheUserInfo(null);
+        if (isUnAuthenticated!) {
+          return Left(CacheFailure('Logout Failure'));
+        }
+        return Right(isUnAuthenticated);
+      }
+    } on CacheException {
+      return Left(CacheFailure('Logout Failure'));
+    }
+    throw Left(CacheFailure('Logout Failure'));
   }
 
   @override
