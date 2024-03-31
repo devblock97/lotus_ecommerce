@@ -3,13 +3,12 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
-import 'package:ecommerce_app/core/models/customer_model.dart';
-import 'package:ecommerce_app/core/usecase/usecase.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
+import 'package:ecommerce_app/core/data/models/customer_model.dart';
+import 'package:ecommerce_app/core/domain/usecase/usecase.dart';
 import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../auth/data/models/sign_in_model.dart';
 import '../../../domain/usecases/use_case.dart';
 
 
@@ -29,7 +28,7 @@ class ShipmentBloc extends Bloc<CheckOutEvent, ShippingState> {
 
   void _getCustomerInfoRequest(GetCustomerInfoEvent event, Emitter<ShippingState> emit) async {
     final cachedCustomer = await getLocalCustomer(NoParams());
-    if (cachedCustomer != null) {
+    if (cachedCustomer.isRight()) {
       cachedCustomer.fold(
           (error) {
             if (error is CacheFailure) {

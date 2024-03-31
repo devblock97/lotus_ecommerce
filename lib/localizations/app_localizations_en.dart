@@ -6,4 +6,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signIn => 'Sign in';
+
+  @override
+  String get signUp => 'Sign up';
+
+  @override
+  String get enterEmailPassword => 'Enter email and password';
 }

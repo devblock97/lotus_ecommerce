@@ -1,4 +1,5 @@
-import '../../features/auth/data/models/user_model.dart';
+import 'billing.dart';
+import 'shipping.dart';
 
 class CustomerModel {
   final int id;

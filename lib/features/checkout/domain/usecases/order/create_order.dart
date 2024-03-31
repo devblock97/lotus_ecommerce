@@ -1,6 +1,6 @@
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
-import 'package:ecommerce_app/core/usecase/usecase.dart';
+import 'package:ecommerce_app/core/domain/usecase/usecase.dart';
 import 'package:ecommerce_app/features/checkout/data/models/create_order.dart';
 import 'package:ecommerce_app/features/checkout/data/models/order_model.dart';
 import 'package:ecommerce_app/features/checkout/domain/repositories/order_repository.dart';

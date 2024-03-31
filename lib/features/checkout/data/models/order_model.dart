@@ -1,7 +1,5 @@
-
-
-import '../../../../core/models/billing.dart';
-import '../../../../core/models/shipping.dart';
+import 'package:ecommerce_app/core/data/models/billing.dart';
+import 'package:ecommerce_app/core/data/models/shipping.dart';
 
 class OrderModel {
   int? id;

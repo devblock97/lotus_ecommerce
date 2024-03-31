@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
-import 'package:ecommerce_app/core/models/customer_model.dart';
+import 'package:ecommerce_app/core/data/models/customer_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class CheckOutRemoteDataSource {

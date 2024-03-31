@@ -18,15 +18,11 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   @override
   Future<OrderModel> createOrder(Order order) async {
      try {
-       print('order to json: ${order.toJson()}');
-       print('order endpoint: ${ApiConfig.URL}${ApiConfig.ORDERS}');
        final response = await client.post(
          Uri.parse('${ApiConfig.URL}${ApiConfig.ORDERS}'),
          headers: ApiConfig.HEADER,
          body: jsonEncode(order.toJson())
        );
-       print('checking status code: ${response.statusCode}');
-       print('checking order response: ${response.body}');
        return OrderModel.fromJson(jsonDecode(response.body));
      } on ServerException {
        throw ServerException();

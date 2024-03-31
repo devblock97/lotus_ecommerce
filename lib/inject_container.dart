@@ -1,4 +1,9 @@
 
+import 'package:ecommerce_app/core/data/datasources/customer_remote_data_source.dart';
+import 'package:ecommerce_app/core/data/repositories/customer_repository_impl.dart';
+import 'package:ecommerce_app/core/domain/repositories/customer_repository.dart';
+import 'package:ecommerce_app/core/domain/usecase/customer/get_customer.dart';
+import 'package:ecommerce_app/features/account/presentation/bloc/customer_bloc.dart';
 import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:ecommerce_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:ecommerce_app/features/auth/data/repositories/auth_repository_impl.dart';
@@ -42,6 +47,8 @@ Future<void> init() async {
   /// Check Out
   sl.registerFactory<ShipmentBloc>(() => ShipmentBloc(getLocalCustomer: sl(), getRemoteCustomer: sl()));
   sl.registerFactory<OrderBloc>(() => OrderBloc(createOrder: sl()));
+  ///
+  sl.registerFactory(() => CustomerBloc(getCustomer: sl(), getLastUserInfo: sl()));
 
   // Use Case
   sl.registerLazySingleton(() => GetAllProductUseCase(sl()));
@@ -55,6 +62,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetLastUserInfo(sl()));
   sl.registerLazySingleton(() => CreateOrder(orderRepository: sl()));
 
+  sl.registerLazySingleton(() => GetCustomer(customerRepository: sl()));
+
   /// Get customer info for CheckOut
   sl.registerLazySingleton(() => GetRemoteCustomer(checkoutRepository: sl()));
   sl.registerLazySingleton(() => GetLocalCustomer(checkoutRepository: sl()));
@@ -64,7 +73,7 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl(), sl()));
   sl.registerLazySingleton<ShippingAddressRepository>(() => ShippingAddressRepositoryImpl(networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(networkInfo: sl(), remoteDataSource: sl()));
-
+  sl.registerLazySingleton<CustomerRepository>(() => CustomerRepositoryImpl(networkInfo: sl(), remoteDataSource: sl()));
 
   // Data Source
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(client: sl()));
@@ -72,6 +81,7 @@ Future<void> init() async {
   sl.registerLazySingleton<CheckOutRemoteDataSource>(() => CheckoutRemoteDataSourceImpl(client: sl()));
   sl.registerLazySingleton<CheckOutLocalDataSource>(() => CheckOutLocalDataSourceImpl(sharedPreferences: sl()));
   sl.registerLazySingleton<OrderRemoteDataSource>(() => OrderRemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<CustomerRemoteDataSource>(() => CustomerRemoteDataSourceImpl(client: sl()));
 
   /**
    * ! Core

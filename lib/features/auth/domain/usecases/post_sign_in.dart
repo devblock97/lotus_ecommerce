@@ -1,6 +1,7 @@
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
-import 'package:ecommerce_app/core/usecase/usecase.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
+import 'package:ecommerce_app/core/domain/usecase/usecase.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:equatable/equatable.dart';

@@ -2,10 +2,8 @@
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/message_systems.dart';
-import 'package:ecommerce_app/core/entities/customer_entity.dart';
-import 'package:ecommerce_app/core/models/customer_model.dart';
+import 'package:ecommerce_app/core/data/models/customer_model.dart';
 import 'package:ecommerce_app/core/network/network_info.dart';
-import 'package:ecommerce_app/features/auth/domain/entities/user_entity.dart';
 import 'package:ecommerce_app/features/checkout/data/datasources/shipment_remote_datasource.dart';
 import 'package:ecommerce_app/features/checkout/domain/repositories/shipment_repository.dart';
 import 'package:fpdart/src/either.dart';
