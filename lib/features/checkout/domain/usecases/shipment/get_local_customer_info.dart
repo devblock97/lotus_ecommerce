@@ -1,7 +1,7 @@
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
-import 'package:ecommerce_app/core/models/customer_model.dart';
-import 'package:ecommerce_app/core/usecase/usecase.dart';
+import 'package:ecommerce_app/core/data/models/customer_model.dart';
+import 'package:ecommerce_app/core/domain/usecase/usecase.dart';
 import 'package:ecommerce_app/features/checkout/domain/repositories/shipment_repository.dart';
 import 'package:fpdart/src/either.dart';
 

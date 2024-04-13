@@ -1,15 +1,11 @@
-
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
-import 'package:ecommerce_app/core/usecase/usecase.dart';
-import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
+import 'package:ecommerce_app/core/domain/usecase/usecase.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
 import 'package:ecommerce_app/features/auth/domain/usecases/post_sign_out.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/sign_in_model.dart';
 import '../../domain/usecases/get_last_auth.dart';
@@ -64,7 +60,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(const AuthenticationInvalid(error: 'Tên đăng nhập hoặc mật khẩu không hợp lệ'));
         }
       },
-      (r) => emit(AuthenticationSuccess(r))
+      (r) {
+        emit(AuthenticationSuccess(r));
+        emit(Authenticated(r));
+      }
     );
   }
 

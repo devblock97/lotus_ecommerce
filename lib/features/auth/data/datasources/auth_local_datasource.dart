@@ -2,13 +2,13 @@
 import 'dart:convert';
 
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../models/sign_in_model.dart';
 
 abstract class AuthLocalDataSource {
   Future<AuthResponseModel>? getUserInfo() => throw UnimplementedError('Stub!');
-  Future<bool>? cacheUserInfo(AuthResponseModel? userInfo) => throw UnimplementedError('Stub!');
+  Future<void> cacheUserInfo(AuthResponseModel userInfo) => throw UnimplementedError('Stub!');
+  Future<bool> clearCacheUser(String key) => throw UnimplementedError('Stub!');
 }
 
 const CACHED_USER_INFO = 'CACHED_USER_INFO';
@@ -21,15 +21,13 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   AuthLocalDataSourceImpl({required this.sharedPreferences});
 
   @override
-  Future<bool>? cacheUserInfo(AuthResponseModel? userInfo) async {
-    print('user info: $userInfo');
-    if (userInfo != null) {
+  Future<void> cacheUserInfo(AuthResponseModel userInfo) async {
       await sharedPreferences.setString(CACHED_USER_INFO, jsonEncode(userInfo.toJson()));
-      return true;
-    }
-    await sharedPreferences.remove(CACHED_USER_INFO);
-    print('remove done');
-    return false;
+  }
+
+  @override
+  Future<bool> clearCacheUser(String key) async {
+    return await sharedPreferences.remove(CACHED_USER_INFO);
   }
 
   @override

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/screens/account_screen.dart';
+import 'package:ecommerce_app/features/account/presentation/views/account_screen.dart';
 import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
 import 'package:ecommerce_app/screens/explore_screen.dart';
 import 'package:ecommerce_app/features/favorite/presentation/favorite_screen.dart';

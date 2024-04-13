@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class ApiConfig {
-  static String IP_ADDRESS = '192.168.110.47';
+  static String IP_ADDRESS = '192.168.110.46';
   static String MOBILE_URL = 'https://$IP_ADDRESS/senhong/wp-json/wc/v3';
   static String WEB_URL = 'https://localhost/senhong/wp-json/wc/v3';
   static String URL = kIsWeb ? WEB_URL : MOBILE_URL;

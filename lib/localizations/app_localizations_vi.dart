@@ -6,4 +6,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get signIn => 'Đăng nhập';
+
+  @override
+  String get signUp => 'Đăng ký';
+
+  @override
+  String get enterEmailPassword => 'Nhập email và mật khẩu';
 }

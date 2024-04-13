@@ -1,11 +1,10 @@
 
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:ecommerce_app/core/network/network_info.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
@@ -68,18 +67,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, bool>> signOut() async {
     try {
-      final user = await localDataSource.getUserInfo();
-      if (user != null) {
-        final isUnAuthenticated = await localDataSource.cacheUserInfo(null);
-        if (isUnAuthenticated!) {
-          return Left(CacheFailure('Logout Failure'));
-        }
-        return Right(isUnAuthenticated);
+      final isClearedUser = await localDataSource.clearCacheUser(CACHED_USER_INFO);
+      if (!isClearedUser) {
+        return Left(CacheException());
       }
+      return Right(isClearedUser);
     } on CacheException {
       return Left(CacheFailure('Logout Failure'));
     }
-    throw Left(CacheFailure('Logout Failure'));
   }
 
   @override
@@ -97,9 +92,7 @@ class AuthRepositoryImpl implements AuthRepository {
             "password": body.password
           })
         );
-        print('sign up status code: ${response.statusCode}');
         if (response.statusCode == 201) {
-          print('sign up in 201: ${response.body}');
           final customer = jsonDecode(response.body) as Map<String, dynamic>;
           return Right(UserModel.fromJson(customer));
         } else {

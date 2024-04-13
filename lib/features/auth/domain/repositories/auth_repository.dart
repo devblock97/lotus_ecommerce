@@ -1,5 +1,6 @@
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
 import 'package:fpdart/fpdart.dart';
 

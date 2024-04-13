@@ -25,7 +25,7 @@ enum PaymentMethod {
 }
 
 class CheckOutScreen extends StatefulWidget {
-  CheckOutScreen({super.key, required this.items});
+  const CheckOutScreen({super.key, required this.items});
 
   final List<CartItemModel> items;
 

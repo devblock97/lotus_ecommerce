@@ -126,28 +126,28 @@ class _EcommerceAppState extends State<EcommerceApp> {
                 Locale('vn', 'VN'),
                 Locale('en', 'US')
               ],
-              home: BlocProvider(
-                create: (_) => authBloc,
-                child: BlocConsumer<AuthBloc, AuthState>(
-                  listener: (context, state) {
-                    print('bloc consumer listener: ${state}');
-                    if (state is Authenticated) {
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (_)
-                          => const GroceryApp()), (route) => false);
-                    } else {
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (_)
-                          => const LoginScreen()), (route) => false);
-                    }
-                  },
-                  builder: (context, state) {
-                    return const Scaffold(
-                      body: Center(child: CircularProgressIndicator(),),
-                    );
-                  },
-                ),
-              ),
+              // home: BlocProvider(
+              //   create: (_) => authBloc,
+              //   child: BlocConsumer<AuthBloc, AuthState>(
+              //     listener: (context, state) {
+              //       if (state is Authenticated) {
+              //         Navigator.pushAndRemoveUntil(context,
+              //             MaterialPageRoute(builder: (_)
+              //             => const GroceryApp()), (route) => false);
+              //       } else {
+              //         Navigator.pushAndRemoveUntil(context,
+              //             MaterialPageRoute(builder: (_)
+              //             => const LoginScreen()), (route) => false);
+              //       }
+              //     },
+              //     builder: (context, state) {
+              //       return const Scaffold(
+              //         body: Center(child: CircularProgressIndicator(),),
+              //       );
+              //     },
+              //   ),
+              // ),
+            home: const GroceryApp()
           );
         },
         selector: (context, theme) => theme.themeMode

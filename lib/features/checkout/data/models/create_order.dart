@@ -1,6 +1,7 @@
+import 'package:ecommerce_app/core/data/models/billing.dart';
+import 'package:ecommerce_app/core/data/models/shipping.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../auth/data/models/user_model.dart';
 
 class Order extends Equatable {
   final String? paymentMethod;

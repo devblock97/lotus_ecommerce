@@ -1,3 +1,5 @@
 {
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "enterEmailPassword": "Enter email and password"
 }
