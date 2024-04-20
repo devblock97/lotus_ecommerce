@@ -16,7 +16,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
 
   @override
   Future<Either<Failure, CustomerModel>> getCustomer({required int id}) async {
-    final isConnected = await networkInfo.inConnected;
+    final isConnected = await networkInfo.isConnected;
     if (isConnected) {
       try {
         final response = await remoteDataSource.getCustomer(id: id);

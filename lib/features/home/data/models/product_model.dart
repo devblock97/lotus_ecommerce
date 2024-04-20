@@ -76,7 +76,7 @@ class ProductModel {
     data['total_sales'] = totalSales;
     data['stock_quantity'] = stockQuantity;
     data['rating_count'] = ratingCount;
-    data['images'] = images;
+    data['images'] = images?.map((img) => img.toJson()).toList();
     return data;
   }
 }
@@ -91,5 +91,12 @@ class ImageModel {
     var image = json['src'] as String;
     image = image.replaceAll('localhost', ApiConfig.IP_ADDRESS);
     return ImageModel(json['id'], image);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['src'] = src!.replaceAll('localhost', ApiConfig.IP_ADDRESS);
+    return data;
   }
 }

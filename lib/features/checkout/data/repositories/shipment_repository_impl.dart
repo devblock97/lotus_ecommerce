@@ -24,7 +24,7 @@ class ShippingAddressRepositoryImpl implements ShippingAddressRepository {
 
   @override
   Future<Either<Failure, CustomerModel>> getRemoteCustomerInfo({required int userId}) async {
-    var isConnected = await networkInfo.inConnected;
+    var isConnected = await networkInfo.isConnected;
     if (isConnected) {
       try {
         final customer = await remoteDataSource.getRemoteCustomerInfo(userId: userId);

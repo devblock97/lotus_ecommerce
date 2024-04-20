@@ -1,13 +1,19 @@
 
+import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/domain/usecase/usecase.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
-import 'package:ecommerce_app/features/home/data/repositories/product_repository_impl.dart';
+import 'package:ecommerce_app/features/home/domain/repositories/product_repository.dart';
+import 'package:fpdart/src/either.dart';
 
-class GetAllProductUseCase {
-  final ProductRepositoryImpl _productRepositoryImpl;
+class GetAllProductUseCase  extends UseCase<List<ProductModel>, NoParams>{
 
-  const GetAllProductUseCase(this._productRepositoryImpl);
+  GetAllProductUseCase(this._repository);
+  final ProductRepository _repository;
 
-  Future<List<ProductModel>> call() async {
-    return await _productRepositoryImpl.getAllProducts();
+  @override
+  Future<Either<Failure, List<ProductModel>>> call(NoParams params) async {
+    return _repository.getAllProducts();
   }
+
+
 }

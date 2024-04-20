@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
-
+import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
@@ -28,6 +29,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return AuthResponseModel.fromJson(jsonDecode(response.body));
     } on ServerException catch (e) {
       throw ServerException();
+    } on TimeoutException catch (e) {
+      throw ServerFailure('Request timeout!!!');
     }
   }
 

@@ -1,18 +1,19 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart' as product;
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/home/data/repositories/product_repository_impl.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_event.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_state.dart';
+import 'package:ecommerce_app/features/home/presentation/widgets/product_card.dart' as home;
+import 'package:ecommerce_app/features/home/presentation/widgets/product_skelton.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
-import 'package:ecommerce_app/features/home/presentation/widgets/product_card.dart' as home;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:ecommerce_app/features/home/data/models/product_model.dart' as product;
 
 import '../../../../widgets/my_search_bar.dart';
 import '../widgets/product_card.dart';
@@ -27,11 +28,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
 
-  late ProductRepositoryImpl productRepositoryImpl;
+  late HomeBloc homeBloc;
   @override
   void initState() {
     super.initState();
-    productRepositoryImpl = ProductRepositoryImpl();
+    homeBloc = sl<HomeBloc>()..add(const GetProductRequest());
   }
 
   @override
@@ -43,64 +44,128 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          const SliverToBoxAdapter(
-            child: SizedBox(
-              height: 50,
+    return BlocProvider(
+      create: (_) => homeBloc,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: CustomScrollView(
+          slivers: [
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 50,
+              ),
             ),
-          ),
 
-          /// Ecommerce App Bar [_SliverAppBar]
-          const _SliverAppBar(),
+            /// Ecommerce App Bar [_SliverAppBar]
+            const _SliverAppBar(),
 
-          const SliverToBoxAdapter(
-            child: EcommerceSearchBar(),
-          ),
-
-          const SliverToBoxAdapter(
-            child: _CarouselHome(),
-          ),
-
-          /// Ecommerce [Recommended for you] this section include title [Best Selling]
-          /// and product lists [Best Selling]
-          const SliverToBoxAdapter(
-            child: _CategorySingleListView(
-                categoryName: 'Recommended for you', productList: null),
-          ),
-
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(18.0),
-              child: _TitleSection(title: 'Best Selling'),
+            const SliverToBoxAdapter(
+              child: EcommerceSearchBar(),
             ),
-          ),
-          _SliverCategoryGrid(productRepositoryImpl: productRepositoryImpl,),
 
-          /// Ecommerce [_SliverCategoryGrid]; this section include title [Exclusive Offer]
-          /// and product lists [Exclusive Offer]
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 6),
-              child: _TitleSection(title: 'Exclusive Offer'),
+            const SliverToBoxAdapter(
+              child: _CarouselHome(),
             ),
-          ),
-          const SliverToBoxAdapter(child: ProductsList(),),
 
-          /// Ecommerce [All Products]; this section include title [All Products]
-          /// and product lists [All Products]
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 6),
-              child: _TitleSection(title: 'All Products'),
+            /// Ecommerce [Recommended for you] this section include title [Best Selling]
+            /// and product lists [Best Selling]
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+                child: _TitleSection(title: 'Phù hợp cho bạn'),
+              ),
             ),
-          ),
-          const SliverToBoxAdapter(child: ProductsList()),
-        ],
+            BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state is ProductError) {
+                  return SliverToBoxAdapter(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          homeBloc.add(const GetProductRequest());
+                        },
+                        child: const Column(
+                          children: [
+                            Icon(Icons.refresh),
+                            Text('Tải lại')
+                          ],
+                        )
+                    ),
+                  );
+                }
+                if (state is ProductSuccess) {
+                  return SliverToBoxAdapter(
+                    child: _CategorySingleListView(
+                      productList: state.productList,),
+                  );
+                }
+                return const SliverToBoxAdapter(child: ProductSkelton());
+              },
+            ),
+
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+                child: _TitleSection(title: 'Sản phẩm bán chạy'),
+              ),
+            ),
+            BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state is ProductError) {
+                  return SliverToBoxAdapter(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          homeBloc.add(const GetProductRequest());
+                        },
+                        child: const Column(
+                          children: [
+                            Icon(Icons.refresh),
+                            Text('Tải lại')
+                          ],
+                        )
+                    ),
+                  );
+                }
+                if (state is ProductSuccess) {
+                  return SliverGrid(
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200.0,
+                      mainAxisSpacing: 2.0,
+                      childAspectRatio: 0.6,
+                    ),
+                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                      return home.ProductCard(product: state.productList[index]);
+                    },
+                      childCount: state.productList.length,
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter(child: ProductSkelton());
+              },
+            ),
+
+            /// Ecommerce [_SliverCategoryGrid]; this section include title [Exclusive Offer]
+            /// and product lists [Exclusive Offer]
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+                child: _TitleSection(title: 'Siêu ưu đãi'),
+              ),
+            ),
+            const SliverToBoxAdapter(child: ProductsList(),),
+
+            /// Ecommerce [All Products]; this section include title [All Products]
+            /// and product lists [All Products]
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
+                child: _TitleSection(title: 'Tất cả sản phẩm'),
+              ),
+            ),
+            const SliverToBoxAdapter(child: ProductsList()),
+          ],
+        ),
+        // body: _AllProducts(),
       ),
-      // body: _AllProducts(),
     );
   }
 
@@ -116,11 +181,11 @@ class ProductsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => HomeBloc(sl())..add(const GetProduct()),
+      create: (_) => HomeBloc(sl())..add(const GetProductRequest()),
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is ProductInitial || state is ProductLoading) {
-            return const Center(child: CircularProgressIndicator(),);
+           return const ProductSkelton();
           }
           if (state is ProductSuccess) {
             return GridView.builder(
@@ -128,11 +193,11 @@ class ProductsList extends StatelessWidget {
               shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.55
+                  childAspectRatio: 0.6
                 ),
                 itemCount: state.productList.length,
                 itemBuilder: (_, index) {
-                  return ProductCard(product: state.productList[index]);
+                  return  ProductCard(product: state.productList[index]);
                 }
             );
           }
@@ -229,110 +294,23 @@ class _SliverAppBar extends StatelessWidget {
   }
 }
 
-class _CategorySingleListView extends StatefulWidget {
+class _CategorySingleListView extends StatelessWidget {
   const _CategorySingleListView({
-    this.categoryName,
     this.productList
   });
 
-  final String? categoryName;
   final List<ProductModel>? productList;
 
   @override
-  State<_CategorySingleListView> createState() => __CategoryListViewState();
-}
-
-class __CategoryListViewState extends State<_CategorySingleListView> {
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (widget.categoryName != null)
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: _TitleSection(title: widget.categoryName!),
-          ),
-        BlocProvider(
-          create: (_) => HomeBloc(sl())..add(const GetProduct()),
-          child: BlocBuilder<HomeBloc, HomeState>(
-            builder: (_, state) {
-              if (state is ProductInitial || state is ProductLoading) {
-                return const Center(child: CircularProgressIndicator(),);
-              }
-              if (state is ProductSuccess) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                      children: state.productList.map((e) {
-                        return SizedBox(
-                            height: 320, width: 200, child: ProductCard(product: e));
-                      }).toList()
-                  )
-                );
-              }
-              return const SizedBox();
-            },
-          ),
+    return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+            children: productList!.map((e) {
+              return SizedBox(
+                  height: 320, width: 200, child: ProductCard(product: e));
+            }).toList()
         )
-      ],
-    );
-  }
-}
-
-class _SliverCategoryGrid extends StatelessWidget {
-  const _SliverCategoryGrid({
-    required this.productRepositoryImpl,
-  });
-
-  final ProductRepositoryImpl productRepositoryImpl;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<product.ProductModel>>(
-      future: productRepositoryImpl.getAllProducts(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            final productLists = snapshot.data!.map((e) {
-              return product.ProductModel(
-                id: e.id,
-                name: e.name,
-                slug: e.slug,
-                permalink: e.permalink,
-                description: e.description,
-                shortDescription: e.shortDescription,
-                sku: e.sku,
-                price: e.price,
-                regularPrice: e.regularPrice,
-                salePrice: e.salePrice,
-                onSale: e.onSale,
-                totalSales: e.totalSales,
-                stockQuantity: e.stockQuantity,
-                ratingCount: e.ratingCount,
-                images: e.images
-              );
-            }).toList();
-            return SliverGrid(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200.0,
-                mainAxisSpacing: 2.0,
-                childAspectRatio: 0.55,
-              ),
-              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                  return home.ProductCard(product: productLists[index]);
-                },
-                childCount: productLists.length,
-              ),
-            );
-          } else {
-            return const SliverToBoxAdapter(child: Center(child: Text('Failed to loading data from server'),));
-          }
-
-        }
-        else {
-          return const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator(),));
-        }
-      },
     );
   }
 }

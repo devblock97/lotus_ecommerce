@@ -12,6 +12,7 @@ import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart';
 import 'package:ecommerce_app/localizations/app_localizations.dart';
 import 'package:ecommerce_app/theme/theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,6 +20,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +29,6 @@ void main() async {
 
   /// Local DB with Hive
   await Hive.initFlutter();
-
-  final sharedPreferences = await SharedPreferences.getInstance();
-  final userCached = sharedPreferences.getString(CACHED_USER_INFO);
 
   /// Dependencies injection
   await init();
@@ -126,28 +125,27 @@ class _EcommerceAppState extends State<EcommerceApp> {
                 Locale('vn', 'VN'),
                 Locale('en', 'US')
               ],
-              // home: BlocProvider(
-              //   create: (_) => authBloc,
-              //   child: BlocConsumer<AuthBloc, AuthState>(
-              //     listener: (context, state) {
-              //       if (state is Authenticated) {
-              //         Navigator.pushAndRemoveUntil(context,
-              //             MaterialPageRoute(builder: (_)
-              //             => const GroceryApp()), (route) => false);
-              //       } else {
-              //         Navigator.pushAndRemoveUntil(context,
-              //             MaterialPageRoute(builder: (_)
-              //             => const LoginScreen()), (route) => false);
-              //       }
-              //     },
-              //     builder: (context, state) {
-              //       return const Scaffold(
-              //         body: Center(child: CircularProgressIndicator(),),
-              //       );
-              //     },
-              //   ),
-              // ),
-            home: const GroceryApp()
+              home: BlocProvider(
+                create: (_) => authBloc,
+                child: BlocConsumer<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    if (state is Authenticated) {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (_)
+                          => const GroceryApp()), (route) => false);
+                    } else {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (_)
+                          => const LoginScreen()), (route) => false);
+                    }
+                  },
+                  builder: (context, state) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator(),),
+                    );
+                  },
+                ),
+              ),
           );
         },
         selector: (context, theme) => theme.themeMode
