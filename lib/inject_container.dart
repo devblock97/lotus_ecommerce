@@ -21,7 +21,10 @@ import 'package:ecommerce_app/features/checkout/data/repositories/shipment_repos
 import 'package:ecommerce_app/features/checkout/domain/repositories/order_repository.dart';
 import 'package:ecommerce_app/features/checkout/domain/repositories/shipment_repository.dart';
 import 'package:ecommerce_app/features/checkout/presentation/bloc/order/order_bloc.dart';
+import 'package:ecommerce_app/features/home/data/datasources/home_local_datasource.dart';
+import 'package:ecommerce_app/features/home/data/datasources/home_remote_datasource.dart';
 import 'package:ecommerce_app/features/home/data/repositories/product_repository_impl.dart';
+import 'package:ecommerce_app/features/home/domain/repositories/product_repository.dart';
 import 'package:ecommerce_app/features/home/domain/usecases/get_all_product_use_case.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -69,7 +72,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetLocalCustomer(checkoutRepository: sl()));
 
   // Repository
-  sl.registerLazySingleton<ProductRepositoryImpl>(() => ProductRepositoryImpl());
+  sl.registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl(sl(), sl(), sl()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl(), sl()));
   sl.registerLazySingleton<ShippingAddressRepository>(() => ShippingAddressRepositoryImpl(networkInfo: sl(), remoteDataSource: sl(), localDataSource: sl()));
   sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(networkInfo: sl(), remoteDataSource: sl()));
@@ -82,6 +85,8 @@ Future<void> init() async {
   sl.registerLazySingleton<CheckOutLocalDataSource>(() => CheckOutLocalDataSourceImpl(sharedPreferences: sl()));
   sl.registerLazySingleton<OrderRemoteDataSource>(() => OrderRemoteDataSourceImpl(client: sl()));
   sl.registerLazySingleton<CustomerRemoteDataSource>(() => CustomerRemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<HomeLocalDatasource>(() => HomeLocalDataSourceImpl(sl()));
 
   /**
    * ! Core

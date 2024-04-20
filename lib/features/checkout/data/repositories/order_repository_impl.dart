@@ -17,7 +17,7 @@ class OrderRepositoryImpl implements OrderRepository {
 
   @override
   Future<Either<Failure, OrderModel>> createOrder(Order order) async {
-    final isConnected = await networkInfo.inConnected;
+    final isConnected = await networkInfo.isConnected;
     if (isConnected) {
       try {
         final response = await remoteDataSource.createOrder(order);

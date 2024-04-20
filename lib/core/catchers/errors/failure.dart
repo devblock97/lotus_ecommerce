@@ -48,3 +48,16 @@ class ConnectionFailure extends Failure {
   @override
   List<Object?> get props => [error];
 }
+
+class NetworkFailure extends Failure {
+
+  final String error;
+  NetworkFailure(this.error);
+
+  @override
+  String toString() => 'NetworkFailure [errorMessage: $error]';
+
+  @override
+  List<Object?> get props => [error];
+
+}

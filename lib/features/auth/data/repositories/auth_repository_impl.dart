@@ -31,7 +31,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, AuthResponseModel>> signIn(AuthModel body) async {
 
     sharedPreferences = await SharedPreferences.getInstance();
-    var isConnected = await networkInfo.inConnected;
+    var isConnected = await networkInfo.isConnected;
 
     if (isConnected) {
       try {
@@ -79,7 +79,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, UserModel>> signUp(SignUpModel body) async {
-    var isConnected = await networkInfo.inConnected;
+    var isConnected = await networkInfo.isConnected;
     if (isConnected) {
       try {
         final response = await http.post(
@@ -92,7 +92,7 @@ class AuthRepositoryImpl implements AuthRepository {
             "password": body.password
           })
         );
-        if (response.statusCode == 201) {
+        if (response.statusCode == 200) {
           final customer = jsonDecode(response.body) as Map<String, dynamic>;
           return Right(UserModel.fromJson(customer));
         } else {

@@ -25,18 +25,16 @@ class ProductCard extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(product: product)));
       },
       child: Container(
-        height: 150,
-        width: 100,
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             border: Border.all(color: secondaryText),
             borderRadius: BorderRadius.circular(18)),
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header (sale and favorite)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -58,15 +56,21 @@ class ProductCard extends StatelessWidget {
               ],
             ),
             const Gap(5),
+
+            // Product image
             Center(
               child: Image.network(
                 product.images![0].src!,
               ),
             ),
+
+            // Product name
             Text(
               product.name!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+
+            // Footer (price and add to cart)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
