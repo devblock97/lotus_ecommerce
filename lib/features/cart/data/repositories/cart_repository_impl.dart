@@ -1,10 +1,18 @@
+import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
+import 'package:ecommerce_app/features/cart/data/datasources/cart_local_data_source.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 
 class CartRepositoryImpl extends ChangeNotifier implements CartRepository {
   final List<CartItemModel> _cartLists = [];
+
+  CartRepositoryImpl(this.localDataSource);
+
+  final CartLocalDataSource localDataSource;
 
   @override
   void addToCart(ProductModel product, int quantity) {
@@ -76,5 +84,10 @@ class CartRepositoryImpl extends ChangeNotifier implements CartRepository {
     return _cartLists
         .firstWhere((cart) => cart.product.id == product.id)
         .quantity;
+  }
+
+  @override
+  Future<Either<Failure, void>> addProductToCart(CartItemModel cart) {
+    throw UnimplementedError();
   }
 }
