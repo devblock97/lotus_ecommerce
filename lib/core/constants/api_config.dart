@@ -1,15 +1,20 @@
 
 import 'dart:convert';
 
+import 'package:ecommerce_app/env/env.dart';
 import 'package:flutter/foundation.dart';
 
 class ApiConfig {
   static String IP_ADDRESS = '192.168.110.46';
   static String MOBILE_URL = 'https://$IP_ADDRESS/senhong/wp-json/wc/v3';
   static String WEB_URL = 'https://localhost/senhong/wp-json/wc/v3';
-  static String URL = kIsWeb ? WEB_URL : MOBILE_URL;
-  static String CONSUMER_KEY = 'ck_27711f499d97c090120b9dcef1e1f40af1778570';
-  static String CONSUMER_SECRECT = 'cs_f62d5e2ce67c8bc1be8cd46a915e36adcb5f1aa2';
+  // static String URL = kIsWeb ? WEB_URL : MOBILE_URL;
+  // static String CONSUMER_KEY = 'ck_27711f499d97c090120b9dcef1e1f40af1778570';
+  // static String CONSUMER_SECRECT = 'cs_f62d5e2ce67c8bc1be8cd46a915e36adcb5f1aa2';
+
+  static String URL = 'https://devblocks.tech/wp-json/wc/v3';
+  static String CONSUMER_KEY = Env.consumerKey;
+  static String CONSUMER_SECRECT = Env.consumerSecret;
 
   static String PRODUCTS = '/products';
   static String ORDERS = '/orders';
