@@ -6,6 +6,7 @@ import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:ecommerce_app/core/network/network_info.dart';
+import 'package:ecommerce_app/core/utils/secure_storage.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
@@ -31,6 +32,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, AuthResponseModel>> signIn(AuthModel body) async {
 
     sharedPreferences = await SharedPreferences.getInstance();
+    final secureStorage = SecureStorage();
     var isConnected = await networkInfo.isConnected;
 
     if (isConnected) {
@@ -40,6 +42,7 @@ class AuthRepositoryImpl implements AuthRepository {
         if (response.error is AuthResponseError) {
           return Left(InputInvalid(error: response.error?.message));
         }
+        await secureStorage.writeToken(response.success!.token);
         await localDataSource.cacheUserInfo(response);
         return Right(response);
       } on ServerException catch(err) {

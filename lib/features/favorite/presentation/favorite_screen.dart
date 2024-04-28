@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/app.dart';
+import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/screens/product_detail_screen.dart';
@@ -16,7 +17,7 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var favorite = context.watch<FavoriteRepositoryImpl>();
-    var cart = context.read<CartRepositoryImpl>();
+    // var cart = context.read<CartRepository>();
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +45,7 @@ class FavoriteScreen extends StatelessWidget {
             ? EcommerceButton(
                 title: 'Thêm tất cả sản phảm vào giỏ hàng',
                 onTap: () {
-                  cart.addAllProductFromFavorite(favorite.productLists);
+                  // cart.addAllProductFromFavorite(favorite.productLists);
                   favorite.clearAllFavoriteLists();
 
                   /// Enable the code below when interact with server

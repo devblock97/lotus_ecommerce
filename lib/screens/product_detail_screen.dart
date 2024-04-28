@@ -1,15 +1,20 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/models/notification.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
 import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
+import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -25,10 +30,10 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
-    var cart = context.read<CartRepositoryImpl>();
-    var cartWatch = context.watch<CartRepositoryImpl>();
-    var notify = context.watch<NotifyRepositoryImpl>();
-    var notifyRead = context.read<NotifyRepositoryImpl>();
+    // var cart = context.read<CartRepositoryImpl>();
+    // var cartWatch = context.watch<CartRepositoryImpl>();
+    // var notify = context.watch<NotifyRepositoryImpl>();
+    // var notifyRead = context.read<NotifyRepositoryImpl>();
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -39,56 +44,60 @@ class _DetailScreenState extends State<DetailScreen> {
           actions: [
             Stack(
               children: [
-                if (cartWatch.cartLists().isNotEmpty)
-                  Positioned(
-                      left: 27,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle
-                        ),
-                        child: Text('${cartWatch.cartLists().length}',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10)),
-                      )),
+                // if (cartWatch.cartLists().isNotEmpty)
+                //   Positioned(
+                //       left: 27,
+                //       child: Container(
+                //         padding: const EdgeInsets.all(4),
+                //         decoration: const BoxDecoration(
+                //           color: Colors.red,
+                //           shape: BoxShape.circle
+                //         ),
+                //         child: Text('${cartWatch.cartLists().length}',
+                //             style: const TextStyle(
+                //                 color: Colors.white,
+                //                 fontWeight: FontWeight.bold,
+                //                 fontSize: 10)),
+                //       )),
                 IconButton(
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const CartScreen()));
+                          MaterialPageRoute(builder: (_) =>
+                              BlocProvider(create: (_) =>
+                              sl<CartBloc>()..add(
+                                  const GetCartEvent()),
+                                  child: const CartScreen(),)));
                     },
                     icon: Icon(
                       Icons.shopping_cart_outlined,
-                      color: cart.cartLists().isNotEmpty
-                          ? primaryButton
-                          : Colors.black,
+                      // color: cart.cartLists().isNotEmpty
+                      //     ? primaryButton
+                      //     : Colors.black,
                     )),
               ],
             ),
             Stack(
               children: [
-                if (notify.notifyCounter() > 0)
-                  Positioned(
-                      left: 27,
-                      top: 5,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          notify.notifyCounter() > 9
-                              ? '9+'
-                              : '${notify.notifyCounter()}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10),
-                        ),
-                      )),
+                // if (notify.notifyCounter() > 0)
+                //   Positioned(
+                //       left: 27,
+                //       top: 5,
+                //       child: Container(
+                //         padding: const EdgeInsets.all(4),
+                //         decoration: const BoxDecoration(
+                //           color: Colors.red,
+                //           shape: BoxShape.circle,
+                //         ),
+                //         child: Text(
+                //           notify.notifyCounter() > 9
+                //               ? '9+'
+                //               : '${notify.notifyCounter()}',
+                //           style: const TextStyle(
+                //               color: Colors.white,
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 10),
+                //         ),
+                //       )),
                 Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: Positioned(
@@ -98,15 +107,16 @@ class _DetailScreenState extends State<DetailScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (_) => const NotificationScreen()));
-                        notify.resetNotify();
+                        // notify.resetNotify();
                       },
                       icon: Icon(
-                          notify.notifyCounter() > 0
-                              ? Icons.notifications
-                              : Icons.notifications_outlined,
-                          color: notify.notifyCounter() > 0
-                              ? primaryButton
-                              : Colors.black),
+                          // notify.notifyCounter() > 0
+                          //     ? Icons.notifications
+                               Icons.notifications_outlined,
+                          // color: notify.notifyCounter() > 0
+                          //     ? primaryButton
+                          //     : Colors.black),
+                      )
                     ),
                   ),
                 ),
@@ -152,7 +162,11 @@ class _DetailScreenState extends State<DetailScreen> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            widget.quantity--;
+                            if (widget.quantity > 1) {
+                              setState(() {
+                                widget.quantity--;
+                              });
+                            }
                           },
                           icon: const Icon(Icons.remove)),
                       Container(
@@ -167,9 +181,11 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       IconButton(
                           onPressed: () {
-                            setState(() {
-                              widget.quantity++;
-                            });
+                            if (widget.quantity < 10) {
+                              setState(() {
+                                widget.quantity++;
+                              });
+                            }
                           },
                           icon: const Icon(
                             Icons.add,
@@ -177,7 +193,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ))
                     ],
                   ),
-                  Text('\$${widget.product.price}',
+                  Text('${widget.product.price} đ',
                       style: const TextStyle(
                           color: primaryText,
                           fontWeight: FontWeight.bold,
@@ -185,16 +201,15 @@ class _DetailScreenState extends State<DetailScreen> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: ExpansionTile(
-                trailing: Icon(Icons.keyboard_arrow_down),
-                title: Text('Product Detail'),
+                trailing: const Icon(Icons.keyboard_arrow_down),
+                title: const Text('Product Detail'),
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                        'Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.'),
+                    padding: const EdgeInsets.all(8.0),
+                    child: HtmlWidget(widget.product.description!),
                   )
                 ],
               ),
@@ -217,10 +232,10 @@ class _DetailScreenState extends State<DetailScreen> {
           child: EcommerceButton(
             title: 'Thêm vào giỏ hàng',
             onTap: () {
-              cart.addToCart(widget.product, widget.quantity);
-              notifyRead.addNotification(NotificationModel(
-                  title: 'Added ${widget.product.name} to cart',
-                  isReaded: false));
+              context.read<CartBloc>().add(AddToCartEvent(
+                  item: CartItemModel(
+                      product: widget.product,
+                      quantity: widget.quantity)));
             },
           ),
         ));

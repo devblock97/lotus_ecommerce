@@ -13,6 +13,9 @@ class ApiConfig {
   static String PRODUCTS = '/wc/v3/products';
   static String ORDERS = '/wc/v3/orders';
   static String CART = '/wc/store/v1/cart';
+  static String ADD_ITEM = '/wc/store/v1/cart/add-item';
+  static String UPDATE_ITEM = '/wc/store/v1/cart/update-item';
+  static String REMOVE_ITEM = '/wc/store/v1/cart/remove-item';
   static String CUSTOMERS = '/wc/v3/customers';
   static String AUTH = '/jwt-auth/v1/token';
 

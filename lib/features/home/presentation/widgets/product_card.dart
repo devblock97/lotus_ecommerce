@@ -1,8 +1,12 @@
 
+import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
+import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
+import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import '../../../../theme/color.dart';
@@ -129,13 +133,9 @@ class _AddProductButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cart = context.read<CartRepositoryImpl>();
-    var notif = context.read<NotifyRepositoryImpl>();
     return ElevatedButton(
       onPressed: () {
-        cart.addToCart(product, 1);
-        notif.addNotification(NotificationModel(
-            title: 'Add ${product.name} to cart', isReaded: false));
+        context.read<CartBloc>().add(AddToCartEvent(item: CartItemModel(product: product, quantity: 1)));
       },
       style: ElevatedButton.styleFrom(
           minimumSize: const Size(40, 40),

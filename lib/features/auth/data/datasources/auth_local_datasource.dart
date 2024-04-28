@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
+import 'package:ecommerce_app/core/utils/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
@@ -29,6 +30,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<bool> clearCacheUser(String key) async {
+    final secureStorage = SecureStorage();
+    await secureStorage.removeToken();
     return await sharedPreferences.remove(CACHED_USER_INFO);
   }
 
