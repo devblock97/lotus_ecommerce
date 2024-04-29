@@ -16,7 +16,7 @@ class ServerFailure extends Failure {
 }
 
 class InputInvalid extends Failure {
-  final String error;
+  final String? error;
   InputInvalid({required this.error});
 
   @override

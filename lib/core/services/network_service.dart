@@ -18,7 +18,7 @@ class NetworkService extends BaseRepository {
 
   @override
   Future<List<ProductModel>> get(String endpoint) async {
-    var url = Uri.parse(ApiConfig.URL + endpoint);
+    var url = Uri.parse(ApiConfig.API_URL + endpoint);
     var response = await client.get(url, headers: ApiConfig.HEADER);
     print('status code: ${response.statusCode}');
     if (response.statusCode == 200) {
@@ -35,14 +35,14 @@ class NetworkService extends BaseRepository {
 
   @override
   Future<dynamic> post(String endpoint, dynamic body) async {
-    final url = Uri.parse(ApiConfig.URL + endpoint);
+    final url = Uri.parse(ApiConfig.API_URL + endpoint);
     final response = await client.get(url, headers: ApiConfig.HEADER);
     return _handleResponse(response);
   }
 
   @override
   Future<dynamic> put(String endpoint, dynamic body) async {
-    final url = Uri.parse(ApiConfig.URL + endpoint);
+    final url = Uri.parse(ApiConfig.API_URL + endpoint);
     final response = await client.put(url, headers: ApiConfig.HEADER);
     return _handleResponse(response);
   }

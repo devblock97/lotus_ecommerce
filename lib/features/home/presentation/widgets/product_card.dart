@@ -25,14 +25,15 @@ class ProductCard extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(product: product)));
       },
       child: Container(
-        margin: const EdgeInsets.all(8),
+        margin: const EdgeInsets.all(3),
         decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             border: Border.all(color: secondaryText),
-            borderRadius: BorderRadius.circular(18)),
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Header (sale and favorite)
             Row(
@@ -61,6 +62,9 @@ class ProductCard extends StatelessWidget {
             Center(
               child: Image.network(
                 product.images![0].src!,
+                width: 110,
+                height: 110,
+                fit: BoxFit.cover,
               ),
             ),
 

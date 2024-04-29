@@ -42,10 +42,10 @@ class ShipmentBloc extends Bloc<CheckOutEvent, ShippingState> {
     } else {
       final userPref = await SharedPreferences.getInstance();
       final userString = userPref.getString(CACHED_USER_INFO);
-      final userCached = AuthResponseModel.fromJson(jsonDecode(userString!));
-      if (userCached.data != null) {
+      final userCached = AuthResponseModel(success: AuthResponseSuccess.fromJson(jsonDecode(userString!)));
+      if (userCached.success != null) {
         emit(const ShippingLoading());
-        final response = await getRemoteCustomer(ParamCustomer(userId: userCached.data!.id));
+        final response = await getRemoteCustomer(ParamCustomer(userId:1));
         response.fold(
             (error) {
               if (error is ServerFailure) {
