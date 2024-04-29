@@ -1,36 +1,46 @@
 
 import 'dart:convert';
 
+import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
+import 'package:ecommerce_app/core/constants/message_systems.dart';
+import 'package:ecommerce_app/core/network/network_info.dart';
+import 'package:ecommerce_app/features/home/data/datasources/home_remote_datasource.dart';
+import 'package:ecommerce_app/features/home/data/datasources/home_local_datasource.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/home/domain/repositories/product_repository.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/constants/api_config.dart';
 import 'package:http/http.dart' as http;
 
 class ProductRepositoryImpl implements ProductRepository {
 
-  final client = http.Client();
+  final NetworkInfo networkInfo;
+  final HomeRemoteDataSource remoteDataSource;
+  final HomeLocalDatasource localDataSource;
+
+  ProductRepositoryImpl(this.networkInfo, this.remoteDataSource, this.localDataSource);
 
   @override
-  Future<List<ProductModel>> getAllProducts() async {
-    var url = Uri.parse(ApiConfig.URL + ApiConfig.PRODUCTS);
-    var header = {
-      'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.CONSUMER_KEY}:${ApiConfig.CONSUMER_SECRECT}'))}'
-    };
-    var response = await client.get(url, headers: header);
-    print('status code: ${response.statusCode}');
-    if (response.statusCode == 200) {
-      final body = jsonDecode(response.body) as List;
+  Future<Either<Failure, List<ProductModel>>> getAllProducts() async {
 
-      return body.map((dynamic json) {
-        final map = json as Map<String, dynamic>;
-        final product = ProductModel.fromJson(map);
-        print('data response: ${product.name}, ${product.images![0].src}');
-
-        return ProductModel.fromJson(map);
-      }).toList();
+    final isConnected = await networkInfo.isConnected;
+    if (isConnected) {
+      try {
+        final response = await remoteDataSource.getAllProducts();
+        localDataSource.saveAllProducts(response);
+        return Right(response);
+      } on ServerFailure {
+        return Left(ServerFailure(SERVER_RESPONSE_ERROR));
+      }
     } else {
-      throw Exception('Failed to loading data from server');
+      try {
+        final response = await localDataSource.getAllProducts();
+        return Right(response);
+      } on CacheException {
+        return Left(CacheFailure(CACHE_ERROR));
+      }
     }
   }
 

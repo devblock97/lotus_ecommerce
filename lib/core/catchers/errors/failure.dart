@@ -15,6 +15,18 @@ class ServerFailure extends Failure {
   List<Object?> get props => [error];
 }
 
+class InputInvalid extends Failure {
+  final String? error;
+  InputInvalid({required this.error});
+
+  @override
+  String toString() => 'UserInvalid [errorMessage: $error]';
+
+  @override
+  List<Object?> get props => [error];
+}
+
+
 class CacheFailure extends Failure {
   final String error;
   CacheFailure(this.error);
@@ -35,4 +47,17 @@ class ConnectionFailure extends Failure {
   
   @override
   List<Object?> get props => [error];
+}
+
+class NetworkFailure extends Failure {
+
+  final String error;
+  NetworkFailure(this.error);
+
+  @override
+  String toString() => 'NetworkFailure [errorMessage: $error]';
+
+  @override
+  List<Object?> get props => [error];
+
 }

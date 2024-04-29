@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
@@ -9,6 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../../../inject_container.dart';
 
@@ -25,6 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final password = TextEditingController();
   final authBloc = sl<AuthBloc>();
 
+  late AnimationController animationController;
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       create: (_) => authBloc,
       child: BlocListener<AuthBloc, AuthState>(
         listener: (_, state) {
-          if (state is AuthenticationSuccess) {
+          if (state is AuthenticationSuccess || state is Authenticated) {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const GroceryApp()),
                   (route) => false,
@@ -43,13 +50,35 @@ class _LoginScreenState extends State<LoginScreen> {
           }
           if (state is AuthenticationLoading) {
             showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (_) {
                 return const Center(
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 6),
+                  child: CircularProgressIndicator(
+                      color: Colors.white, strokeWidth: 6),
                 );
               },
             );
+          }
+          if (state is AuthenticationInvalid) {
+            Navigator.pop(context);
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(message: state.error),
+              onAnimationControllerInit: (controller) {
+                animationController = controller;
+              }
+            );
+          }
+          if (state is AuthenticationError) {
+              Navigator.pop(context);
+              showTopSnackBar(
+                  Overlay.of(context),
+                  CustomSnackBar.error(message: state.error),
+                onAnimationControllerInit: (controller) {
+                    animationController = controller;
+                }
+              );
           }
         },
         child: Scaffold(
@@ -94,7 +123,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Gap(30),
                 ElevatedButton(
                   onPressed: () async {
-                    var userBox = await Hive.openBox('userBox');
                     final authentication = AuthModel(username.text, password.text);
                     authBloc.add(SignInRequest(authentication));
                   },

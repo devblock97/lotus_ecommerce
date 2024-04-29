@@ -1,5 +1,6 @@
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -11,7 +12,12 @@ abstract class AuthRepository {
   Future<Either<Failure, AuthResponseModel>> signIn(AuthModel body)
     => throw UnimplementedError('Stub!');
 
-  Future<Either<Failure, void>> signOut() => throw UnimplementedError('Stub!');
+  Future<Either<Failure, AuthResponseModel>>? getUserInfo()
+    => throw UnimplementedError('Stub!');
 
-  Future<Either<Failure, UserModel>> signUp(SignUpModel body) => throw UnimplementedError('Stub!');
+  Future<Either<Failure, bool>> signOut()
+    => throw UnimplementedError('Stub!');
+
+  Future<Either<Failure, UserModel>> signUp(SignUpModel body)
+    => throw UnimplementedError('Stub!');
 }

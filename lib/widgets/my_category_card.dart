@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/core/models/category_model.dart';
+import 'package:ecommerce_app/core/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {

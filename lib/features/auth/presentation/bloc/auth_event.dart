@@ -7,6 +7,14 @@ abstract class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CheckSignedIn extends AuthEvent {
+  CheckSignedIn();
+}
+
+class SignOutRequest extends AuthEvent {
+  SignOutRequest();
+}
+
 class SignInRequest extends AuthEvent {
   final AuthModel authModel;
   SignInRequest(this.authModel);

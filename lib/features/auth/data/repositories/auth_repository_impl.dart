@@ -1,9 +1,10 @@
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:ecommerce_app/core/network/network_info.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
@@ -11,56 +12,77 @@ import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
 import 'package:ecommerce_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../datasources/auth_local_datasource.dart';
+import '../datasources/auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
 
   final NetworkInfo networkInfo;
+  final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
 
-  AuthRepositoryImpl(this.networkInfo);
+  AuthRepositoryImpl(this.remoteDataSource, this.localDataSource, this.networkInfo);
+
+  late SharedPreferences sharedPreferences;
 
   @override
   Future<Either<Failure, AuthResponseModel>> signIn(AuthModel body) async {
 
-    var isConnected = await networkInfo.inConnected;
+    sharedPreferences = await SharedPreferences.getInstance();
+    var isConnected = await networkInfo.isConnected;
 
     if (isConnected) {
       try {
-        final response = await http.post(
-          Uri.parse(ApiConfig.AUTH),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: json.encode({
-            'username': body.username,
-            'password': body.password,
-          }),
-        );
+        final response = await remoteDataSource.signIn(body);
 
-        if (response.statusCode == 200) {
-          return Right(AuthResponseModel.fromJson(json.decode(response.body)));
-        } else {
-          return Left(ServerFailure('Failed to loading data from server [statusCode: ${response.statusCode}]'));
+        if (response.error is AuthResponseError) {
+          return Left(InputInvalid(error: response.error?.message));
         }
-      } catch (e) {
-        return Left(ServerFailure('Server unreachable [errorMessage: $e]'));
+        await localDataSource.cacheUserInfo(response);
+        return Right(response);
+      } on ServerException catch(err) {
+        return Left(ServerFailure('Server Failure [error: $err]]'));
+      } on InputInvalid catch (err) {
+        return Left(InputInvalid(error: 'Username or password incorrect'));
       }
     } else {
       return Left(ConnectionFailure('Internet connection failure!!!'));
     }
   }
 
+
   @override
-  Future<Either<Failure, void>> signOut() {
-    throw UnimplementedError();
+  Future<Either<Failure, AuthResponseModel>> getUserInfo() async {
+    try {
+      final user = await localDataSource.getUserInfo();
+      return Right(user!);
+    } on CacheException {
+      return Left(CacheFailure('Cache Failure'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> signOut() async {
+    try {
+      final isClearedUser = await localDataSource.clearCacheUser(CACHED_USER_INFO);
+      if (!isClearedUser) {
+        return Left(CacheException());
+      }
+      return Right(isClearedUser);
+    } on CacheException {
+      return Left(CacheFailure('Logout Failure'));
+    }
   }
 
   @override
   Future<Either<Failure, UserModel>> signUp(SignUpModel body) async {
-    var isConnected = await networkInfo.inConnected;
+    var isConnected = await networkInfo.isConnected;
     if (isConnected) {
       try {
         final response = await http.post(
-          Uri.parse('https://192.168.110.47/senhong/wp-json/wc/v3/customers'),
+          Uri.parse('${ApiConfig.API_URL}${ApiConfig.CUSTOMERS}'),
           headers: ApiConfig.HEADER,
           body: jsonEncode({
             "first_name": body.firstName,
@@ -69,9 +91,7 @@ class AuthRepositoryImpl implements AuthRepository {
             "password": body.password
           })
         );
-        print('sign up status code: ${response.statusCode}');
-        if (response.statusCode == 201) {
-          print('sign up in 201: ${response.body}');
+        if (response.statusCode == 200) {
           final customer = jsonDecode(response.body) as Map<String, dynamic>;
           return Right(UserModel.fromJson(customer));
         } else {

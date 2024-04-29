@@ -1,8 +1,8 @@
 
+import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../catchers/errors/failure.dart';
 
 abstract class UseCase<Type, Params> {
   Future<Either<Failure, Type>> call(Params params);

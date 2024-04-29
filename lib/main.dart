@@ -1,18 +1,26 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/app.dart';
+import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart';
+import 'package:ecommerce_app/localizations/app_localizations.dart';
 import 'package:ecommerce_app/theme/theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,20 +29,12 @@ void main() async {
 
   /// Local DB with Hive
   await Hive.initFlutter();
-  var user = await Hive.openBox('userBox');
 
   /// Dependencies injection
   await init();
 
-
-  // Bloc.observer = SimpleBlocObserver();
-  // if (user.isNotEmpty) {
-  //   runApp(const EcommerceApp());
-  // } else {
-  //   runApp(const MaterialApp(home: LoginScreen(),));
-  // }
-
-  runApp(const MaterialApp(home: EcommerceApp(),));
+  Bloc.observer = SimpleBlocObserver();
+  runApp(const EcommerceApp());
 
 }
 
@@ -57,13 +57,26 @@ class SimpleBlocObserver extends BlocObserver {
 }
 
 
-class EcommerceApp extends StatelessWidget {
+class EcommerceApp extends StatefulWidget {
   const EcommerceApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var user = Hive.openBox('userBox');
+  State<EcommerceApp> createState() => _EcommerceAppState();
+}
 
+class _EcommerceAppState extends State<EcommerceApp> {
+
+  late bool userLogged = false;
+  final authBloc = sl<AuthBloc>();
+
+  @override
+  void initState() {
+    super.initState();
+    authBloc.add(CheckSignedIn());
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         /// Use Clean Architecture
@@ -102,7 +115,37 @@ class EcommerceApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: EcommerceTheme.buildLightTheme(context),
               darkTheme: EcommerceTheme.buildDarkTheme(context),
-              home: LoginScreen(),
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate
+              ],
+              supportedLocales: const [
+                Locale('vn', 'VN'),
+                Locale('en', 'US')
+              ],
+              home: BlocProvider(
+                create: (_) => authBloc,
+                child: BlocConsumer<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    if (state is Authenticated) {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (_)
+                          => const GroceryApp()), (route) => false);
+                    } else {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (_)
+                          => const LoginScreen()), (route) => false);
+                    }
+                  },
+                  builder: (context, state) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator(),),
+                    );
+                  },
+                ),
+              ),
           );
         },
         selector: (context, theme) => theme.themeMode

@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/features/cart/data/datasource/datasource.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
@@ -28,13 +27,12 @@ class _EcommerceSearchBarState extends State<EcommerceSearchBar> {
           leading: const Icon(Icons.search_outlined),
         );
       }, suggestionsBuilder: (context, suggestor) {
-        return List<ListTile>.generate(allProducts.length, (index) {
-          final String item = allProducts[index].name;
+        return List<ListTile>.generate(10, (index) {
           return ListTile(
-            title: Text(item),
+            title: Text('item $index'),
             onTap: () {
               setState(() {
-                suggestor.closeView(item);
+                suggestor.closeView('item $index');
               });
             },
           );
