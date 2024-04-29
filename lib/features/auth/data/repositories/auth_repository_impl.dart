@@ -36,12 +36,11 @@ class AuthRepositoryImpl implements AuthRepository {
     if (isConnected) {
       try {
         final response = await remoteDataSource.signIn(body);
-        if (response.statusCode == 403) {
-          return Left(InputInvalid(error: response.message));
-        }
 
+        if (response.error is AuthResponseError) {
+          return Left(InputInvalid(error: response.error?.message));
+        }
         await localDataSource.cacheUserInfo(response);
-        localDataSource.getUserInfo()!.then((value) => print('checking value: ${value.data!.token}'));
         return Right(response);
       } on ServerException catch(err) {
         return Left(ServerFailure('Server Failure [error: $err]]'));
@@ -83,7 +82,7 @@ class AuthRepositoryImpl implements AuthRepository {
     if (isConnected) {
       try {
         final response = await http.post(
-          Uri.parse('${ApiConfig.URL}${ApiConfig.CUSTOMERS}'),
+          Uri.parse('${ApiConfig.API_URL}${ApiConfig.CUSTOMERS}'),
           headers: ApiConfig.HEADER,
           body: jsonEncode({
             "first_name": body.firstName,

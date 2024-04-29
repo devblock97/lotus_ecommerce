@@ -88,14 +88,14 @@ class _AccountScreenState extends State<AccountScreen> {
                           title: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text('${state.authResponseModel.data?.firstName} ${state.authResponseModel.data?.lastName}'),
+                              Text(state.authResponseModel.success!.userDisplayName),
                               const Icon(
                                 Icons.edit,
                                 color: primaryButton,
                               )
                             ],
                           ),
-                          subtitle: Text(state.authResponseModel.data!.email),
+                          subtitle: Text(state.authResponseModel.success!.userEmail),
                         );
                       }
                       return ListTile(

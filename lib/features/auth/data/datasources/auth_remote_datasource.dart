@@ -20,13 +20,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthResponseModel> signIn(AuthModel body) async {
     try {
       final response = await client.post(
-          Uri.parse(ApiConfig.AUTH),
+          Uri.parse('${ApiConfig.API_URL}${ApiConfig.AUTH}'),
           headers: {
             'Content-Type': 'application/json',
           },
           body: jsonEncode(body.toJson())
       );
-      return AuthResponseModel.fromJson(jsonDecode(response.body));
+      if (response.statusCode == 403) {
+        return AuthResponseModel(error: AuthResponseError.fromJson(jsonDecode(response.body)));
+      }
+      return AuthResponseModel(success: AuthResponseSuccess.fromJson(jsonDecode(response.body)));
     } on ServerException catch (e) {
       throw ServerException();
     } on TimeoutException catch (e) {

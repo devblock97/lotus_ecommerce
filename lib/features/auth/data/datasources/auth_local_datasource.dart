@@ -22,7 +22,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> cacheUserInfo(AuthResponseModel userInfo) async {
-      await sharedPreferences.setString(CACHED_USER_INFO, jsonEncode(userInfo.toJson()));
+    if (userInfo.success is AuthResponseSuccess) {
+      await sharedPreferences.setString(CACHED_USER_INFO, jsonEncode(userInfo.success!.toJson()));
+    }
   }
 
   @override
@@ -31,10 +33,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<AuthResponseModel>? getUserInfo() {
+  Future<AuthResponseModel>? getUserInfo() async {
     final jsonString = sharedPreferences.getString(CACHED_USER_INFO);
     if (jsonString != null) {
-      return Future.value(AuthResponseModel.fromJson(jsonDecode(jsonString)));
+      return AuthResponseModel(success: AuthResponseSuccess.fromJson(jsonDecode(jsonString)));
     } else {
       throw CacheException();
     }

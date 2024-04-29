@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen>
                     gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 200.0,
                       mainAxisSpacing: 2.0,
-                      childAspectRatio: 0.6,
+                      childAspectRatio: 0.67,
                     ),
                     delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                       return home.ProductCard(product: state.productList[index]);
@@ -193,7 +193,7 @@ class ProductsList extends StatelessWidget {
               shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.6
+                  childAspectRatio: 0.67
                 ),
                 itemCount: state.productList.length,
                 itemBuilder: (_, index) {
@@ -308,7 +308,7 @@ class _CategorySingleListView extends StatelessWidget {
         child: Row(
             children: productList!.map((e) {
               return SizedBox(
-                  height: 320, width: 200, child: ProductCard(product: e));
+                  height: 280, width: 190, child: ProductCard(product: e));
             }).toList()
         )
     );

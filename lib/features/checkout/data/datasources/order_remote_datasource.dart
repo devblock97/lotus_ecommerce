@@ -19,7 +19,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   Future<OrderModel> createOrder(Order order) async {
      try {
        final response = await client.post(
-         Uri.parse('${ApiConfig.URL}${ApiConfig.ORDERS}'),
+         Uri.parse('${ApiConfig.API_URL}${ApiConfig.ORDERS}'),
          headers: ApiConfig.HEADER,
          body: jsonEncode(order.toJson())
        );

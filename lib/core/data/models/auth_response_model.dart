@@ -1,71 +1,111 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
-class AuthResponseModel extends Equatable {
-  final bool success;
-  final int statusCode;
-  final String message;
-  final Data? data;
+abstract class AuthResponse extends Equatable {
+  AuthResponseSuccess fromSuccessJson(Map<String, dynamic> json) =>
+      throw UnimplementedError('Stub');
 
-  const AuthResponseModel(
-      this.success, this.statusCode, this.message, this.data);
+  AuthResponseError fromErrorJson(Map<String, dynamic> json) =>
+      throw UnimplementedError('Stub');
 
-  factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
-    // When login failure then "data" field will be return []
-    // if successful login then "data" return json value
-    bool isLoginFailure = (json['data'] is List);
-    return AuthResponseModel(
-        json['success'] as bool,
-        json['statusCode'] as int,
-        json['message'] as String,
-        isLoginFailure ? null : Data.fromJson(json['data'])
+}
+
+class AuthResponseModel implements AuthResponse {
+
+  const AuthResponseModel({this.success, this.error});
+
+  final AuthResponseSuccess? success;
+  final AuthResponseError? error;
+
+  @override
+  AuthResponseError fromErrorJson(Map<String, dynamic> json) {
+    return AuthResponseError.fromJson(json);
+  }
+
+  @override
+  AuthResponseSuccess fromSuccessJson(Map<String, dynamic> json) {
+    return AuthResponseSuccess.fromJson(json);
+  }
+
+  @override
+  List<Object?> get props => [success, error];
+
+  @override
+  bool? get stringify => false;
+
+}
+
+class AuthResponseSuccess extends Equatable {
+  final String token;
+  final String userEmail;
+  final String userNiceName;
+  final String userDisplayName;
+
+  const AuthResponseSuccess(
+      this.token, this.userEmail, this.userNiceName, this.userDisplayName);
+
+  factory AuthResponseSuccess.fromJson(Map<String, dynamic> json) {
+
+    return AuthResponseSuccess(
+        json['token'],
+        json['user_email'],
+        json['user_nicename'],
+        json['user_display_name']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'success': success,
-      'statusCode': statusCode,
-      'message': message,
-      'data': data!.toJson()
+      'token': token,
+      'user_email': userEmail,
+      'user_nicename': userNiceName,
+      'user_display_name': userDisplayName
     };
   }
 
   @override
-  List<Object?> get props => [success, statusCode, message, data];
+  List<Object?> get props => [token, userNiceName, userEmail, userDisplayName];
 }
 
-class Data {
-  final String token;
-  final int id;
-  final String email;
-  final String nicename;
-  final String firstName;
-  final String lastName;
-  final String displayName;
+class AuthResponseError extends Equatable {
 
-  const Data(this.token, this.id, this.email, this.nicename, this.firstName,
-      this.lastName, this.displayName);
+  final String code;
+  final String message;
+  final Data data;
 
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
-        json['token'] as String,
-        json['id'] as int,
-        json['email'] as String,
-        json['nicename'] as String,
-        json['firstName'] as String,
-        json['lastName'] as String,
-        json['displayName'] as String);
+  const AuthResponseError(this.code, this.message, this.data);
+
+  factory AuthResponseError.fromJson(Map<String, dynamic> json) {
+    return AuthResponseError(
+      json['code'],
+      json['message'],
+      json['data']
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'token': token,
-      'id': id,
-      'email': email,
-      'nicename': nicename,
-      'firstName': firstName,
-      'lastName': lastName,
-      'displayName': displayName
+      'code': code,
+      'message': message,
+      'data': data.toJson(),
     };
   }
+
+  @override
+  List<Object?> get props => [code, message, data];
+}
+
+class Data {
+  final int status;
+
+  Data(this.status);
+
+  factory Data.fromJson(Map<String, dynamic> json) {
+    return Data(
+      json['status']
+    );
+  }
+
+  Map<String, dynamic> toJson() => {'status': status};
 }

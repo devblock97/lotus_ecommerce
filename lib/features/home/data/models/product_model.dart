@@ -89,14 +89,14 @@ class ImageModel {
 
   factory ImageModel.fromJson(Map<String, dynamic> json) {
     var image = json['src'] as String;
-    image = image.replaceAll('localhost', ApiConfig.IP_ADDRESS);
+    // image = image.replaceAll('localhost', ApiConfig.IP_ADDRESS);
     return ImageModel(json['id'], image);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     data['id'] = id;
-    data['src'] = src!.replaceAll('localhost', ApiConfig.IP_ADDRESS);
+    // data['src'] = src!.replaceAll('localhost', ApiConfig.IP_ADDRESS);
     return data;
   }
 }
