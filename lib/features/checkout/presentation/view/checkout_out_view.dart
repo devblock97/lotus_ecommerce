@@ -1,5 +1,7 @@
 
 import 'package:ecommerce_app/app.dart';
+import 'package:ecommerce_app/core/extensions/currency_extension.dart';
+import 'package:ecommerce_app/features/cart/data/models/cart.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/checkout/data/models/create_order.dart';
 import 'package:ecommerce_app/features/checkout/presentation/bloc/order/order_bloc.dart';
@@ -25,9 +27,9 @@ enum PaymentMethod {
 }
 
 class CheckOutScreen extends StatefulWidget {
-  const CheckOutScreen({super.key, required this.items});
+  const CheckOutScreen({super.key, required this.carts});
 
-  final List<CartItemModel> items;
+  final Cart carts;
 
   @override
   State<CheckOutScreen> createState() => _CheckOutScreenState();
@@ -67,29 +69,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     borderRadius: BorderRadius.circular(8),
                     color: Colors.white
                 ),
-                child: BlocBuilder<ShipmentBloc, ShippingState>(
-                    builder: (context, state) {
-                      if (state is ShippingSuccess) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('${state.customer.firstName} ${state.customer.lastName}'),
-                                Text('Thay đổi')
-                              ],
-                            ),
-                            Text(state.customer.shipping.address1!),
-                          ],
-                        );
-                      }
-                      if (state is ShippingLoading) {
-                        return const Center(child: CircularProgressIndicator(),);
-                      }
-                      return const SizedBox();
-                    }
-                ),
+                child: Shipping(cart: widget.carts),
               ),
 
               const Text('Phương thức thanh toán'),
@@ -145,7 +125,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               ),
 
               const Text('Sản phẩm'),
-              ListItemCheckOut(items: widget.items),
+              ListItemCheckOut(carts: widget.carts),
 
               const Text('Phương thức giao hàng'),
               Container(
@@ -178,8 +158,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Tạm tính'),
-                        Text('${widget.items.fold(0.0, (prePrice, items) =>
-                        prePrice + (double.parse(items.product.price!) * items.quantity))}')
+                        Text('${widget.carts.item!.fold(0.0, (prePrice, items) =>
+                        prePrice + (double.parse(items.prices!.price!) * items.quantity!))}')
                       ],
                     ),
                     Gap(5),
@@ -223,8 +203,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Tổng tiền'),
-                  Text('${widget.items.fold(0.0, (previousValue, element) =>
-                  previousValue + (double.parse(element.product.price!) * element.quantity))}đ')
+                  Text(widget.carts.totals!.totalPrice!.format(code: widget.carts.totals!.currencyCode!))
                 ],
               ),
               BlocBuilder<ShipmentBloc, ShippingState>(
@@ -251,9 +230,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       },
                       child: ElevatedButton(
                         onPressed: () async {
-                          List<LineItem> lineItems = widget.items.map((e) => LineItem(
-                                productId: e.product.id!,
-                                quantity: e.quantity)).toList();
+                          List<LineItem> lineItems = widget.carts.item!.map((e) => LineItem(
+                                productId: e.id!,
+                                quantity: e.quantity!)).toList();
                           print('checking line item: ${lineItems.length}');
                           Order order = Order(
                               paymentMethod: 'bacs',
@@ -345,54 +324,28 @@ class _PlaceOrderButtonState extends State<PlaceOrderButton> {
   }
 }
 
-class Shipping extends StatefulWidget {
+class Shipping extends StatelessWidget {
   const Shipping({
     super.key,
+    required this.cart
   });
 
-  @override
-  State<Shipping> createState() => _ShippingState();
-}
-
-class _ShippingState extends State<Shipping> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<ShipmentBloc>().add(const GetCustomerInfoEvent());
-  }
+  final Cart cart;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.white
-      ),
-      child: BlocBuilder<ShipmentBloc, ShippingState>(
-          builder: (context, state) {
-            if (state is ShippingSuccess) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${state.customer.firstName} ${state.customer.lastName}'),
-                      Text('Thay đổi')
-                    ],
-                  ),
-                  Text(state.customer.shipping.address1!),
-                ],
-              );
-            }
-            if (state is ShippingLoading) {
-              return const Center(child: CircularProgressIndicator(),);
-            }
-            return const SizedBox();
-          }
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('${cart.shippingAddress!.firstName} ${cart.shippingAddress!.lastName}'),
+            Text('Thay đổi')
+          ],
+        ),
+        Text(cart.shippingAddress!.address1),
+      ],
     );
   }
 }
@@ -400,10 +353,10 @@ class _ShippingState extends State<Shipping> {
 class ListItemCheckOut extends StatelessWidget {
   const ListItemCheckOut({
     super.key,
-    required this.items,
+    required this.carts,
   });
 
-  final List<CartItemModel> items;
+  final Cart carts;
 
   @override
   Widget build(BuildContext context) {
@@ -416,9 +369,9 @@ class ListItemCheckOut extends StatelessWidget {
       child: ListView.builder(
         shrinkWrap: true,
         physics: const ClampingScrollPhysics(),
-        itemCount: items.length,
+        itemCount: carts.item!.length,
         itemBuilder: (context, index) {
-          return ProductItem(item: items[index]);
+          return ProductItem(product: carts.item![index]);
         },
       ),
     );
@@ -629,7 +582,6 @@ class PlaceOrder extends StatelessWidget {
                   //   print('create order error: ${response.request?.url}');
                   // }
 
-                  cart.clearItemAllItemToCart();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

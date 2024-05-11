@@ -1,26 +1,19 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/app.dart';
-import 'package:ecommerce_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart';
+import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
 import 'package:ecommerce_app/inject_container.dart';
-import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart';
 import 'package:ecommerce_app/localizations/app_localizations.dart';
 import 'package:ecommerce_app/theme/theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,12 +74,12 @@ class _EcommerceAppState extends State<EcommerceApp> {
       providers: [
         /// Use Clean Architecture
         /// Cart
-        ChangeNotifierProxyProvider(
-            create: (context) => CartRepositoryImpl(),
-            update: (context, value, CartRepositoryImpl? cart) {
-              if (cart == null) throw ArgumentError('Cart');
-              return cart;
-            }),
+        // ChangeNotifierProxyProvider(
+        //     create: (context) => CartRepositoryImpl(),
+        //     update: (context, value, CartRepositoryImpl? cart) {
+        //       if (cart == null) throw ArgumentError('Cart');
+        //       return cart;
+        //     }),
 
         /// Favorite
         ChangeNotifierProxyProvider(
@@ -106,7 +99,9 @@ class _EcommerceAppState extends State<EcommerceApp> {
         ),
 
         /// Theme Selector
-        ChangeNotifierProvider(create: (_) => ThemeSelector())
+        ChangeNotifierProvider(create: (_) => ThemeSelector()),
+
+        BlocProvider(create: (_) => sl<CartBloc>()),
       ],
       child: Selector<ThemeSelector, ThemeMode>(
         builder: (context, themeMode, child) {

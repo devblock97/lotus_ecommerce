@@ -5,4 +5,15 @@ class CartItemModel {
   int quantity;
 
   CartItemModel({required this.product, required this.quantity});
+
+  factory CartItemModel.fromJson(Map<String, dynamic> json) {
+    return CartItemModel(product: json['product'], quantity: json['quantity']);
+  }
+
+  Map<String, dynamic> toJson() =>
+    {
+      'product': product,
+      'quantity': quantity
+    };
+
 }

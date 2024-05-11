@@ -1,87 +1,147 @@
+import 'package:ecommerce_app/core/extensions/currency_extension.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
+import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
+import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_cart_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../checkout/presentation/view/checkout_out_view.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var cart = context.watch<CartRepositoryImpl>();
+  State<CartScreen> createState() => _CartScreenState();
+}
 
+class _CartScreenState extends State<CartScreen> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    sl<CartBloc>().add(const GetCartEvent());
+  }
+
+  @override
+  void dispose() {
+    print('checking cart screen: dispose');
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.keyboard_arrow_left, color: secondaryButton,)),
+        leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.keyboard_arrow_left,
+              color: secondaryButton,
+            )
+        ),
         title: Text(
           'Giỏ hàng',
-          // style: TextStyle(
-          //     color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: Theme
+              .of(context)
+              .textTheme
+              .headlineSmall,
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 1,
       ),
-      body: ListView.builder(
-        itemCount: cart.cartLists().length,
-        itemBuilder: (_, index) {
-          return CartItem(
-            product: cart.cartLists()[index].product,
-            quantity: cart.cartLists()[index].quantity,
-          );
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartSuccess) {
+            return ListView.builder(
+              itemCount: state.carts.item!.length,
+              itemBuilder: (_, index) {
+                return CartItem(
+                  product: state.carts.item![index],
+                  quantity: state.carts.item![index].quantity!,
+                  prices: state.carts.item![index].prices,
+                );
+              },
+            );
+          }
+          if (state is CartError) {
+            showTopSnackBar(
+                Overlay.of(context),
+                CustomSnackBar.error(message: state.message),
+                // onAnimationControllerInit: (controller) {
+                //   animationController = controller;
+                // }
+            );
+          }
+          return const Center(child: CircularProgressIndicator(),);
         },
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 14),
-        child: cart.cartLists().isEmpty
-            ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                  child: Text(
-                    'Không có sản phẩm nào trong giở hàng',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-            )
-            : ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => CheckOutScreen(items: cart.cartLists(),)));
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryButton,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(19)),
-                    padding: const EdgeInsets.all(22)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Flexible(
-                      flex: 3,
-                      child: Text(
-                        'Thanh toán',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Flexible(
-                      flex: 2,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: const Color(0xFF489E67)),
-                        child: Text('\$${cart.totalPrice()}'),
-                      ),
+      bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartSuccess) {
+            final totals = state.carts.totals;
+            return Padding(
+              padding: const EdgeInsets.only(
+                  left: 8, top: 0, right: 8, bottom: 14),
+              child: state.carts.item!.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              'Không có sản phẩm nào trong giở hàng',
+                              textAlign: TextAlign.center,
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyMedium,
+                            ),
+                          ),
                     )
-                  ],
-                )),
+                  : ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => CheckOutScreen(carts: state.carts)));
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryButton,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(19)),
+                          padding: const EdgeInsets.all(22)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Flexible(
+                            flex: 3,
+                            child: Text(
+                              'Thanh toán',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          Flexible(
+                            flex: 2,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: const Color(0xFF489E67)),
+                              child: Text(totals!.totalPrice!.format(code: totals.currencyCode!)),
+                            ),
+                          )
+                        ],
+                      )),
+            );
+          }
+          return const SizedBox();
+        },
       ),
     );
   }
