@@ -7,7 +7,7 @@ import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_event.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_state.dart';
 import 'package:ecommerce_app/features/home/presentation/widgets/product_card.dart' as home;
-import 'package:ecommerce_app/features/home/presentation/widgets/product_skelton.dart';
+import 'package:ecommerce_app/features/home/presentation/widgets/product_skeleton.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen>
                       productList: state.productList,),
                   );
                 }
-                return const SliverToBoxAdapter(child: ProductSkelton());
+                return const SliverToBoxAdapter(child: ProductSkeleton());
               },
             ),
 
@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   );
                 }
-                return const SliverToBoxAdapter(child: ProductSkelton());
+                return const SliverToBoxAdapter(child: ProductSkeleton());
               },
             ),
 
@@ -185,7 +185,7 @@ class ProductsList extends StatelessWidget {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is ProductInitial || state is ProductLoading) {
-           return const ProductSkelton();
+           return const ProductSkeleton();
           }
           if (state is ProductSuccess) {
             return GridView.builder(

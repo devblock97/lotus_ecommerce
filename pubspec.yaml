@@ -115,7 +115,9 @@ flutter:
     - assets/icons/logo.svg
     - assets/icons/success.png
     - assets/icons/mastercard.svg
-    - assets/icons/sen_hong.jpg
+    - assets/icons/sen_hong.png
+    - assets/icons/apple.svg
+    - assets/icons/google.svg
     # Categories
     - assets/categories/category_1.png
     - assets/categories/category_2.png
@@ -155,4 +157,4 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/sen_hong.jpg"
+  image_path: "assets/icons/sen_hong.png"

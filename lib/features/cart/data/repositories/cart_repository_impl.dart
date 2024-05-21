@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/constants/message_systems.dart';
 import 'package:ecommerce_app/core/network/network_info.dart';
@@ -37,7 +39,7 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<Either<Failure, Cart>> deleteItemCart(String key) async {
     try {
-      final response = await remoteDataSource.removeProductToCart(key);
+      final response = await remoteDataSource.removeItem(key);
       return Right(response);
     } catch (e) {
       throw Exception(e);
@@ -50,6 +52,25 @@ class CartRepositoryImpl implements CartRepository {
     if (isConnected) {
       try {
         final response = await remoteDataSource.updateCart(key, quantity);
+        return Right(response);
+      } on SocketException {
+        return Left(NetworkFailure(INTERNET_CONNECTION_ERROR));
+      } on HttpException {
+        return Left(ServerFailure(SERVER_RESPONSE_ERROR));
+      } catch (e) {
+        return Left(ServerFailure(SERVER_RESPONSE_ERROR));
+      }
+    } else {
+      return Left(NetworkFailure(INTERNET_CONNECTION_ERROR));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Cart>> deleteAllItems() async {
+    final isConnected = await networkInfo.isConnected;
+    if (isConnected) {
+      try {
+        final response = await remoteDataSource.deleteAllItems();
         return Right(response);
       } catch (e) {
         return Left(ServerFailure(SERVER_RESPONSE_ERROR));

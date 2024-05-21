@@ -1,17 +1,12 @@
-import 'dart:convert';
-
 import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/views/signup_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
-import 'package:ecommerce_app/widgets/my_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -32,10 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   late AnimationController animationController;
 
+  bool isValidate = false;
+
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -85,47 +83,155 @@ class _LoginScreenState extends State<LoginScreen> {
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(8),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Gap(50),
-                SvgPicture.asset('assets/icons/logo.svg'),
-                const Gap(50),
-                RichText(
-                    textAlign: TextAlign.left,
-                    textDirection: TextDirection.ltr,
-                    text: const TextSpan(
-                        text: 'Login\n',
-                        style: TextStyle(
-                            color: primaryText,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: 'Enter your emails and password',
-                              style:
-                                  TextStyle(color: secondaryText, fontSize: 16))
-                        ])),
+                Image.asset('assets/icons/sen_hong.png'),
                 const Gap(30),
-                TextFormWidget(label: 'Email', controller: username,),
+                TextFormField(
+                  controller: username,
+                  onChanged: (value) {
+                    if (password.text.isNotEmpty && username.text.isNotEmpty) {
+                      setState(() {
+                        isValidate = true;
+                      });
+                    }
+                  },
+                  decoration: InputDecoration(
+                    label: const Text('Email'),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)
+                    )
+                  ),
+                ),
                 const Gap(20),
-                TextFormWidget(
-                  label: 'Password',
+                TextFormField(
                   controller: password,
+                  onChanged: (value) {
+                    if (password.text.isNotEmpty && username.text.isNotEmpty) {
+                      setState(() {
+                        isValidate = true;
+                      });
+                    }
+                  },
+                  decoration: InputDecoration(
+                    label: const Text('Password'),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
+                    )
+                  ),
                   obscureText: true,
                 ),
                 const Gap(10),
-                const Align(
+                Align(
                   alignment: Alignment.bottomRight,
-                  child: Text(
-                    'Forget Password?',
-                    textAlign: TextAlign.end,
+                  child: TextButton(
+                    onPressed: () => showTopSnackBar(
+                      Overlay.of(context),
+                      const CustomSnackBar.info(
+                        message: 'Coming soon',
+                        backgroundColor: Colors.orange,
+                      )
+                    ),
+                    child: const Text(
+                      'Forget Password?',
+                      textAlign: TextAlign.end,
+                    ),
                   ),
+                ),
+                const Gap(20),
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(child: Divider(color: Colors.grey, thickness: 1.0)),
+                    Gap(10),
+                    Text('or'),
+                    Gap(10),
+                    Expanded(child: Divider(color: Colors.grey, thickness: 1.0)),
+                  ],
+                ),
+                const Gap(20),
+                OutlinedButton(
+                  onPressed: () {
+                    showTopSnackBar(
+                      Overlay.of(context),
+                      const CustomSnackBar.info(
+                          message: 'Coming soon',
+                          backgroundColor: Colors.orange
+                      )
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)
+                    ),
+                    padding: const EdgeInsets.all(16)
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/google.svg',
+                        width: 25,
+                        height: 25,
+                      ),
+                      const Gap(10),
+                      const Text(
+                        'Login with Google',
+                        style: TextStyle(
+                          color: primaryText,
+                          fontSize: 16,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const Gap(10),
+                OutlinedButton(
+                    onPressed: () {
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        const CustomSnackBar.info(
+                          message: 'Coming soon',
+                          backgroundColor: Colors.orange,
+                        )
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)
+                      ),
+                      padding: const EdgeInsets.all(16)
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/apple.svg',
+                          width: 25,
+                          height: 25,
+                        ),
+                        const Gap(10),
+                        const Text(
+                          'Login with Apple',
+                          style: TextStyle(
+                            color: primaryText,
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
+                    )
                 ),
                 const Gap(30),
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: (username.text.trim().isNotEmpty && password.text.isNotEmpty)
+                  ? () async {
                     final authentication = AuthModel(username.text, password.text);
                     authBloc.add(SignInRequest(authentication));
-                  },
+                  }
+                  : null,
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),

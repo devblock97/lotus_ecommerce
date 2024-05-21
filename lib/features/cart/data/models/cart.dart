@@ -5,6 +5,7 @@ import 'package:ecommerce_app/core/data/models/shipping.dart';
 class Cart {
   List<Product>? item;
   Totals? totals;
+  List<Coupon>? coupons;
   Shipping? shippingAddress;
   Billing? billingAddress;
   bool? needsPayment;
@@ -28,14 +29,20 @@ class Cart {
     this.shippingRates,
     this.itemsCount,
     this.itemsWeight,
-    this.paymentMethods});
+    this.paymentMethods,
+    this.coupons});
 
   Cart.fromJson(Map<String, dynamic> json) {
     if (json['items'] != null) {
       item = <Product>[];
       json['items'].forEach((v) { item!.add(Product.fromJson(v)); });
     }
-
+    if (json['coupon'] != null) {
+      coupons = <Coupon>[];
+      json['coupon'].forEach((v) => coupons!.add(Coupon.fromJson(v)));
+    } else {
+      coupons = <Coupon>[];
+    }
     totals = json['totals'] != null ? Totals.fromJson(json['totals']) : null;
     shippingAddress = Shipping.fromJson(json['shipping_address']);
     billingAddress = Billing.fromJson(json['billing_address']);
@@ -166,6 +173,27 @@ class Product {
   }
 }
 
+class Coupon {
+  String? code;
+  String? discountType;
+  Totals? totals;
+
+  Coupon(this.code, this.discountType, this.totals);
+
+  Coupon.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
+    discountType = json['discount_type'];
+    totals = Totals.fromJson(json['totals']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
+    data['discount_type'] = discountType;
+    data['totals'] = totals?.toJson();
+    return data;
+  }
+}
 
 class Images {
   int? id;
@@ -403,16 +431,16 @@ class Totals {
   }
 }
 
-class ShippingRate {
+class ShippingRates {
   int? packageId;
   String? name;
   Destination? destination;
   List<Items>? items;
-  List<ShippingRates>? shippingRates;
+  List<ShippingRatesItem>? shippingRates;
 
-  ShippingRate({this.packageId, this.name, this.destination, this.items, this.shippingRates});
+  ShippingRates({this.packageId, this.name, this.destination, this.items, this.shippingRates});
 
-  ShippingRate.fromJson(Map<String, dynamic> json) {
+  ShippingRates.fromJson(Map<String, dynamic> json) {
     packageId = json['package_id'];
     name = json['name'];
     destination = json['destination'] != null ? Destination.fromJson(json['destination']) : null;
@@ -421,8 +449,8 @@ class ShippingRate {
       json['items'].forEach((v) { items!.add(Items.fromJson(v)); });
     }
     if (json['shipping_rates'] != null) {
-      shippingRates = <ShippingRates>[];
-      json['shipping_rates'].forEach((v) { shippingRates!.add(ShippingRates.fromJson(v)); });
+      shippingRates = <ShippingRatesItem>[];
+      json['shipping_rates'].forEach((v) { shippingRates!.add(ShippingRatesItem.fromJson(v)); });
     }
   }
 
@@ -496,7 +524,7 @@ class Items {
   }
 }
 
-class ShippingRates {
+class ShippingRatesItem {
   String? rateId;
   String? name;
   String? description;
@@ -515,9 +543,9 @@ class ShippingRates {
   String? currencyPrefix;
   String? currencySuffix;
 
-  ShippingRates({this.rateId, this.name, this.description, this.deliveryTime, this.price, this.taxes, this.instanceId, this.methodId, this.metaData, this.selected, this.currencyCode, this.currencySymbol, this.currencyMinorUnit, this.currencyDecimalSeparator, this.currencyThousandSeparator, this.currencyPrefix, this.currencySuffix});
+  ShippingRatesItem({this.rateId, this.name, this.description, this.deliveryTime, this.price, this.taxes, this.instanceId, this.methodId, this.metaData, this.selected, this.currencyCode, this.currencySymbol, this.currencyMinorUnit, this.currencyDecimalSeparator, this.currencyThousandSeparator, this.currencyPrefix, this.currencySuffix});
 
-  ShippingRates.fromJson(Map<String, dynamic> json) {
+  ShippingRatesItem.fromJson(Map<String, dynamic> json) {
     rateId = json['rate_id'];
     name = json['name'];
     description = json['description'];
