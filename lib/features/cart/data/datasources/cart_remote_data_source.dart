@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
+import 'package:ecommerce_app/core/constants/message_systems.dart';
 import 'package:ecommerce_app/core/utils/secure_storage.dart';
+import 'package:ecommerce_app/core/utils/utils.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:http/http.dart' as http;
@@ -11,8 +14,9 @@ import 'package:http/http.dart' as http;
 abstract class CartRemoteDataSource {
   Future<Cart> getCarts() => throw UnimplementedError('Stub');
   Future<Cart> addProductToCart(CartItemModel item) => throw UnimplementedError('Stub');
-  Future<Cart> removeProductToCart(String key) => throw UnimplementedError('Stub');
+  Future<Cart> removeItem(String key) => throw UnimplementedError('Stub');
   Future<Cart> updateCart(String key, int quantity) => throw UnimplementedError('Stub');
+  Future<Cart> deleteAllItems() => throw UnimplementedError('Stub');
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -28,7 +32,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final token = await secureStorage.readToken();
       final nonce = await secureStorage.readNonce();
       final response = await client.post(
-        Uri.parse('${ApiConfig.API_URL}${ApiConfig.ADD_ITEM}'),
+        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.addItem}'),
         body: jsonEncode({
           'id': item.product.id,
           'quantity': item.quantity
@@ -40,11 +44,18 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           'Nonce': '$nonce'
         }
       );
-      print('checking add to cart: ${jsonDecode(response.body)}');
+
+      if (response.statusCode < 200 && response.statusCode > 209) {
+        throw ServerFailure(SERVER_RESPONSE_ERROR);
+      }
       return Cart.fromJson(jsonDecode(response.body));
 
-    } on ServerException {
-      throw ServerException();
+    } on SocketException catch(e) {
+      throw NetworkFailure('cart [addItem] issue [SocketException]: ${e.message}');
+    } on HttpException catch (e) {
+      throw HttpException('cart [addItem] issue [HttpException]: ${e.message}');
+    } catch (_) {
+      rethrow;
     }
   }
 
@@ -55,7 +66,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final token = await secureStorage.readToken();
       final nonce = await secureStorage.readNonce();
       final response = await client.get(
-          Uri.parse('${ApiConfig.API_URL}${ApiConfig.CART}'),
+          Uri.parse('${ApiConfig.apiUrl}${ApiConfig.cart}'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -63,29 +74,30 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
             'Nonce': '$nonce'
           }
       );
-      print('header: ${response.statusCode} - ${response.headers}');
       if (response.statusCode == 200) {
         final secureStorage = SecureStorage();
         final value = parseNonceFromHeader(response.headers);
-        print('checking nonce: $value');
         secureStorage.writeNonce(value);
       }
       final cart = Cart.fromJson(jsonDecode(response.body));
-      print('cart here: ${cart.itemsCount}');
       return cart;
-    } catch (e) {
-      throw Exception(e);
+    } on SocketException catch (e) {
+      throw NetworkFailure('cart [getCart] issue [SocketException]: ${e.message}');
+    } on HttpException catch (e) {
+      throw HttpException('cart [getCart] issue [HttpException]: ${e.message}');
+    } catch (_) {
+      rethrow;
     }
   }
 
   @override
-  Future<Cart> removeProductToCart(String key) async {
+  Future<Cart> removeItem(String key) async {
     try {
       final secureStorage = SecureStorage();
       final nonce = await secureStorage.readNonce();
       final token = await secureStorage.readToken();
       final response = await client.post(
-        Uri.parse('${ApiConfig.API_URL}${ApiConfig.REMOVE_ITEM}'),
+        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.removeItem}'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -96,10 +108,13 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           'key': key
         })
       );
-      print('remove cart response: ${response.body}');
       return Cart.fromJson(jsonDecode(response.body));
-    } catch (e) {
-      throw Exception(e);
+    } on SocketException catch(e) {
+      throw NetworkFailure('cart [removeItem] issue [SocketException]: ${e.message}');
+    } on HttpException catch (e) {
+      throw HttpException('cart [removeItem] issue [HttpException]: ${e.message}');
+    } catch (_) {
+      rethrow;
     }
   }
 
@@ -110,7 +125,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final token = await secureStorage.readToken();
       final nonce = await secureStorage.readNonce();
       final response = await client.post(
-        Uri.parse('${ApiConfig.API_URL}${ApiConfig.UPDATE_ITEM}'),
+        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.updateItem}'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -122,23 +137,38 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           'quantity': quantity
         })
       );
-      final update = Cart.fromJson(jsonDecode(response.body));
-      print('update cart item status code: ${response.statusCode} ${update.item?.length}');
       return Cart.fromJson(jsonDecode(response.body));
-    } on ServerException catch (e) {
-      throw ServerException();
+    } on SocketException catch (e) {
+      throw NetworkFailure('cart [updateCart] issue [SocketException]: ${e.message}');
+    } on HttpException catch(e) {
+      throw HttpException('cart [updateCart] issue [HttpException]: ${e.message}');
+    } catch (_) {
+      rethrow;
     }
   }
 
-}
-
-String parseNonceFromHeader(Map<String, String> headers) {
-  // Check for both possibilities (nonce and x-wc-store-api-nonce)
-  if (headers.containsKey('nonce')) {
-    return headers['nonce']!;
-  } else if (headers.containsKey('x-wc-store-api-nonce')) {
-    return headers['x-wc-store-api-nonce']!;
-  } else {
-    throw Exception('Nonce not found in headers');
+  @override
+  Future<Cart> deleteAllItems() async {
+    try {
+      final secureStorage = SecureStorage();
+      final token = await secureStorage.readToken();
+      final nonce = await secureStorage.readNonce();
+      final response = await client.delete(
+        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.deleteAllItems}'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Nonce': '$nonce'
+        },
+      );
+      return Cart.fromJson(jsonDecode(response.body));
+    } on SocketException catch(e) {
+      throw NetworkFailure('cart [deleteAllItems] issue [SocketException]: ${e.message}');
+    } on HttpException catch(e) {
+      throw HttpException('cart [deleteAllItems] issue [HttpException]: ${e.message}');
+    } catch(_) {
+      rethrow;
+    }
   }
 }

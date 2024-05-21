@@ -19,8 +19,8 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   Future<CustomerModel> getCustomer({required int id}) async {
     try {
       final response = await client.get(
-        Uri.parse('${ApiConfig.API_URL}${ApiConfig.CUSTOMERS}/$id'),
-        headers: ApiConfig.HEADER
+        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.customer}/$id'),
+        headers: ApiConfig.header
       );
       return CustomerModel.fromJson(jsonDecode(response.body));
     } on ServerException {

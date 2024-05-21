@@ -15,4 +15,6 @@ abstract class CartRepository {
 
   Future<Either<Failure, Cart>> updateItem(String key, int quantity) => throw UnimplementedError('Stub');
 
+  Future<Either<Failure, Cart>> deleteAllItems() => throw UnimplementedError('Stub');
+
 }

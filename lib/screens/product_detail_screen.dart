@@ -1,12 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
-import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
-import 'package:ecommerce_app/features/home/data/models/product_model.dart';
+import 'package:ecommerce_app/features/cart/presentation/view/cart_screen.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
-import 'package:ecommerce_app/features/notification/data/models/notification.dart';
-import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
-import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
+import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
@@ -61,12 +58,14 @@ class _DetailScreenState extends State<DetailScreen> {
                 //       )),
                 IconButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) =>
-                              BlocProvider(create: (_) =>
-                              sl<CartBloc>()..add(
-                                  const GetCartEvent()),
-                                  child: const CartScreen(),)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => BlocProvider(
+                                    create: (_) => sl<CartBloc>()
+                                      ..add(const GetCartEvent()),
+                                    child: const CartScreen(),
+                                  )));
                     },
                     icon: Icon(
                       Icons.shopping_cart_outlined,
@@ -102,22 +101,21 @@ class _DetailScreenState extends State<DetailScreen> {
                   padding: const EdgeInsets.all(2.0),
                   child: Positioned(
                     child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const NotificationScreen()));
-                        // notify.resetNotify();
-                      },
-                      icon: Icon(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const NotificationScreen()));
+                          // notify.resetNotify();
+                        },
+                        icon: Icon(
                           // notify.notifyCounter() > 0
                           //     ? Icons.notifications
-                               Icons.notifications_outlined,
+                          Icons.notifications_outlined,
                           // color: notify.notifyCounter() > 0
                           //     ? primaryButton
                           //     : Colors.black),
-                      )
-                    ),
+                        )),
                   ),
                 ),
               ],
@@ -234,8 +232,7 @@ class _DetailScreenState extends State<DetailScreen> {
             onTap: () {
               context.read<CartBloc>().add(AddToCartEvent(
                   item: CartItemModel(
-                      product: widget.product,
-                      quantity: widget.quantity)));
+                      product: widget.product, quantity: widget.quantity)));
             },
           ),
         ));

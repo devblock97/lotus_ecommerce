@@ -17,6 +17,7 @@ import 'package:ecommerce_app/features/cart/data/datasources/cart_remote_data_so
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/add_item.dart';
+import 'package:ecommerce_app/features/cart/domain/use_cases/delete_all_items.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/delete_item.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/get_cart.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/update_item.dart';
@@ -60,17 +61,17 @@ Future<void> init() async {
   sl.registerFactory<OrderBloc>(() => OrderBloc(createOrder: sl()));
   ///
   sl.registerFactory(() => CustomerBloc(getCustomer: sl(), getLastUserInfo: sl()));
-  sl.registerFactory(() => CartBloc(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => CartBloc());
 
-  // Use Case
+  /// Use Case
   sl.registerLazySingleton(() => GetAllProductUseCase(sl()));
-  /// Sign In
+  // Sign In
   sl.registerLazySingleton(() => PostSignIn(authRepository: sl()));
-  /// Sign Up
+  // Sign Up
   sl.registerLazySingleton(() => PostSignUp(sl()));
-  /// Sign Out
+  // Sign Out
   sl.registerLazySingleton(() => PostSignOut(authRepository: sl()));
-  /// Get last user info (used to sign in again with enter form)
+  // Get last user info (used to sign in again with enter form)
   sl.registerLazySingleton(() => GetLastUserInfo(sl()));
   sl.registerLazySingleton(() => CreateOrder(orderRepository: sl()));
 
@@ -83,6 +84,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCart(sl()));
   sl.registerLazySingleton(() => DeleteItem(cartRepository: sl()));
   sl.registerLazySingleton(() => UpdateItem(sl()));
+  sl.registerLazySingleton(() => DeleteAllItems(sl()));
 
   // Repository
   sl.registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl(sl(), sl(), sl()));

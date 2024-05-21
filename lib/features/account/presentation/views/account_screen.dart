@@ -1,7 +1,7 @@
 import 'package:ecommerce_app/features/account/presentation/bloc/customer_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/presentation.dart';
-import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
+import 'package:ecommerce_app/features/cart/presentation/view/cart_screen.dart';
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/theme/theme.dart';

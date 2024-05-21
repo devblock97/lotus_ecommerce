@@ -80,7 +80,7 @@ class AuthResponseError extends Equatable {
     return AuthResponseError(
       json['code'],
       json['message'],
-      json['data']
+      Data.fromJson(json['data'])
     );
   }
 

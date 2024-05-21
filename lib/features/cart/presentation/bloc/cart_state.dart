@@ -6,13 +6,18 @@ abstract class CartState extends Equatable {
   List<Object?> get props => [];
 }
 
+class CartInitialize extends CartState {
+  const CartInitialize();
+}
+
 class CartSuccess extends CartState {
 
-  const CartSuccess(this.carts);
-  final Cart carts;
+  const CartSuccess({required this.cart, this.dismiss});
+  final Cart cart;
+  final bool? dismiss;
 
   @override
-  List<Object?> get props => [carts];
+  List<Object?> get props => [cart, dismiss];
 }
 
 class CartLoading extends CartState {
@@ -35,6 +40,13 @@ class CartDeleteSuccess extends CartState {
 
 class CartDeleteLoading extends CartState {
   const CartDeleteLoading();
+}
+
+/// This class used to indicate state for cart event:
+/// increment item [IncrementItemEvent], decrement item[DecrementItemEvent]
+/// remove item [DecrementItemEvent] and add item [AddToCartEvent]
+class UpdateItemLoading extends CartState {
+  const UpdateItemLoading();
 }
 
 class InCart extends CartState {

@@ -20,7 +20,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthResponseModel> signIn(AuthModel body) async {
     try {
       final response = await client.post(
-          Uri.parse('${ApiConfig.API_URL}${ApiConfig.AUTH}'),
+          Uri.parse('${ApiConfig.apiUrl}${ApiConfig.auth}'),
           headers: {
             'Content-Type': 'application/json',
           },
