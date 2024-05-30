@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/core/extensions/currency_extension.dart';
+import 'package:ecommerce_app/core/extensions/currency.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';

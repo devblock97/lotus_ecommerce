@@ -85,7 +85,12 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.asset('assets/icons/sen_hong.png'),
+                Image.asset(
+                  'assets/icons/sen_hong.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.cover,
+                ),
                 const Gap(30),
                 TextFormField(
                   controller: username,
@@ -243,7 +248,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Gap(30),
                 GestureDetector(
                   onTap: () {
-                    print('On tap to signup');
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => SingUpScreen()));
                   },

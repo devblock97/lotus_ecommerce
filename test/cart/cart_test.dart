@@ -49,7 +49,7 @@ void main() {
 
   test('cart null', () {
     CartRepositoryImpl cart = CartRepositoryImpl();
-    expect(cart.cartLists(), output1);
+    expect(cart.getCarts(), output1);
   });
 
   test('add 1 item to cart', () {

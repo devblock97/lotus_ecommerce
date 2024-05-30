@@ -1,34 +1,27 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/account/presentation/views/account_screen.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/view/cart_screen.dart';
-import 'package:ecommerce_app/inject_container.dart';
-import 'package:ecommerce_app/screens/explore_screen.dart';
 import 'package:ecommerce_app/features/favorite/presentation/favorite_screen.dart';
 import 'package:ecommerce_app/features/home/presentation/view/home_screen.dart';
+import 'package:ecommerce_app/inject_container.dart';
+import 'package:ecommerce_app/screens/explore_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:provider/provider.dart';
-
-import 'package:http/http.dart' as http;
 
 class GroceryApp extends StatefulWidget {
-  const GroceryApp({super.key});
+  const GroceryApp({super.key, this.selectedIndex = 0});
+
+  final int selectedIndex;
 
   @override
   State<GroceryApp> createState() => _EcommerceAppState();
 }
 
 class _EcommerceAppState extends State<GroceryApp> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   final connectivity = InternetConnectionChecker();
   late StreamSubscription<InternetConnectionChecker> _connectivitySubscription;
@@ -50,6 +43,7 @@ class _EcommerceAppState extends State<GroceryApp> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override

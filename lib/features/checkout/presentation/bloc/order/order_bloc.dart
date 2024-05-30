@@ -18,7 +18,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   void _onTapPlaceOrder(TapOnPlaceOrder event, Emitter<OrderState> emit) async {
     emit(const OrderLoading());
-    print('checking order line item: ${event.order.lineItems.length}');
     final response = await createOrder(ParamCreateOrder(order: event.order));
     response.fold(
             (l) => emit(const OrderError()),

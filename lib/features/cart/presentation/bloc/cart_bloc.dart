@@ -7,7 +7,7 @@ import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/add_item.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/delete_all_items.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/delete_item.dart';
-import 'package:ecommerce_app/features/cart/domain/use_cases/get_cart.dart';
+import 'package:ecommerce_app/features/cart/domain/use_cases/get_items.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/update_item.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:equatable/equatable.dart';
@@ -17,7 +17,19 @@ part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
 
-  CartBloc() : super (const CartLoading()) {
+  final GetCart getCart;
+  final AddItemCart addItemCart;
+  final UpdateItem updateItem;
+  final DeleteItem deleteItem;
+  final DeleteAllItems deleteAllItems;
+
+  CartBloc(
+      this.getCart,
+      this.addItemCart,
+      this.updateItem,
+      this.deleteItem,
+      this.deleteAllItems)
+      : super (const CartLoading()) {
     on<AddToCartEvent>((emit, state) => _onAddToCart(emit, state));
     on<GetCartEvent>((emit, state) => _onGetCart(emit, state));
     on<DeleteItemEvent>((emit, state) => _onDeleteItem(emit, state));
@@ -28,7 +40,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onAddToCart(AddToCartEvent event, Emitter<CartState> emit) async {
     try {
-      final response = await sl<AddItemCart>().call(ParamAddItemCart(item: event.item));
+      final response = await addItemCart(ParamAddItemCart(item: event.item));
       response.fold(
           (error) {
             emit(const CartError(message: 'Không thể thêm sản phẩm vào giở hàng'));
@@ -43,8 +55,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onGetCart(GetCartEvent event, Emitter<CartState> emit) async {
+    print('check cart screen trigger');
     try {
-      final response = await sl<GetCart>().call(NoParams());
+      final response = await getCart(NoParams());
       response.fold(
           (error) {
             emit(const CartError(message: 'Xin lỗi, không thể lấy giỏ hàng, vui lòng thử lại sau'));
@@ -60,7 +73,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onDeleteItem(DeleteItemEvent event, Emitter<CartState> emit) async {
     try {
-      final response = await sl<DeleteItem>().call(ParamPostDeleteItem(key: event.key));
+      final response = await deleteItem(ParamPostDeleteItem(key: event.key));
       response.fold(
           (error) => emit(const CartDeleteError()),
           (carts) => emit(CartSuccess(cart: carts, dismiss: true))
@@ -72,7 +85,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onIncrementItem(IncrementItemEvent event, Emitter<CartState> emit) async {
     try {
-      final response = await sl<UpdateItem>().call(PostParamUpdateItem(key: event.key, quantity: event.quantity));
+      final response = await updateItem(PostParamUpdateItem(key: event.key, quantity: event.quantity));
       response.fold(
               (error) {
             if (error is NetworkFailure) {

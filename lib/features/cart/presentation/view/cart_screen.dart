@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/core/extensions/currency_extension.dart';
+import 'package:ecommerce_app/core/extensions/currency.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
@@ -59,6 +59,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: BlocConsumer<CartBloc, CartState>(
         listener: (context, state) {
+          print('check cart state: $state');
           if (state is CartError) {
             
           }
@@ -102,7 +103,15 @@ class _CartScreenState extends State<CartScreen> {
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => CheckOutScreen(carts: state.cart)));
+                        // Navigator.push(context, MaterialPageRoute(
+                        //     builder: (_) => CheckOutScreen(carts: state.cart)));
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          const CustomSnackBar.info(
+                            message: 'Coming soon',
+                            backgroundColor: Colors.orange,
+                          )
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: primaryButton,

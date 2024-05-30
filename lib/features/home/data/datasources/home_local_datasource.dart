@@ -36,7 +36,6 @@ class HomeLocalDataSourceImpl implements HomeLocalDatasource {
       }).toList();
       return products;
     } catch (e) {
-      print('retrieve error');
       return [];
     }
   }
@@ -44,13 +43,9 @@ class HomeLocalDataSourceImpl implements HomeLocalDatasource {
   @override
   Future<void> saveAllProducts(List<ProductModel> products) async {
     try {
-
       final productJson = jsonEncode(products.map((p) {
-        print('checking on save all product: ${jsonEncode(p.toJson())}');
         return p.toJson();
       }).toList());
-      print('on save all product listening: $productJson');
-
       localSource.setString(ALL_PRODUCTS, productJson);
     } on CacheException {
       throw CacheFailure(CACHE_ERROR);

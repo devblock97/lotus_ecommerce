@@ -19,7 +19,7 @@ import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.
 import 'package:ecommerce_app/features/cart/domain/use_cases/add_item.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/delete_all_items.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/delete_item.dart';
-import 'package:ecommerce_app/features/cart/domain/use_cases/get_cart.dart';
+import 'package:ecommerce_app/features/cart/domain/use_cases/get_items.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/update_item.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/checkout/data/datasources/order_remote_datasource.dart';
@@ -61,7 +61,7 @@ Future<void> init() async {
   sl.registerFactory<OrderBloc>(() => OrderBloc(createOrder: sl()));
   ///
   sl.registerFactory(() => CustomerBloc(getCustomer: sl(), getLastUserInfo: sl()));
-  sl.registerFactory(() => CartBloc());
+  sl.registerFactory(() => CartBloc(sl(), sl(), sl(), sl(), sl()));
 
   /// Use Case
   sl.registerLazySingleton(() => GetAllProductUseCase(sl()));
