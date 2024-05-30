@@ -17,12 +17,21 @@ class ApiConfig {
   static String deleteAllItems = '/wc/store/v1/cart/items';
   static String updateItem = '/wc/store/v1/cart/update-item';
   static String removeItem = '/wc/store/v1/cart/remove-item';
-  static String customer = '/wc/v3/customers';
+  static String register = '/wc/v3/customers/';
   static String auth = '/jwt-auth/v1/token';
 
-  static Map<String, String> header = {
+  static Map<String, String> headerSystem = {
     'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.consumerKey}:${ApiConfig.consumerSecret}'))}',
     'Content-Type': 'application/json; charset=utf-8'
   };
+
+  static Map<String, String> headerPersonal(String token, String? nonce) {
+    return {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+      'Nonce': nonce ?? ''
+    };
+  }
 
 }

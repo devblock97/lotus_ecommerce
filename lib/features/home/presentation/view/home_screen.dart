@@ -52,12 +52,9 @@ class _HomeScreenState extends State<HomeScreen>
           slivers: [
             const SliverToBoxAdapter(
               child: SizedBox(
-                height: 50,
+                height: 30,
               ),
             ),
-
-            /// Ecommerce App Bar [_SliverAppBar]
-            const _SliverAppBar(),
 
             const SliverToBoxAdapter(
               child: EcommerceSearchBar(),
@@ -258,37 +255,6 @@ class _CarouselHome extends StatelessWidget {
                   ),
                 ))
             .toList(),
-      ),
-    );
-  }
-}
-
-class _SliverAppBar extends StatelessWidget {
-  const _SliverAppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      title: Column(
-        children: [
-          const Gap(20),
-          SvgPicture.asset('assets/icons/logo.svg'),
-          const Gap(10),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.location_on),
-              Text(
-                'Quan 12, Ho Chi Minh',
-                style:
-                    TextStyle(color: primaryText, fontWeight: FontWeight.bold),
-              ),
-            ],
-          )
-        ],
       ),
     );
   }

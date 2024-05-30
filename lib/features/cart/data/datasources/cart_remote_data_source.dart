@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
-import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:ecommerce_app/core/constants/message_systems.dart';
 import 'package:ecommerce_app/core/utils/secure_storage.dart';
@@ -37,12 +36,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           'id': item.product.id,
           'quantity': item.quantity
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-          'Nonce': '$nonce'
-        }
+        headers: ApiConfig.headerPersonal(token!, nonce!)
       );
 
       if (response.statusCode < 200 && response.statusCode > 209) {
@@ -67,12 +61,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final nonce = await secureStorage.readNonce();
       final response = await client.get(
           Uri.parse('${ApiConfig.apiUrl}${ApiConfig.cart}'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
-            'Nonce': '$nonce'
-          }
+          headers: ApiConfig.headerPersonal(token!, nonce)
       );
       if (response.statusCode == 200) {
         final secureStorage = SecureStorage();
@@ -98,12 +87,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final token = await secureStorage.readToken();
       final response = await client.post(
         Uri.parse('${ApiConfig.apiUrl}${ApiConfig.removeItem}'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
-            'Nonce': '$nonce'
-          },
+          headers: ApiConfig.headerPersonal(token!, nonce!),
         body: jsonEncode({
           'key': key
         })
@@ -126,12 +110,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final nonce = await secureStorage.readNonce();
       final response = await client.post(
         Uri.parse('${ApiConfig.apiUrl}${ApiConfig.updateItem}'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-          'Nonce': '$nonce'
-        },
+        headers: ApiConfig.headerPersonal(token!, nonce!),
         body: jsonEncode({
           'key': key,
           'quantity': quantity
@@ -155,12 +134,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final nonce = await secureStorage.readNonce();
       final response = await client.delete(
         Uri.parse('${ApiConfig.apiUrl}${ApiConfig.deleteAllItems}'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-          'Nonce': '$nonce'
-        },
+        headers: ApiConfig.headerPersonal(token!, nonce!),
       );
       return Cart.fromJson(jsonDecode(response.body));
     } on SocketException catch(e) {

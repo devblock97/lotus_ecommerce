@@ -27,10 +27,6 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
-    // var cart = context.read<CartRepositoryImpl>();
-    // var cartWatch = context.watch<CartRepositoryImpl>();
-    // var notify = context.watch<NotifyRepositoryImpl>();
-    // var notifyRead = context.read<NotifyRepositoryImpl>();
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -38,89 +34,6 @@ class _DetailScreenState extends State<DetailScreen> {
             icon: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          actions: [
-            Stack(
-              children: [
-                // if (cartWatch.cartLists().isNotEmpty)
-                //   Positioned(
-                //       left: 27,
-                //       child: Container(
-                //         padding: const EdgeInsets.all(4),
-                //         decoration: const BoxDecoration(
-                //           color: Colors.red,
-                //           shape: BoxShape.circle
-                //         ),
-                //         child: Text('${cartWatch.cartLists().length}',
-                //             style: const TextStyle(
-                //                 color: Colors.white,
-                //                 fontWeight: FontWeight.bold,
-                //                 fontSize: 10)),
-                //       )),
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => BlocProvider(
-                                    create: (_) => sl<CartBloc>()
-                                      ..add(const GetCartEvent()),
-                                    child: const CartScreen(),
-                                  )));
-                    },
-                    icon: Icon(
-                      Icons.shopping_cart_outlined,
-                      // color: cart.cartLists().isNotEmpty
-                      //     ? primaryButton
-                      //     : Colors.black,
-                    )),
-              ],
-            ),
-            Stack(
-              children: [
-                // if (notify.notifyCounter() > 0)
-                //   Positioned(
-                //       left: 27,
-                //       top: 5,
-                //       child: Container(
-                //         padding: const EdgeInsets.all(4),
-                //         decoration: const BoxDecoration(
-                //           color: Colors.red,
-                //           shape: BoxShape.circle,
-                //         ),
-                //         child: Text(
-                //           notify.notifyCounter() > 9
-                //               ? '9+'
-                //               : '${notify.notifyCounter()}',
-                //           style: const TextStyle(
-                //               color: Colors.white,
-                //               fontWeight: FontWeight.bold,
-                //               fontSize: 10),
-                //         ),
-                //       )),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Positioned(
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const NotificationScreen()));
-                          // notify.resetNotify();
-                        },
-                        icon: Icon(
-                          // notify.notifyCounter() > 0
-                          //     ? Icons.notifications
-                          Icons.notifications_outlined,
-                          // color: notify.notifyCounter() > 0
-                          //     ? primaryButton
-                          //     : Colors.black),
-                        )),
-                  ),
-                ),
-              ],
-            ),
-          ],
           backgroundColor: secondaryBackground,
         ),
         body: SingleChildScrollView(
@@ -316,7 +229,6 @@ class _ProductRatingBarState extends State<_ProductRatingBar> {
                 color: Colors.redAccent,
               ),
               onRatingUpdate: (rating) {
-                print(rating);
               },
             )
           ],

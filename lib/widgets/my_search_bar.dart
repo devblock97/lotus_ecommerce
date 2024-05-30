@@ -18,11 +18,11 @@ class _EcommerceSearchBarState extends State<EcommerceSearchBar> {
           onTap: () {
             controller.openView();
           },
-          backgroundColor: const MaterialStatePropertyAll(secondaryBackground),
-          elevation: MaterialStateProperty.all(5),
-          shape: MaterialStatePropertyAll(
+          backgroundColor: const WidgetStatePropertyAll(secondaryBackground),
+          elevation: WidgetStateProperty.all(5),
+          shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-          hintText: 'Search Store',
+          hintText: 'Nhập tìm kiếm...',
           onChanged: (_) => controller.openView(),
           leading: const Icon(Icons.search_outlined),
         );

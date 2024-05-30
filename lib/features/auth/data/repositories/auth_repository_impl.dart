@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
@@ -84,22 +85,12 @@ class AuthRepositoryImpl implements AuthRepository {
     var isConnected = await networkInfo.isConnected;
     if (isConnected) {
       try {
-        final response = await http.post(
-          Uri.parse('${ApiConfig.apiUrl}${ApiConfig.customer}'),
-          headers: ApiConfig.header,
-          body: jsonEncode({
-            "first_name": body.firstName,
-            "last_name": body.lastName,
-            "email": body.email,
-            "password": body.password
-          })
-        );
-        if (response.statusCode == 200) {
-          final customer = jsonDecode(response.body) as Map<String, dynamic>;
-          return Right(UserModel.fromJson(customer));
-        } else {
-          return Left(ServerFailure('Failed to loading data from server [statusCode: ${response.statusCode}]'));
-        }
+        final response = await remoteDataSource.signUp(body);
+        return Right(response);
+      } on SocketException catch (e) {
+        return Left(NetworkFailure('auth [SignUp] issue: ${e.message}'));
+      } on HttpException catch (e) {
+        return Left(ServerFailure('auth [SignUp] issue: ${e.message}'));
       } catch (e) {
         return Left(ServerFailure('Failed during make http request to server!!!'));
       }
