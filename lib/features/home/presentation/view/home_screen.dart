@@ -7,7 +7,7 @@ import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_event.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_state.dart';
 import 'package:ecommerce_app/features/home/presentation/widgets/product_card.dart' as home;
-import 'package:ecommerce_app/features/home/presentation/widgets/product_skelton.dart';
+import 'package:ecommerce_app/features/home/presentation/widgets/product_skeleton.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
@@ -52,12 +52,9 @@ class _HomeScreenState extends State<HomeScreen>
           slivers: [
             const SliverToBoxAdapter(
               child: SizedBox(
-                height: 50,
+                height: 30,
               ),
             ),
-
-            /// Ecommerce App Bar [_SliverAppBar]
-            const _SliverAppBar(),
 
             const SliverToBoxAdapter(
               child: EcommerceSearchBar(),
@@ -98,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen>
                       productList: state.productList,),
                   );
                 }
-                return const SliverToBoxAdapter(child: ProductSkelton());
+                return const SliverToBoxAdapter(child: ProductSkeleton());
               },
             ),
 
@@ -139,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   );
                 }
-                return const SliverToBoxAdapter(child: ProductSkelton());
+                return const SliverToBoxAdapter(child: ProductSkeleton());
               },
             ),
 
@@ -185,7 +182,7 @@ class ProductsList extends StatelessWidget {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is ProductInitial || state is ProductLoading) {
-           return const ProductSkelton();
+           return const ProductSkeleton();
           }
           if (state is ProductSuccess) {
             return GridView.builder(
@@ -258,37 +255,6 @@ class _CarouselHome extends StatelessWidget {
                   ),
                 ))
             .toList(),
-      ),
-    );
-  }
-}
-
-class _SliverAppBar extends StatelessWidget {
-  const _SliverAppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      title: Column(
-        children: [
-          const Gap(20),
-          SvgPicture.asset('assets/icons/logo.svg'),
-          const Gap(10),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.location_on),
-              Text(
-                'Quan 12, Ho Chi Minh',
-                style:
-                    TextStyle(color: primaryText, fontWeight: FontWeight.bold),
-              ),
-            ],
-          )
-        ],
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
@@ -15,6 +16,7 @@ class UserModel extends Equatable {
   Shipping? shipping;
   bool? isPayingCustomer;
   String? avatarUrl;
+  AuthResponseError? authResponseError;
   // List<MetaData>? metaData;
 
   UserModel(

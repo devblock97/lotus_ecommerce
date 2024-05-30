@@ -1,4 +1,7 @@
+import 'package:ecommerce_app/core/extensions/currency.dart';
+import 'package:ecommerce_app/features/cart/data/models/cart.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +9,10 @@ import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
 class CartItem extends StatefulWidget {
-  CartItem({super.key, required this.product, required this.quantity});
+  CartItem({super.key, required this.product, required this.quantity, this.prices});
 
-  final ProductModel product;
+  final Product product;
+  final Prices? prices;
   int quantity;
 
   @override
@@ -23,8 +27,7 @@ class _CartItemState extends State<CartItem> {
 
   @override
   Widget build(BuildContext context) {
-    var cart = context.read<CartRepositoryImpl>();
-    final image = widget.product.images![0].src!.replaceAll('localhost', '192.168.110.47');
+    final prices = widget.prices;
     return Column(
       children: [
         Row(
@@ -33,7 +36,7 @@ class _CartItemState extends State<CartItem> {
             Flexible(
                 flex: 1,
                 child: Image.network(
-                  image,
+                  widget.product.images![0].src!,
                   fit: BoxFit.contain,
                 )),
             const Gap(10),
@@ -44,48 +47,44 @@ class _CartItemState extends State<CartItem> {
                   children: [
                     ListTile(
                       title: Text(widget.product.name!),
-                      subtitle: const Text('${'cai'}, Price'),
                       trailing: IconButton(
-                        onPressed: () => cart.removeItemToCart(widget.product),
+                        onPressed: () {
+                          context.read<CartBloc>().add(DeleteItemEvent(key: widget.product.key!));
+                        },
                         icon: const Icon(Icons.cancel_outlined),
                       ),
                     ),
                     ListTile(
                       title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                border: Border.all(
-                                    width: 1, color: secondaryButton)),
-                            child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (widget.quantity > 1) {
-                                      cart.decrementItem(widget.product);
-                                    }
-                                  });
-                                },
-                                icon: const Icon(Icons.remove_outlined)),
-                          ),
-                          Text('${widget.quantity}'),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                border:
-                                    Border.all(color: primaryButton, width: 1)),
-                            child: IconButton(
-                                onPressed: () {
-                                  if (widget.quantity < 10) {
-                                    cart.incrementItem(widget.product);
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (widget.quantity > 1) {
+                                    context.read<CartBloc>().add(DecrementItemEvent(key: widget.product.key!, quantity: widget.quantity - 1));
                                   }
-                                },
-                                icon: const Icon(Icons.add_outlined)),
-                          )
+                                });
+                              },
+                              icon: const Icon(Icons.remove_outlined)),
+                          Text('${widget.quantity}'),
+                          IconButton(
+                              onPressed: () {
+                                if (widget.quantity < 10) {
+                                  // cart.incrementItem(widget.product);
+                                  context.read<CartBloc>().add(IncrementItemEvent(key: widget.product.key!, quantity: widget.quantity + 1));
+                                }
+                              },
+                              icon: const Icon(Icons.add_outlined))
                         ],
                       ),
-                      trailing: Text('\$${widget.product.price}'),
+                      trailing: Text(
+                          prices!.price!.format(code: prices.currencyCode!),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600
+                        ),
+                      ),
                     ),
                   ],
                 )),

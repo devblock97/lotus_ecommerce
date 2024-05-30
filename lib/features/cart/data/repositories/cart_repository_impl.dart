@@ -1,80 +1,84 @@
+import 'dart:io';
+
+import 'package:ecommerce_app/core/catchers/errors/failure.dart';
+import 'package:ecommerce_app/core/constants/message_systems.dart';
+import 'package:ecommerce_app/core/network/network_info.dart';
+import 'package:ecommerce_app/features/cart/data/datasources/cart_remote_data_source.dart';
+import 'package:ecommerce_app/features/cart/data/models/cart.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
-import 'package:ecommerce_app/features/home/data/models/product_model.dart';
-import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 
-class CartRepositoryImpl extends ChangeNotifier implements CartRepository {
-  final List<CartItemModel> _cartLists = [];
+class CartRepositoryImpl implements CartRepository {
+
+  CartRepositoryImpl(this.remoteDataSource, this.networkInfo);
+
+  final CartRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo;
 
   @override
-  void addToCart(ProductModel product, int quantity) {
-    if (quantity < 0) return;
-    var isInCart =
-        _cartLists.any((element) => element.product.id == product.id);
+  Future<Either<Failure, Cart>> addItemCart(CartItemModel cart) async {
+    try {
+      final response = await remoteDataSource.addProductToCart(cart);
+      return Right(response);
+    } catch (e) {
+      return Left(CacheFailure(CACHE_ERROR));
+    }
+  }
 
-    if (isInCart) {
-      for (var p in _cartLists) {
-        if (p.product.id == product.id) {
-          p.quantity += quantity;
-        }
+  @override
+  Future<Either<Failure, Cart>> getCarts() async {
+    try {
+      final response = await remoteDataSource.getCarts();
+      return Right(response);
+    } catch (e) {
+      return Left(CacheFailure(CACHE_ERROR));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Cart>> deleteItemCart(String key) async {
+    try {
+      final response = await remoteDataSource.removeItem(key);
+      return Right(response);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Cart>> updateItem(String key, int quantity) async {
+    final isConnected = await networkInfo.isConnected;
+    if (isConnected) {
+      try {
+        final response = await remoteDataSource.updateCart(key, quantity);
+        return Right(response);
+      } on SocketException {
+        return Left(NetworkFailure(INTERNET_CONNECTION_ERROR));
+      } on HttpException {
+        return Left(ServerFailure(SERVER_RESPONSE_ERROR));
+      } catch (e) {
+        return Left(ServerFailure(SERVER_RESPONSE_ERROR));
       }
     } else {
-      final item = CartItemModel(product: product, quantity: quantity);
-      _cartLists.add(item);
+      return Left(NetworkFailure(INTERNET_CONNECTION_ERROR));
     }
-    notifyListeners();
   }
 
   @override
-  void addAllProductFromFavorite(List<ProductModel> listItems) {
-    for (var i = 0; i < listItems.length; i++) {
-      addToCart(listItems[i], 1);
+  Future<Either<Failure, Cart>> deleteAllItems() async {
+    final isConnected = await networkInfo.isConnected;
+    if (isConnected) {
+      try {
+        final response = await remoteDataSource.deleteAllItems();
+        return Right(response);
+      } catch (e) {
+        return Left(ServerFailure(SERVER_RESPONSE_ERROR));
+      }
+    } else {
+      return Left(NetworkFailure(INTERNET_CONNECTION_ERROR));
     }
-    notifyListeners();
   }
 
-  @override
-  void clearItemAllItemToCart() {
-    _cartLists.clear();
-    notifyListeners();
-  }
 
-  @override
-  void decrementItem(ProductModel product) {
-    _cartLists.firstWhere((cart) => cart.product.id == product.id).quantity--;
-    notifyListeners();
-  }
-
-  @override
-  void incrementItem(ProductModel product) {
-    _cartLists.firstWhere((cart) => cart.product.id == product.id).quantity++;
-    notifyListeners();
-  }
-
-  @override
-  void removeItemToCart(ProductModel product) {
-    final item = _cartLists.firstWhere((cart) => cart.product.id == product.id);
-    _cartLists.remove(item);
-    notifyListeners();
-  }
-
-  @override
-  List<CartItemModel> cartLists() {
-    return _cartLists;
-  }
-
-  @override
-  String totalPrice() => _cartLists
-      .fold<double>(
-          0,
-          (previousValue, cart) =>
-              previousValue + (double.parse(cart.product.price!) * cart.quantity))
-      .toStringAsPrecision(6);
-
-  @override
-  int productQuantity(ProductModel product) {
-    return _cartLists
-        .firstWhere((cart) => cart.product.id == product.id)
-        .quantity;
-  }
 }

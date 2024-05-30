@@ -1,9 +1,10 @@
+import 'package:ecommerce_app/widgets/skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ProductSkelton extends StatelessWidget {
-  const ProductSkelton({super.key});
+class ProductSkeleton extends StatelessWidget {
+  const ProductSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +20,15 @@ class ProductSkelton extends StatelessWidget {
           childAspectRatio: 0.7
       ),
       itemBuilder: (BuildContext context, int index) {
-        return const SkeltonLoading();
+        return const SkeletonLoading();
       },
     );
   }
 }
 
 
-class SkeltonLoading extends StatelessWidget {
-  const SkeltonLoading({
+class SkeletonLoading extends StatelessWidget {
+  const SkeletonLoading({
     super.key,
   });
 
@@ -35,55 +36,27 @@ class SkeltonLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
-        Skelton(
+        Skeleton(
           height: 20,
         ),
         Gap(10),
-        Skelton(
+        Skeleton(
           width: 120,
           height: 120,
         ),
         Gap(10),
-        Skelton(height: 20,),
+        Skeleton(height: 20,),
         Gap(10),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: Skelton(height: 20)),
+            Expanded(child: Skeleton(height: 20)),
             Gap(10),
-            Expanded(child: Skelton(height: 20,))
+            Expanded(child: Skeleton(height: 20,))
           ],
         )
       ],
-    );
-  }
-}
-
-class Skelton extends StatelessWidget {
-  const Skelton({
-    super.key,
-    this.width,
-    this.height
-  });
-
-  final double? width;
-  final double? height;
-
-  @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      highlightColor: Colors.grey,
-      baseColor: Colors.black,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.black.withOpacity(0.1)
-        ),
-      ),
     );
   }
 }

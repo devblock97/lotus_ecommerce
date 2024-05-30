@@ -45,10 +45,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onSignInRequest(SignInRequest event, Emitter<AuthState> emit) async {
     emit(const AuthenticationLoading());
     final response = await postSignIn!(ParamPostSignIn(event.authModel));
-    print('auth bloc response: $response');
     response.fold(
       (l) {
-        print('checking left: $l');
         if (l is ServerFailure) {
           emit(const AuthenticationError(code: 500, 'Failed to response from server'));
         }
@@ -56,7 +54,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(const AuthenticationError(code: 503, 'Internet connection failure!'));
         }
         if (l is InputInvalid) {
-          print('user invalid emit');
           emit(const AuthenticationInvalid(error: 'Tên đăng nhập hoặc mật khẩu không hợp lệ'));
         }
       },
@@ -70,7 +67,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onSignUpRequest(SignUpRequest event, Emitter<AuthState> emit) async {
     emit(const AuthenticationLoading());
     final response = await postSignUp!(ParamPostSignUp(event.body));
-    print('sign up response: ${response.toString()}');
     response.fold(
       (l) {
         if (l is ServerFailure) {

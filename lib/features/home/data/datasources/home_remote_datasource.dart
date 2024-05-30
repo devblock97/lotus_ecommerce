@@ -18,11 +18,11 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<List<ProductModel>> getAllProducts() async {
     try {
-      var url = Uri.parse(ApiConfig.API_URL + ApiConfig.PRODUCTS);
+      var url = Uri.parse(ApiConfig.apiUrl + ApiConfig.products);
       var header = {
-        'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.CONSUMER_KEY}:${ApiConfig.CONSUMER_SECRECT}'))}'
+        'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.register}:${ApiConfig.consumerSecret}'))}'
       };
-      final response = await client.get(url, headers: ApiConfig.HEADER);
+      final response = await client.get(url, headers: ApiConfig.headerSystem);
       if (response.statusCode == 200) {
         List<ProductModel> allProducts = [];
         final body = jsonDecode(response.body) as List;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 @immutable
 class TextFormWidget extends StatelessWidget {
@@ -8,6 +9,7 @@ class TextFormWidget extends StatelessWidget {
       this.leadingIcon,
       this.trailingIcon,
       this.controller,
+      this.validator,
       this.obscureText = false});
 
   final String label;
@@ -15,16 +17,23 @@ class TextFormWidget extends StatelessWidget {
   final Icon? leadingIcon;
   final TextEditingController? controller;
   final bool obscureText;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      autofocus: true,
       decoration: InputDecoration(
-          label: Text(label),
-          prefixIcon: leadingIcon,
-          suffixIcon: trailingIcon),
+        label: Text(label),
+        prefixIcon: leadingIcon,
+        suffixIcon: trailingIcon,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8)
+        )
+      ),
       obscureText: obscureText,
+      validator: validator,
     );
   }
 }

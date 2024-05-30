@@ -26,7 +26,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
           final customer = await getCustomer(const ParamGetCustomer(2));
           customer.fold(
             (error) {
-                print('reponse error');
                 if (error is ServerFailure) {
                   emit(CustomerError(error.error));
                 }

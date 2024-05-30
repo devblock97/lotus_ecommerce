@@ -1,7 +1,9 @@
+import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/account/presentation/bloc/customer_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/presentation.dart';
-import 'package:ecommerce_app/features/cart/presentation/cart_screen.dart';
+import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:ecommerce_app/features/cart/presentation/view/cart_screen.dart';
 import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/theme/theme.dart';
@@ -33,15 +35,15 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     var theme = context.watch<ThemeSelector>();
-    final MaterialStateProperty<Color?> overlayColor =
-    MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
+    final WidgetStateProperty<Color?> overlayColor =
+    WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
         // Material color when switch is selected.
-        if (states.contains(MaterialState.selected)) {
+        if (states.contains(WidgetState.selected)) {
           return Colors.amber.withOpacity(0.54);
         }
         // Material color when switch is disabled.
-        if (states.contains(MaterialState.disabled)) {
+        if (states.contains(WidgetState.disabled)) {
           return Colors.grey.shade400;
         }
         // Otherwise return null to set default material color
@@ -50,11 +52,11 @@ class _AccountScreenState extends State<AccountScreen> {
         return null;
       },
     );
-    final MaterialStateProperty<Color?> trackColor =
-    MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
+    final WidgetStateProperty<Color?> trackColor =
+    WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
         // Track color when the switch is selected.
-        if (states.contains(MaterialState.selected)) {
+        if (states.contains(WidgetState.selected)) {
           return primaryButton;
         }
         // Otherwise return null to set default track color
@@ -77,13 +79,12 @@ class _AccountScreenState extends State<AccountScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
-                      print('checking customer state: $state; status = ${state is Authenticated}');
                       if (state is Authenticated) {
                         return ListTile(
                           leading: CircleAvatar(
                             maxRadius: 45,
                             backgroundColor: Colors.transparent,
-                            child: Image.asset('assets/products/apple.png'),
+                            child: Image.asset('assets/icons/user_profile.jpg'),
                           ),
                           title: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,14 +105,14 @@ class _AccountScreenState extends State<AccountScreen> {
                           backgroundColor: Colors.transparent,
                           child: Image.asset('assets/products/apple.png'),
                         ),
-                        title: Text('Ban chưa đăng nhập'),
+                        title: const Text('Ban chưa đăng nhập'),
                       );
                     },
                   ),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const CartScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const GroceryApp(selectedIndex: 2,)));
                   },
                   leading: const Icon(Icons.shopping_bag_outlined),
                   title: const Text('Đơn hàng'),
@@ -119,54 +120,61 @@ class _AccountScreenState extends State<AccountScreen> {
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                const ExpansionTile(
-                  leading: Icon(Icons.credit_card_outlined),
-                  title: Text('Đơn hàng đã mua'),
+                ExpansionTile(
+                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  leading: const Icon(Icons.credit_card_outlined),
+                  title: const Text('Đơn hàng đã mua'),
                   initiallyExpanded: true,
-                  trailing: Icon(Icons.keyboard_arrow_right),
+                  trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                const ExpansionTile(
-                  leading: Icon(Icons.location_on_outlined),
-                  title: Text('Địa chỉ giao hàng'),
+                ExpansionTile(
+                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  leading: const Icon(Icons.location_on_outlined),
+                  title: const Text('Địa chỉ giao hàng'),
                   initiallyExpanded: true,
-                  trailing: Icon(Icons.keyboard_arrow_right),
+                  trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                const ExpansionTile(
-                  leading: Icon(Icons.payments_outlined),
-                  title: Text('Phương thức thanh toán'),
+                ExpansionTile(
+                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  leading: const Icon(Icons.payments_outlined),
+                  title: const Text('Phương thức thanh toán'),
                   initiallyExpanded: true,
-                  trailing: Icon(Icons.keyboard_arrow_right),
+                  trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                const ExpansionTile(
-                  leading: Icon(Icons.credit_score),
-                  title: Text('Thẻ tín dụng'),
+                ExpansionTile(
+                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  leading: const Icon(Icons.credit_score),
+                  title: const Text('Thẻ tín dụng'),
                   initiallyExpanded: true,
-                  trailing: Icon(Icons.keyboard_arrow_right),
+                  trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const NotificationScreen()));
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (_) => const NotificationScreen()));
+                    _showFeatureComingSoon();
                   },
                   leading: const Icon(Icons.notifications_outlined),
                   title: const Text('Thông báo'),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                const ExpansionTile(
-                  leading: Icon(Icons.help_outline),
-                  title: Text('Trợ giúp'),
+                ExpansionTile(
+                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  leading: const Icon(Icons.help_outline),
+                  title: const Text('Trợ giúp'),
                   initiallyExpanded: true,
-                  trailing: Icon(Icons.keyboard_arrow_right),
+                  trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                const ExpansionTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text('Giới thiệu'),
+                ExpansionTile(
+                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  leading: const Icon(Icons.info_outline),
+                  title: const Text('Giới thiệu'),
                   initiallyExpanded: true,
-                  trailing: Icon(Icons.keyboard_arrow_right),
+                  trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 SwitchListTile(
-                  title: const Text('Light theme'),
+                  title: const Text('Dark theme'),
                   value: selected,
                   trackColor: trackColor,
                   overlayColor: overlayColor,
@@ -195,18 +203,16 @@ class _AccountScreenState extends State<AccountScreen> {
                         Navigator.pop(context);
                         showTopSnackBar(
                           Overlay.of(context),
-                          CustomSnackBar.success(message: 'Sign out successful!')
+                          const CustomSnackBar.success(message: 'Sign out successful!')
                         );
                       }
                     },
                     builder: (context, state) {
                       final isLoggedIn = (state is Authenticated);
-                      print('checking is logged in: $isLoggedIn');
                       return EcommerceButton(
                         title: isLoggedIn ? 'Đăng xuất' : 'Đăng nhập',
                         onTap: () {
                          if (isLoggedIn) {
-                           print('on tap logout');
                            context.read<AuthBloc>().add(SignOutRequest());
                          } else {
                            Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
@@ -222,6 +228,11 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
     );
+  }
+
+  void _showFeatureComingSoon() {
+    showTopSnackBar(Overlay.of(context), const CustomSnackBar.info(
+        message: 'Coming soon', backgroundColor: Colors.orange,));
   }
 }
 
