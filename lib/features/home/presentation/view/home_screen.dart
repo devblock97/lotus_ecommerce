@@ -188,9 +188,10 @@ class ProductsList extends StatelessWidget {
             return GridView.builder(
               physics: const ClampingScrollPhysics(),
               shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.67
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200.0,
+                  mainAxisSpacing: 2.0,
+                  childAspectRatio: 0.67,
                 ),
                 itemCount: state.productList.length,
                 itemBuilder: (_, index) {

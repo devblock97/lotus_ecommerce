@@ -143,7 +143,7 @@ class _DetailScreenState extends State<DetailScreen> {
           child: EcommerceButton(
             title: 'Thêm vào giỏ hàng',
             onTap: () {
-              context.read<CartBloc>().add(AddToCartEvent(
+              context.read<CartBloc>().add(AddItemEvent(
                   item: CartItemModel(
                       product: widget.product, quantity: widget.quantity)));
             },

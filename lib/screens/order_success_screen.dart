@@ -17,11 +17,11 @@ class OrderSuccessScreen extends StatelessWidget {
         Image.asset('assets/icons/success.png'),
         const Spacer(),
         const Text(
-          'Your Order has been accepted',
+          'Chúc mừng bạn đã đặt hàng thành công',
           style: textPrimaryStyle,
         ),
         const Text(
-          'Your items has been placcd and is on \nit\'s way to being processed',
+          'Your items has been placce and is on \nit\'s way to being processed',
           style: textSecondaryStyle,
         ),
         const Spacer(),
@@ -30,12 +30,12 @@ class OrderSuccessScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: EcommerceButton(
-                title: 'Track Order',
+                title: 'Xem đơn hàng',
                 onTap: () {},
               ),
             )),
         EcommerceButton(
-            title: 'Back to home',
+            title: 'Tiếp tục mua hàng',
             titleColor: primaryText,
             backgroundColor: Colors.transparent,
             onTap: () => Navigator.pushAndRemoveUntil(

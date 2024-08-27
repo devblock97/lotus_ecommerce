@@ -9,6 +9,7 @@ import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AuthRemoteDataSource {
@@ -31,11 +32,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
           body: jsonEncode(body.toJson())
       );
-      if (response.statusCode == 403) {
-        return AuthResponseModel(error: AuthResponseError.fromJson(
+      debugPrint('access token: ${jsonDecode(response.body)}');
+      if (response.statusCode == 200) {
+        return AuthResponseModel(success: AuthResponseSuccess.fromJson(
             jsonDecode(response.body)));
       }
-      return AuthResponseModel(success: AuthResponseSuccess.fromJson(
+      return AuthResponseModel(error: AuthResponseError.fromJson(
           jsonDecode(response.body)));
     } on ServerException catch (e) {
       throw ServerException();
@@ -48,7 +50,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> signUp(SignUpModel body) async {
     try {
       final response = await http.post(
-          Uri.parse('${ApiConfig.apiUrl}${ApiConfig.register}'),
+          Uri.parse('${ApiConfig.apiUrl}${ApiConfig.customer}'),
           headers: ApiConfig.headerSystem,
           body: jsonEncode({
             'username': body.username,

@@ -29,8 +29,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       this.updateItem,
       this.deleteItem,
       this.deleteAllItems)
-      : super (const CartLoading()) {
-    on<AddToCartEvent>((emit, state) => _onAddToCart(emit, state));
+      : super (const CartInitialize()) {
+    on<AddItemEvent>((emit, state) => _onAddToCart(emit, state));
     on<GetCartEvent>((emit, state) => _onGetCart(emit, state));
     on<DeleteItemEvent>((emit, state) => _onDeleteItem(emit, state));
     on<IncrementItemEvent>((emit, state) => _onIncrementItem(emit, state));
@@ -38,7 +38,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<DeleteAllItemEvent>((emit,state) => _onDeleteAllItems(emit, state));
   }
 
-  Future<void> _onAddToCart(AddToCartEvent event, Emitter<CartState> emit) async {
+  Future<void> _onAddToCart(AddItemEvent event, Emitter<CartState> emit) async {
     try {
       final response = await addItemCart(ParamAddItemCart(item: event.item));
       response.fold(

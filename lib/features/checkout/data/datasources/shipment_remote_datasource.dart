@@ -24,7 +24,7 @@ class CheckoutRemoteDataSourceImpl implements CheckOutRemoteDataSource {
   Future<CustomerModel> getRemoteCustomerInfo({required int userId}) async {
     try {
       final response = await client.get(
-        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.register}/$userId'),
+        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.customer}/$userId'),
         headers: ApiConfig.headerSystem
       );
 

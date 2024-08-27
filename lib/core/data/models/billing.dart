@@ -42,17 +42,17 @@ class Billing {
   }
 
   Map<String, dynamic> toJson() => {
-    'first_name': firstName,
-    'last_name': lastName,
-    'company': company,
-    'address_1': address1,
-    'address_2': address2,
-    'city': city,
-    'postcode': postcode,
-    'country': country,
-    'state': state,
-    'email': email,
-    'phone': phone,
+    'first_name': firstName ?? '',
+    'last_name': lastName ?? '',
+    'company': company ?? '',
+    'address_1': address1 ?? '',
+    'address_2': address2 ?? '',
+    'city': city ?? '',
+    'postcode': postcode ?? '',
+    'country': country ?? '',
+    'state': state ?? '',
+    'email': email ?? '',
+    'phone': phone ?? '',
   };
 
 }

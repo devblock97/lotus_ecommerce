@@ -1,27 +1,29 @@
 class Shipping {
-  final String firstName;
-  final String lastName;
-  final String company;
+  final String? firstName;
+  final String? lastName;
+  final String? company;
   final String address1;
-  final String address2;
-  final String city;
-  final String postcode;
-  final String country;
-  final String state;
-  final String phone;
+  final String? address2;
+  final String? city;
+  final String? postcode;
+  final String? country;
+  final String? state;
+  final String? phone;
 
   Shipping({
-    required this.firstName,
-    required this.lastName,
-    required this.company,
+    this.firstName,
+    this.lastName,
+    this.company,
     required this.address1,
-    required this.address2,
-    required this.city,
-    required this.postcode,
-    required this.country,
-    required this.state,
-    required this.phone,
+    this.address2,
+    this.city,
+    this.postcode,
+    this.country,
+    this.state,
+    this.phone,
   });
+
+  bool isEmpty() => city!.isEmpty && address1.isEmpty && address2!.isEmpty;
 
   factory Shipping.fromJson(Map<String, dynamic> json) {
     return Shipping(
@@ -39,15 +41,15 @@ class Shipping {
   }
 
   Map<String, dynamic> toJson() => {
-    'first_name': firstName,
-    'last_name': lastName,
-    'company': company,
-    'address_1': address1,
-    'address_2': address2,
-    'city': city,
-    'postcode': postcode,
-    'country': country,
-    'state': state,
-    'phone': phone,
+    'first_name': firstName ?? '',
+    'last_name': lastName ?? '',
+    'company': company ?? '',
+    'address_1': address1 ?? '',
+    'address_2': address2 ?? '',
+    'city': city ?? '',
+    'postcode': postcode ?? '',
+    'country': country ?? '',
+    'state': state ?? '',
+    'phone': phone ?? '',
   };
 }

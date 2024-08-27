@@ -4,12 +4,12 @@ import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/presentation.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -25,6 +25,8 @@ class SingUpScreen extends StatefulWidget {
 
 class _SingUpScreenState extends State<SingUpScreen> {
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final username = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
@@ -33,6 +35,8 @@ class _SingUpScreenState extends State<SingUpScreen> {
   bool isValidate = false;
 
   final authBloc = sl<AuthBloc>();
+
+  StringBuffer error = StringBuffer();
 
   @override
   Widget build(BuildContext context) {
@@ -62,160 +66,173 @@ class _SingUpScreenState extends State<SingUpScreen> {
               );
             }
           },
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/icons/sen_hong.png',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.cover,
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(8),
+              shrinkWrap: true,
+              children: [
+                Image.asset(
+                  'assets/icons/sen_hong.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
+                ),
+                const Gap(30),
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: const Text('Username'),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
+                    )
                   ),
-                  RichText(
-                      textAlign: TextAlign.left,
-                      textDirection: TextDirection.ltr,
-                      text: const TextSpan(
-                          text: 'Sign Up\n',
-                          style: TextStyle(
-                              color: primaryText,
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'Enter your credentials to continue',
-                                style: TextStyle(
-                                    color: secondaryText,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal))
-                          ])),
-                  const Gap(30),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      label: const Text('Username'),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)
-                      )
+                  onChanged: (value) {
+                    setState(() {
+                      isValidate = username.text.isNotEmpty
+                          && email.text.isNotEmpty
+                          && confirmPassword.text.isNotEmpty
+                          && password.text.isNotEmpty;
+                    });
+                  },
+                  controller: username,
+                ),
+                const Gap(20),
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: const Text('Email'),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
+                    )
+                  ),
+                  validator: (email) => email!.isValidEmail() ? null : 'Email is invalid',
+                  onChanged: (value) {
+                    setState(() {
+                      isValidate = username.text.isNotEmpty
+                          && email.text.isNotEmpty
+                          && confirmPassword.text.isNotEmpty
+                          && password.text.isNotEmpty;
+                    });
+                  },
+                  controller: email,
+                ),
+                const Gap(20),
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: const Text('Password'),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        isValidate = username.text.isNotEmpty
-                            && email.text.isNotEmpty
-                            && password.text.isNotEmpty;
-                      });
-                    },
-                    controller: username,
+                    suffixIcon: const Icon(Icons.remove_red_eye)
                   ),
-                  const Gap(20),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      label: const Text('Email'),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)
-                      )
+                  validator: (value) {
+                    if (!value!.isValidPassword()) {
+                      return 'Password must be at least 8 characters long and contain:\n'
+                          '* At least one uppercase letter (A-Z)\n'
+                          '* At least one lowercase letter (a-z)\n'
+                          '* At least one number (0-9)\n'
+                          '* At least one special character (!@#\$&*~)';
+                    }
+                    return null;
+                  },
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onChanged: (value) {
+                    setState(() {
+                      isValidate = username.text.isNotEmpty
+                          && email.text.isNotEmpty
+                          && confirmPassword.text.isNotEmpty
+                          && password.text.isNotEmpty;
+                    });
+                  },
+                  controller: password,
+                  obscureText: true,
+                ),
+                const Gap(20),
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: const Text('Confirm password'),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
                     ),
-                    validator: (email) => email!.isValidEmail() ? null : 'Email is invalid',
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    onChanged: (value) {
-                      setState(() {
-                        isValidate = username.text.isNotEmpty
-                            && email.text.isNotEmpty
-                            && password.text.isNotEmpty;
-                      });
-                    },
-                    controller: email,
+                    suffixIcon: const Icon(Icons.remove_red_eye),
                   ),
-                  const Gap(20),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      label: const Text('Password'),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)
-                      ),
-                      suffixIcon: const Icon(Icons.remove_red_eye)
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        isValidate = username.text.isNotEmpty
-                            && email.text.isNotEmpty
-                            && password.text.isNotEmpty;
-                      });
-                    },
-                    controller: password,
-                    obscureText: true,
-                  ),
-                  const Gap(20),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      label: const Text('Confirm password'),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)
-                      ),
-                      suffixIcon: const Icon(Icons.remove_red_eye),
-                    ),
-                    validator: (input) => input!.hasMatchPassword(password.text)
-                        ? null : 'Password has not matching',
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    controller: confirmPassword,
-                    obscureText: true,
-                  ),
-                  const Gap(10),
-                  RichText(
+                  validator: (input) => input!.hasMatchPassword(password.text)
+                      ? null : 'Password has not matching',
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  controller: confirmPassword,
+                  obscureText: true,
+                  onChanged: (value) {
+                    isValidate = username.text.isNotEmpty
+                        && email.text.isNotEmpty
+                        && confirmPassword.text.isNotEmpty
+                        && password.text.isNotEmpty;
+                  },
+                ),
+                const Gap(10),
+                RichText(
+                  text: const TextSpan(
+                      text: 'By continuing you agree to our ',
+                      style: TextStyle(color: secondaryText),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'Terms of Service ',
+                            style: TextStyle(color: primaryButton)),
+                        TextSpan(
+                          text: 'and ',
+                          style: TextStyle(color: secondaryText),
+                        ),
+                        TextSpan(
+                            text: 'Privacy Policy.',
+                            style: TextStyle(color: primaryButton))
+                      ]),
+                ),
+                const Gap(30),
+                ElevatedButton(
+                  onPressed: isValidate
+                      ? () {
+                          final body = SignUpModel(
+                            username: username.text.toString(),
+                            email: email.text.toString(),
+                            password: password.text.toString());
+                          authBloc.add(SignUpRequest(body));
+                          if (_formKey.currentState!.validate()) {
+                            print('value valid: ${_formKey.currentState}');
+                            setState(() {
+                              error.clear();
+                            });
+                          } else {
+                            final form = _formKey.currentState;
+                            setState(() {
+                              error.write('value is invalid');
+                            });
+                          }
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.all(22),
+                      minimumSize: const Size.fromHeight(50),
+                      backgroundColor: primaryButton),
+                  child: const Text('Sign Up'),
+                ),
+                const Gap(30),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  },
+                  child: RichText(
                     text: const TextSpan(
-                        text: 'By continuing you agree to our ',
+                        text: 'I have already an account? ',
                         style: TextStyle(color: secondaryText),
                         children: <TextSpan>[
                           TextSpan(
-                              text: 'Terms of Service ',
+                              text: 'Login',
                               style: TextStyle(color: primaryButton)),
-                          TextSpan(
-                            text: 'and ',
-                            style: TextStyle(color: secondaryText),
-                          ),
-                          TextSpan(
-                              text: 'Privacy Policy.',
-                              style: TextStyle(color: primaryButton))
                         ]),
                   ),
-                  const Gap(30),
-                  ElevatedButton(
-                    onPressed: isValidate
-                        ? () {
-                            final body = SignUpModel(
-                              username: username.text.toString(),
-                              email: email.text.toString(),
-                              password: password.text.toString());
-                            authBloc.add(SignUpRequest(body));
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        padding: const EdgeInsets.all(22),
-                        minimumSize: const Size.fromHeight(50),
-                        backgroundColor: primaryButton),
-                    child: const Text('Sign Up'),
-                  ),
-                  const Gap(30),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()));
-                    },
-                    child: RichText(
-                      text: const TextSpan(
-                          text: 'I have already an account? ',
-                          style: TextStyle(color: secondaryText),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: 'Login',
-                                style: TextStyle(color: primaryButton)),
-                          ]),
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),

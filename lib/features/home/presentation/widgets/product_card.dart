@@ -135,7 +135,7 @@ class _AddProductButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        context.read<CartBloc>().add(AddToCartEvent(item: CartItemModel(product: product, quantity: 1)));
+        context.read<CartBloc>().add(AddItemEvent(item: CartItemModel(product: product, quantity: 1)));
       },
       style: ElevatedButton.styleFrom(
           minimumSize: const Size(40, 40),

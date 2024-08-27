@@ -3,19 +3,19 @@ import 'shipping.dart';
 
 class CustomerModel {
   final int id;
-  final String dateCreated;
-  final String dateCreatedGmt;
-  final String dateModified;
-  final String dateModifiedGmt;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String role;
-  final String username;
-  final Billing billing;
-  final Shipping shipping;
-  final bool isPayingCustomer;
-  final String avatarUrl;
+  final String? dateCreated;
+  final String? dateCreatedGmt;
+  final String? dateModified;
+  final String? dateModifiedGmt;
+  final String? email;
+  final String? firstName;
+  final String? lastName;
+  final String? role;
+  final String? username;
+  final Billing? billing;
+  final Shipping? shipping;
+  final bool? isPayingCustomer;
+  final String? avatarUrl;
 
   CustomerModel({
     required this.id,
@@ -69,8 +69,8 @@ class CustomerModel {
     'last_name': lastName,
     'role': role,
     'username': username,
-    'billing': billing.toJson(), // Call toJson on nested object
-    'shipping': shipping.toJson(), // Call toJson on nested object
+    'billing': billing?.toJson(), // Call toJson on nested object
+    'shipping': shipping?.toJson(), // Call toJson on nested object
     'is_paying_customer': isPayingCustomer,
     'avatar_url': avatarUrl,
   };
