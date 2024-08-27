@@ -13,7 +13,7 @@ class AuthenticationInitialize extends AuthState {
 }
 
 class Authenticated extends AuthState {
-  final AuthResponseModel authResponseModel;
+  final AuthResponseModel? authResponseModel;
   const Authenticated(this.authResponseModel);
 }
 

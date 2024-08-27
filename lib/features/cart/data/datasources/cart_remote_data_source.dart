@@ -8,6 +8,7 @@ import 'package:ecommerce_app/core/utils/secure_storage.dart';
 import 'package:ecommerce_app/core/utils/utils.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 abstract class CartRemoteDataSource {
@@ -30,6 +31,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       final secureStorage = SecureStorage();
       final token = await secureStorage.readToken();
       final nonce = await secureStorage.readNonce();
+      print('token here: $token - $nonce');
       final response = await client.post(
         Uri.parse('${ApiConfig.apiUrl}${ApiConfig.addItem}'),
         body: jsonEncode({
@@ -39,9 +41,19 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         headers: ApiConfig.headerPersonal(token!, nonce!)
       );
 
+      debugPrint('check response: ${jsonDecode(response.body)}');
+
       if (response.statusCode < 200 && response.statusCode > 209) {
         throw ServerFailure(SERVER_RESPONSE_ERROR);
       }
+
+      if (response.statusCode == 403) {
+        debugPrint('check nonce add to card: ${response.headers}');
+        secureStorage.writeNonce(parseNonceFromHeader(response.headers));
+        return addProductToCart(item);
+      }
+
+      print('add to cart code: ${response.statusCode}');
       return Cart.fromJson(jsonDecode(response.body));
 
     } on SocketException catch(e) {
@@ -63,11 +75,16 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           Uri.parse('${ApiConfig.apiUrl}${ApiConfig.cart}'),
           headers: ApiConfig.headerPersonal(token!, nonce)
       );
+      print('get cart nonce: $nonce; $token');
       if (response.statusCode == 200) {
         final secureStorage = SecureStorage();
         final value = parseNonceFromHeader(response.headers);
         secureStorage.writeNonce(value);
       }
+      if (response.statusCode == 403) {
+        debugPrint('check nonce: ${response.headers}');
+      }
+      print('status code: ${response.statusCode} - ${response.body}');
       final cart = Cart.fromJson(jsonDecode(response.body));
       return cart;
     } on SocketException catch (e) {

@@ -6,9 +6,11 @@ import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
+import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/localizations/app_localizations.dart';
 import 'package:ecommerce_app/theme/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,7 +19,9 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   HttpOverrides.global = MyHttpOverrides();
 
   /// Local DB with Hive

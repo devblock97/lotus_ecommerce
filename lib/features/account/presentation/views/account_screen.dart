@@ -1,10 +1,8 @@
 import 'package:ecommerce_app/app.dart';
+import 'package:ecommerce_app/core/utils/utils.dart';
 import 'package:ecommerce_app/features/account/presentation/bloc/customer_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/presentation.dart';
-import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
-import 'package:ecommerce_app/features/cart/presentation/view/cart_screen.dart';
-import 'package:ecommerce_app/features/notification/presentation/notify_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/theme/theme.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
@@ -89,14 +87,14 @@ class _AccountScreenState extends State<AccountScreen> {
                           title: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(state.authResponseModel.success!.userDisplayName),
+                              Text(state.authResponseModel == null ? 'Chưa đăng nhập': state.authResponseModel!.success!.data.displayName!),
                               const Icon(
                                 Icons.edit,
                                 color: primaryButton,
                               )
                             ],
                           ),
-                          subtitle: Text(state.authResponseModel.success!.userEmail),
+                          subtitle: Text(state.authResponseModel == null ? '' : state.authResponseModel!.success!.data.email!),
                         );
                       }
                       return ListTile(
@@ -121,28 +119,28 @@ class _AccountScreenState extends State<AccountScreen> {
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
-                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  onExpansionChanged: (value) => showFeatureComingSoon(context),
                   leading: const Icon(Icons.credit_card_outlined),
                   title: const Text('Đơn hàng đã mua'),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
-                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  onExpansionChanged: (value) => showFeatureComingSoon(context),
                   leading: const Icon(Icons.location_on_outlined),
                   title: const Text('Địa chỉ giao hàng'),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
-                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  onExpansionChanged: (value) => showFeatureComingSoon(context),
                   leading: const Icon(Icons.payments_outlined),
                   title: const Text('Phương thức thanh toán'),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
-                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  onExpansionChanged: (value) => showFeatureComingSoon(context),
                   leading: const Icon(Icons.credit_score),
                   title: const Text('Thẻ tín dụng'),
                   initiallyExpanded: true,
@@ -152,7 +150,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   onExpansionChanged: (value) {
                     // Navigator.push(context,
                     //     MaterialPageRoute(builder: (_) => const NotificationScreen()));
-                    _showFeatureComingSoon();
+                    showFeatureComingSoon(context);
                   },
                   leading: const Icon(Icons.notifications_outlined),
                   title: const Text('Thông báo'),
@@ -160,14 +158,14 @@ class _AccountScreenState extends State<AccountScreen> {
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
-                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  onExpansionChanged: (value) => showFeatureComingSoon(context),
                   leading: const Icon(Icons.help_outline),
                   title: const Text('Trợ giúp'),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
-                  onExpansionChanged: (value) => _showFeatureComingSoon(),
+                  onExpansionChanged: (value) => showFeatureComingSoon(context),
                   leading: const Icon(Icons.info_outline),
                   title: const Text('Giới thiệu'),
                   initiallyExpanded: true,
@@ -228,11 +226,6 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
     );
-  }
-
-  void _showFeatureComingSoon() {
-    showTopSnackBar(Overlay.of(context), const CustomSnackBar.info(
-        message: 'Coming soon', backgroundColor: Colors.orange,));
   }
 }
 

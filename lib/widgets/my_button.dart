@@ -22,15 +22,15 @@ class EcommerceButton extends StatelessWidget {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
           elevation: elevation,
-          padding: const EdgeInsets.all(22),
+          padding: const EdgeInsets.all(12),
           backgroundColor: backgroundColor ?? primaryButton,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(19),
+            borderRadius: BorderRadius.circular(8),
           ),
-          minimumSize: const Size.fromHeight(50)),
+          minimumSize: const Size.fromHeight(25)),
       child: Text(title,
           style: TextStyle(
-              color: titleColor, fontWeight: FontWeight.bold, fontSize: 18)),
+              color: titleColor, fontWeight: FontWeight.w500, fontSize: 16)),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/catchers/exceptions/exception.dart';
 import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +18,7 @@ class CustomerRemoteDataSourceImpl implements CustomerRemoteDataSource {
   Future<CustomerModel> getCustomer({required int id}) async {
     try {
       final response = await client.get(
-        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.register}/$id'),
+        Uri.parse('${ApiConfig.apiUrl}${ApiConfig.customer}/$id'),
         headers: ApiConfig.headerSystem
       );
       return CustomerModel.fromJson(jsonDecode(response.body));

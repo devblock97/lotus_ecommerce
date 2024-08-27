@@ -1,17 +1,15 @@
+import 'dart:async';
+
 import 'package:ecommerce_app/core/extensions/currency.dart';
-import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/widget/cart_skeleton.dart';
-import 'package:ecommerce_app/features/home/data/models/product_model.dart';
-import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../checkout/presentation/view/checkout_out_view.dart';
 
@@ -28,7 +26,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    sl<CartBloc>().add(const GetCartEvent());
+    // sl<CartBloc>().add(const GetCartEvent());
   }
 
   @override
@@ -59,13 +57,14 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: BlocConsumer<CartBloc, CartState>(
         listener: (context, state) {
-          print('check cart state: $state');
+          print('check cart state listen: $state');
           if (state is CartError) {
-            
+
           }
         },
         builder: (context, state) {
           if (state is CartSuccess) {
+            print('check cart state builder: ${state.cart.item?.length}');
             return ListView.builder(
               itemCount: state.cart.item!.length,
               itemBuilder: (_, index) {
@@ -103,42 +102,32 @@ class _CartScreenState extends State<CartScreen> {
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        // Navigator.push(context, MaterialPageRoute(
-                        //     builder: (_) => CheckOutScreen(carts: state.cart)));
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          const CustomSnackBar.info(
-                            message: 'Coming soon',
-                            backgroundColor: Colors.orange,
-                          )
-                        );
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (_) => CheckOutScreen(carts: state.cart)));
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: primaryButton,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(19)),
-                          padding: const EdgeInsets.all(22)),
+                              borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8)),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Flexible(
-                            flex: 3,
-                            child: Text(
-                              'Thanh toán',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
+                          const Text(
+                            'Thanh toán',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white
                             ),
                           ),
-                          const Spacer(),
-                          Flexible(
-                            flex: 2,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: const Color(0xFF489E67)),
-                              child: Text(totals!.totalPrice!.format(code: totals.currencyCode!)),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: const Color(0xFF489E67)),
+                            child: Text(
+                              totals!.totalPrice!.format(code: totals.currencyCode!),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           )
                         ],

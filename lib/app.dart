@@ -77,24 +77,6 @@ class _EcommerceAppState extends State<GroceryApp> {
             BottomNavigationBarItem(
                 icon: Stack(
                   children: [
-                    // if (cart.cartLists().isNotEmpty)
-                    //   Positioned(
-                    //       left: 10,
-                    //       bottom: 10,
-                    //       child: Container(
-                    //         padding: const EdgeInsets.all(4),
-                    //         decoration: const BoxDecoration(
-                    //           color: Colors.red,
-                    //           shape: BoxShape.circle
-                    //         ),
-                    //         child: Text(
-                    //           '${cart.cartLists().length}',
-                    //           style: const TextStyle(
-                    //               color: Colors.white,
-                    //               fontSize: 12,
-                    //               fontWeight: FontWeight.bold),
-                    //         ),
-                    //       )),
                     Icon(
                       Icons.shopping_cart_checkout,
                       color: _selectedIndex == 2 ? primaryButton : Colors.black,
