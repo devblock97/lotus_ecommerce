@@ -37,8 +37,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return AuthResponseModel(success: AuthResponseSuccess.fromJson(
             jsonDecode(response.body)));
       }
-      return AuthResponseModel(error: AuthResponseError.fromJson(
-          jsonDecode(response.body)));
+      if (response.statusCode == 403) {
+        return AuthResponseModel(error: AuthResponseError.fromJson(
+            jsonDecode(response.body)));
+      }
+      final error = AuthResponseError.fromJson(jsonDecode(response.body));
+      debugPrint('check success: $error');
+      return AuthResponseModel(error: error);
     } on ServerException catch (e) {
       throw ServerException();
     } on TimeoutException catch (e) {

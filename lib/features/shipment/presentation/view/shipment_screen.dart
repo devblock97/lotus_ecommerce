@@ -316,7 +316,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
     user.fold(
       (error) => debugPrint('error'),
       (user) => context.read<ShipmentBloc>().add(UpdateAddressRequest(
-          userId: user!.success!.data.id, address: shipping))
+          userId: user!.success!.data!.id, address: shipping))
     );
   }
 }

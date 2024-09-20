@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class AuthResponse extends Equatable {
   AuthResponseSuccess fromSuccessJson(Map<String, dynamic> json) =>
@@ -37,27 +38,28 @@ class AuthResponseModel implements AuthResponse {
 
 }
 
-class AuthResponseSuccess extends Equatable {
+class AuthResponseSuccess {
   final bool? success;
   final int? statusCode;
-  final String? message;
   final String? code;
-  final Data data;
+  final String? message;
+  final Data? data;
 
-  const AuthResponseSuccess({required this.statusCode, required this.data, required this.success, this.message, this.code,});
+  AuthResponseSuccess({
+    this.success,
+    this.statusCode,
+    this.code,
+    this.message,
+    this.data,
+  });
 
   factory AuthResponseSuccess.fromJson(Map<String, dynamic> json) {
-    debugPrint('success: ${json['success']}');
-    debugPrint('code: ${json['code']}');
-    debugPrint('status code: ${json['statusCode']}');
-    debugPrint('message: ${json['message']}');
-
     return AuthResponseSuccess(
       success: json['success'],
-      code: json['code'],
       statusCode: json['statusCode'],
+      code: json['code'],
       message: json['message'],
-      data: Data.fromJson(json['data'])
+      data: Data.fromJson(json['data']),
     );
   }
 
@@ -67,12 +69,9 @@ class AuthResponseSuccess extends Equatable {
       'statusCode': statusCode,
       'message': message,
       'code': code,
-      'data': data.toJson()
+      'data': data?.toJson()
     };
   }
-
-  @override
-  List<Object?> get props => [success, statusCode, code, message, data];
 }
 
 class AuthResponseError extends Equatable {

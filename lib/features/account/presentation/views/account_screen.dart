@@ -78,6 +78,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       if (state is Authenticated) {
+                        debugPrint('check auth state: $state');
                         return ListTile(
                           leading: CircleAvatar(
                             maxRadius: 45,
@@ -87,14 +88,14 @@ class _AccountScreenState extends State<AccountScreen> {
                           title: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(state.authResponseModel == null ? 'Chưa đăng nhập': state.authResponseModel!.success!.data.displayName!),
+                              Text(state.authResponseModel?.success?.data?.displayName ?? 'Chưa đăng nhập'),
                               const Icon(
                                 Icons.edit,
                                 color: primaryButton,
                               )
                             ],
                           ),
-                          subtitle: Text(state.authResponseModel == null ? '' : state.authResponseModel!.success!.data.email!),
+                          subtitle: Text(state.authResponseModel?.success?.data?.email ?? ''),
                         );
                       }
                       return ListTile(
