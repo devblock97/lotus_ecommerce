@@ -12,7 +12,7 @@ abstract class AuthRepository {
   Future<Either<Failure, AuthResponseModel>> signIn(AuthModel body)
     => throw UnimplementedError('Stub!');
 
-  Future<Either<Failure, AuthResponseModel>>? getUserInfo()
+  Future<Either<Failure, AuthResponseModel?>> getUserInfo()
     => throw UnimplementedError('Stub!');
 
   Future<Either<Failure, bool>> signOut()

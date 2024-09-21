@@ -43,7 +43,7 @@ class AuthRepositoryImpl implements AuthRepository {
         if (response.error is AuthResponseError) {
           return Left(InputInvalid(error: response.error?.message));
         }
-        await secureStorage.writeToken(response.success!.token);
+        await secureStorage.writeToken(response.success!.data.token);
         await localDataSource.cacheUserInfo(response);
         return Right(response);
       } on ServerException catch(err) {
@@ -58,10 +58,10 @@ class AuthRepositoryImpl implements AuthRepository {
 
 
   @override
-  Future<Either<Failure, AuthResponseModel>> getUserInfo() async {
+  Future<Either<Failure, AuthResponseModel?>> getUserInfo() async {
     try {
       final user = await localDataSource.getUserInfo();
-      return Right(user!);
+      return Right(user);
     } on CacheException {
       return Left(CacheFailure('Cache Failure'));
     }

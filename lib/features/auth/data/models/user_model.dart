@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/core/data/models/auth_response_model.dart';
+import 'package:ecommerce_app/core/data/models/shipping.dart';
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
@@ -152,58 +153,6 @@ class Billing {
   }
 }
 
-class Shipping {
-  String? firstName;
-  String? lastName;
-  String? company;
-  String? address1;
-  String? address2;
-  String? city;
-  String? postcode;
-  String? country;
-  String? state;
-  String? phone;
-
-  Shipping(
-      {this.firstName,
-        this.lastName,
-        this.company,
-        this.address1,
-        this.address2,
-        this.city,
-        this.postcode,
-        this.country,
-        this.state,
-        this.phone});
-
-  Shipping.fromJson(Map<String, dynamic> json) {
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    company = json['company'];
-    address1 = json['address_1'];
-    address2 = json['address_2'];
-    city = json['city'];
-    postcode = json['postcode'];
-    country = json['country'];
-    state = json['state'];
-    phone = json['phone'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['first_name'] = firstName;
-    data['last_name'] = lastName;
-    data['company'] = company;
-    data['address_1'] = address1;
-    data['address_2'] = address2;
-    data['city'] = city;
-    data['postcode'] = postcode;
-    data['country'] = country;
-    data['state'] = state;
-    data['phone'] = phone;
-    return data;
-  }
-}
 
 // class MetaData {
 //   int? id;

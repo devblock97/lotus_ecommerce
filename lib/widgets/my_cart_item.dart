@@ -34,11 +34,14 @@ class _CartItemState extends State<CartItem> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
-                flex: 1,
-                child: Image.network(
-                  widget.product.images![0].src!,
-                  fit: BoxFit.contain,
-                )),
+              flex: 1,
+              child: Image.network(
+                widget.product.images![0].src!,
+                fit: BoxFit.contain,
+                width: 70,
+                height: 70,
+              )
+            ),
             const Gap(10),
             Flexible(
                 flex: 2,

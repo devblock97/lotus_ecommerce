@@ -28,14 +28,14 @@ class InputInvalid extends Failure {
 
 
 class CacheFailure extends Failure {
-  final String error;
-  CacheFailure(this.error);
+  final String message;
+  CacheFailure(this.message);
 
   @override
-  String toString() => 'CacheFailure [errorMessage: $error]';
+  String toString() => 'CacheFailure [errorMessage: $message]';
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [message];
 }
 
 class ConnectionFailure extends Failure {

@@ -7,7 +7,7 @@ import 'package:ecommerce_app/core/utils/secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
-  Future<AuthResponseModel>? getUserInfo() => throw UnimplementedError('Stub!');
+  Future<AuthResponseModel?> getUserInfo() => throw UnimplementedError('Stub!');
   Future<void> cacheUserInfo(AuthResponseModel userInfo) => throw UnimplementedError('Stub!');
   Future<bool> clearCacheUser(String key) => throw UnimplementedError('Stub!');
 }
@@ -36,12 +36,12 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<AuthResponseModel>? getUserInfo() async {
+  Future<AuthResponseModel?> getUserInfo() async {
     final jsonString = sharedPreferences.getString(CACHED_USER_INFO);
     if (jsonString != null) {
       return AuthResponseModel(success: AuthResponseSuccess.fromJson(jsonDecode(jsonString)));
-    } else {
-      throw CacheException();
+    } {
+      return null;
     }
   }
 

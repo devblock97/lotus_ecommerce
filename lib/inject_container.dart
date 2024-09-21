@@ -36,6 +36,17 @@ import 'package:ecommerce_app/features/home/data/repositories/product_repository
 import 'package:ecommerce_app/features/home/domain/repositories/product_repository.dart';
 import 'package:ecommerce_app/features/home/domain/usecases/get_all_product_use_case.dart';
 import 'package:ecommerce_app/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ecommerce_app/features/shipment/data/datasources/shipment_local_data_source.dart';
+import 'package:ecommerce_app/features/shipment/data/datasources/shipment_remote_data_source.dart';
+import 'package:ecommerce_app/features/shipment/data/repositories/shipment_repository_impl.dart';
+import 'package:ecommerce_app/features/shipment/domain/repositories/shipment_repository.dart';
+import 'package:ecommerce_app/features/shipment/domain/usecase/get_cities.dart';
+import 'package:ecommerce_app/features/shipment/domain/usecase/get_provinces.dart';
+import 'package:ecommerce_app/features/shipment/domain/usecase/get_wards.dart';
+import 'package:ecommerce_app/features/shipment/domain/usecase/update_address.dart';
+import 'package:ecommerce_app/features/shipment/presentation/bloc/city_bloc.dart';
+import 'package:ecommerce_app/features/shipment/presentation/bloc/shipment_bloc.dart' as ship;
+import 'package:ecommerce_app/features/shipment/presentation/bloc/ward_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -62,6 +73,9 @@ Future<void> init() async {
   ///
   sl.registerFactory(() => CustomerBloc(getCustomer: sl(), getLastUserInfo: sl()));
   sl.registerFactory(() => CartBloc(sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => ship.ShipmentBloc(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => CityCubit(sl()));
+  sl.registerFactory(() => WardCubit(sl()));
 
   /// Use Case
   sl.registerLazySingleton(() => GetAllProductUseCase(sl()));
@@ -85,6 +99,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteItem(cartRepository: sl()));
   sl.registerLazySingleton(() => UpdateItem(sl()));
   sl.registerLazySingleton(() => DeleteAllItems(sl()));
+  sl.registerLazySingleton(() => GetProvinces(repository: sl()));
+  sl.registerLazySingleton(() => GetCities(sl()));
+  sl.registerLazySingleton(() => GetWards(sl()));
+  sl.registerLazySingleton(() => UpdateAddress(sl()));
 
   // Repository
   sl.registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl(sl(), sl(), sl()));
@@ -93,6 +111,7 @@ Future<void> init() async {
   sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(networkInfo: sl(), remoteDataSource: sl()));
   sl.registerLazySingleton<CustomerRepository>(() => CustomerRepositoryImpl(networkInfo: sl(), remoteDataSource: sl()));
   sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<ShipmentRepository>(() => ShipmentRepositoryImpl(sl(), sl()));
 
   // Data Source
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(client: sl()));
@@ -104,6 +123,8 @@ Future<void> init() async {
   sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeRemoteDataSourceImpl(sl()));
   sl.registerLazySingleton<HomeLocalDatasource>(() => HomeLocalDataSourceImpl(sl()));
   sl.registerLazySingleton<CartRemoteDataSource>(() => CartRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton(() => ShipmentLocalDataSourceImpl(sl()));
+  sl.registerLazySingleton(() => ShipmentRemoteDataSourceImpl(sl()));
 
   /**
    * ! Core

@@ -20,7 +20,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     try {
       var url = Uri.parse(ApiConfig.apiUrl + ApiConfig.products);
       var header = {
-        'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.register}:${ApiConfig.consumerSecret}'))}'
+        'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.customer}:${ApiConfig.consumerSecret}'))}'
       };
       final response = await client.get(url, headers: ApiConfig.headerSystem);
       if (response.statusCode == 200) {
