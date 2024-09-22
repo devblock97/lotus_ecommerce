@@ -109,18 +109,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       final response = await sl<UpdateItem>().call(PostParamUpdateItem(key: event.key, quantity: event.quantity));
       response.fold(
-              (error) {
-                if (error is NetworkFailure) {
-                  emit(const CartError(message: 'Không có kết nối đến máy chủ, vui lòng kiểm tra lại internet'));
-                }
-                else if (error is ServerFailure) {
-                  emit(const CartError(message: 'Không thể cập nhật giỏ hàng, vui lòng thử lại sau'));
-                }
-                else {
-                  emit(const CartError(message: 'Không thể giảm số lượng sản phẩm'));
-                }
-              },
-              (carts) => emit(CartSuccess(cart: carts, dismiss: true))
+        (error) {
+          if (error is NetworkFailure) {
+            emit(const CartError(message: 'Không có kết nối đến máy chủ, vui lòng kiểm tra lại internet'));
+          }
+          else if (error is ServerFailure) {
+            emit(const CartError(message: 'Không thể cập nhật giỏ hàng, vui lòng thử lại sau'));
+          }
+          else {
+            emit(const CartError(message: 'Không thể giảm số lượng sản phẩm'));
+          }
+        },
+        (carts) => emit(CartSuccess(cart: carts, dismiss: true))
       );
     } catch (e) {
       throw Exception(e);

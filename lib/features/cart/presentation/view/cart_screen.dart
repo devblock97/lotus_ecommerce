@@ -84,43 +84,47 @@ class _CartScreenState extends State<CartScreen> {
           if (state is CartSuccess) {
             final totals = state.cart.totals;
             return Padding(
-              padding: const EdgeInsets.only(
-                  left: 8, top: 0, right: 8, bottom: 14),
+              padding: const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 14),
               child: state.cart.item!.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'Không có sản phẩm nào trong giở hàng',
-                              textAlign: TextAlign.center,
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium,
-                            ),
-                          ),
-                    )
-                  : ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (_) => CheckOutScreen(carts: state.cart)));
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryButton,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
+                ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        'Không có sản phẩm nào trong giở hàng',
+                        textAlign: TextAlign.center,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyMedium,
+                    ),
+                  ),
+            )
+                : ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (_) => CheckOutScreen(carts: state.cart)));
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryButton,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(19)),
+                        padding: const EdgeInsets.all(22)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Flexible(
+                          flex: 3,
+                          child: Text(
                             'Thanh toán',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.white
                             ),
                           ),
-                          Container(
+                        ),
+                        const Spacer(),
+                        Flexible(
+                          flex: 2,
+                          child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
@@ -130,8 +134,10 @@ class _CartScreenState extends State<CartScreen> {
                               style: const TextStyle(color: Colors.white),
                             ),
                           )
-                        ],
-                      )),
+                        )
+                      ],
+                    )
+                  ),
             );
           }
           return const SizedBox();

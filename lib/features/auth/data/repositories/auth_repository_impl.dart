@@ -12,6 +12,7 @@ import 'package:ecommerce_app/features/auth/data/models/sign_in_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
 import 'package:ecommerce_app/features/auth/data/models/user_model.dart';
 import 'package:ecommerce_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,15 +40,17 @@ class AuthRepositoryImpl implements AuthRepository {
     if (isConnected) {
       try {
         final response = await remoteDataSource.signIn(body);
+        debugPrint('check auth response: ${response.error}; ${response.success}');
 
         if (response.error is AuthResponseError) {
           return Left(InputInvalid(error: response.error?.message));
         }
-        await secureStorage.writeToken(response.success!.data.token);
+        await secureStorage.writeToken(response.success!.data?.token);
+        debugPrint('check auth response success: ${response.success?.data?.token}');
         await localDataSource.cacheUserInfo(response);
         return Right(response);
       } on ServerException catch(err) {
-        return Left(ServerFailure('Server Failure [error: $err]]'));
+        return Left(ServerFailure('Server Failure [error: $err]'));
       } on InputInvalid catch (err) {
         return Left(InputInvalid(error: 'Username or password incorrect'));
       }
