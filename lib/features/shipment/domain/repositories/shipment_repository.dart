@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/data/models/customer_model.dart';
@@ -8,7 +7,7 @@ import 'package:ecommerce_app/features/shipment/data/models/province.dart';
 import 'package:fpdart/fpdart.dart';
 
 abstract class ShipmentRepository {
-  Future<Either<Failure, Void>> createShippingAddress(Shipping address) =>
+  Future<Either<Failure, void>> createShippingAddress(Shipping address) =>
       throw UnimplementedError('Stub');
   Future<Either<Failure, CustomerModel>> updateShippingAddress(int userId, Shipping address) =>
       throw UnimplementedError('Stub');

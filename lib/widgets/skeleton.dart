@@ -15,15 +15,15 @@ class Skeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      highlightColor: Colors.grey,
-      baseColor: Colors.black,
+      highlightColor: Theme.of(context).colorScheme.primary,
+      baseColor: Theme.of(context).colorScheme.secondary,
       child: Container(
         padding: const EdgeInsets.all(12),
         width: width,
         height: height,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: Colors.black.withOpacity(0.1)
+            color: Theme.of(context).colorScheme.primary
         ),
       ),
     );

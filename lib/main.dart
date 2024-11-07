@@ -6,6 +6,7 @@ import 'package:ecommerce_app/features/auth/presentation/views/login_screen.dart
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/favorite/data/repositories/favorite_repository_impl.dart';
 import 'package:ecommerce_app/features/notification/data/repositories/notify_repository_impl.dart';
+import 'package:ecommerce_app/features/theme/presentation/bloc/theme_bloc.dart';
 import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/localizations/app_localizations.dart';
@@ -22,7 +23,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
-  HttpOverrides.global = MyHttpOverrides();
 
   /// Local DB with Hive
   await Hive.initFlutter();
@@ -64,26 +64,16 @@ class EcommerceApp extends StatefulWidget {
 class _EcommerceAppState extends State<EcommerceApp> {
 
   late bool userLogged = false;
-  final authBloc = sl<AuthBloc>();
 
   @override
   void initState() {
     super.initState();
-    authBloc.add(CheckSignedIn());
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        /// Use Clean Architecture
-        /// Cart
-        // ChangeNotifierProxyProvider(
-        //     create: (context) => CartRepositoryImpl(),
-        //     update: (context, value, CartRepositoryImpl? cart) {
-        //       if (cart == null) throw ArgumentError('Cart');
-        //       return cart;
-        //     }),
 
         /// Favorite
         ChangeNotifierProxyProvider(
@@ -106,48 +96,48 @@ class _EcommerceAppState extends State<EcommerceApp> {
         ChangeNotifierProvider(create: (_) => ThemeSelector()),
 
         BlocProvider(create: (_) => sl<CartBloc>()),
+        BlocProvider(create: (_) => sl<ThemeBloc>()..add(const GetThemeRequest())),
+        BlocProvider(create: (_) => sl<AuthBloc>()..add(CheckSignedIn()))
       ],
-      child: Selector<ThemeSelector, ThemeMode>(
-        builder: (context, themeMode, child) {
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, state) {
+          debugPrint('check theme state: $state');
+          final themeMode = (state is SetThemeSuccess) ? state.theme : ThemeMode.system;
           return MaterialApp(
-              themeMode: themeMode,
-              debugShowCheckedModeBanner: false,
-              theme: EcommerceTheme.buildLightTheme(context),
-              darkTheme: EcommerceTheme.buildDarkTheme(context),
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate
-              ],
-              supportedLocales: const [
-                Locale('vn', 'VN'),
-                Locale('en', 'US')
-              ],
-              home: BlocProvider(
-                create: (_) => authBloc,
-                child: BlocConsumer<AuthBloc, AuthState>(
-                  listener: (context, state) {
-                    if (state is Authenticated) {
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (_)
-                          => const GroceryApp()), (route) => false);
-                    } else {
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (_)
-                          => const LoginScreen()), (route) => false);
-                    }
-                  },
-                  builder: (context, state) {
-                    return const Scaffold(
-                      body: Center(child: CircularProgressIndicator(),),
-                    );
-                  },
-                ),
-              ),
+            themeMode: themeMode,
+            debugShowCheckedModeBanner: false,
+            theme: EcommerceTheme.buildLightTheme(context),
+            darkTheme: EcommerceTheme.buildDarkTheme(context),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate
+            ],
+            supportedLocales: const [
+              Locale('vn', 'VN'),
+              Locale('en', 'US')
+            ],
+            home: BlocConsumer<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is Authenticated) {
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (_)
+                      => const GroceryApp()), (route) => false);
+                } else {
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (_)
+                      => const LoginScreen()), (route) => false);
+                }
+              },
+              builder: (context, state) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator(),),
+                );
+              },
+            ),
           );
         },
-        selector: (context, theme) => theme.themeMode
       ),
     );
   }

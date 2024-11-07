@@ -47,6 +47,12 @@ import 'package:ecommerce_app/features/shipment/domain/usecase/update_address.da
 import 'package:ecommerce_app/features/shipment/presentation/bloc/city_bloc.dart';
 import 'package:ecommerce_app/features/shipment/presentation/bloc/shipment_bloc.dart' as ship;
 import 'package:ecommerce_app/features/shipment/presentation/bloc/ward_cubit.dart';
+import 'package:ecommerce_app/features/theme/data/data_source/theme_local_data_source.dart';
+import 'package:ecommerce_app/features/theme/data/repositories/theme_repository.dart';
+import 'package:ecommerce_app/features/theme/domain/repositories/theme_repository.dart';
+import 'package:ecommerce_app/features/theme/domain/usecases/get_theme_use_case.dart';
+import 'package:ecommerce_app/features/theme/domain/usecases/set_theme_use_case.dart';
+import 'package:ecommerce_app/features/theme/presentation/bloc/theme_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -76,6 +82,7 @@ Future<void> init() async {
   sl.registerFactory(() => ship.ShipmentBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory(() => CityCubit(sl()));
   sl.registerFactory(() => WardCubit(sl()));
+  sl.registerFactory(() => ThemeBloc());
 
   /// Use Case
   sl.registerLazySingleton(() => GetAllProductUseCase(sl()));
@@ -103,6 +110,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetCities(sl()));
   sl.registerLazySingleton(() => GetWards(sl()));
   sl.registerLazySingleton(() => UpdateAddress(sl()));
+  sl.registerLazySingleton(() => SetThemeMode(repository: sl()));
+  sl.registerLazySingleton(() => GetThemeMode(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<ProductRepository>(() => ProductRepositoryImpl(sl(), sl(), sl()));
@@ -112,6 +121,7 @@ Future<void> init() async {
   sl.registerLazySingleton<CustomerRepository>(() => CustomerRepositoryImpl(networkInfo: sl(), remoteDataSource: sl()));
   sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl(), sl()));
   sl.registerLazySingleton<ShipmentRepository>(() => ShipmentRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<ThemeRepository>(() => ThemeRepositoryImpl(localDataSource: sl()));
 
   // Data Source
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(client: sl()));
@@ -125,6 +135,7 @@ Future<void> init() async {
   sl.registerLazySingleton<CartRemoteDataSource>(() => CartRemoteDataSourceImpl(sl()));
   sl.registerLazySingleton(() => ShipmentLocalDataSourceImpl(sl()));
   sl.registerLazySingleton(() => ShipmentRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<ThemeLocalDataSource>(() => ThemeLocalDataSourceImpl(preferences: sl()));
 
   /**
    * ! Core
