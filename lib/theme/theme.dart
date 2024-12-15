@@ -22,11 +22,27 @@ class EcommerceTheme {
         backgroundColor: blue700,
         modalBackgroundColor: Colors.white.withOpacity(0.7),
       ),
-      // useMaterial3: true,
+      colorScheme: const ColorScheme(
+        brightness: Brightness.light,
+        primary: lightChipBackground,
+        onPrimary: blue50,
+        secondary: blue100,
+        onSecondary: blue200,
+        error: red400,
+        onError: red200,
+        surface: white50Alpha060,
+        onSurface: blue50Alpha060
+      ),
       cardColor: lightCardBackground,
       brightness: Brightness.light,
       appBarTheme: AppBarTheme(
         titleTextStyle: Theme.of(context).textTheme.headlineSmall
+      ),
+      iconTheme: const IconThemeData(
+        color: lightText
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: lightText
       ),
       textTheme: _buildLightTextTheme(base.textTheme),
     );
@@ -39,14 +55,27 @@ class EcommerceTheme {
         backgroundColor: darkDrawerBackground,
         modalBackgroundColor: Colors.black.withOpacity(0.7)
       ),
-      // useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: black900,
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Colors.white
+        backgroundColor: darkText
+      ),
+      colorScheme: const ColorScheme(
+        brightness: Brightness.dark,
+        primary: Colors.white,
+        onPrimary: blue50,
+        secondary: blue100,
+        onSecondary: blue200,
+        error: red400,
+        onError: red200,
+        surface: Colors.white,
+        onSurface: Colors.white
       ),
       appBarTheme: AppBarTheme(
         titleTextStyle: Theme.of(context).textTheme.headlineSmall
+      ),
+      iconTheme: const IconThemeData(
+        color: darkText
       ),
       textTheme: _buildDarkTextTheme(base.textTheme)
     );
@@ -100,13 +129,13 @@ TextTheme _buildDarkTextTheme(TextTheme base) {
       fontWeight: FontWeight.w600,
       fontSize: 34,
       height: 0.9,
-      color: Colors.black
+      color: darkText
     ),
 
     headlineSmall: GoogleFonts.workSans(
       fontWeight: FontWeight.bold,
       fontSize: 24,
-      color: Colors.black,
+      color: darkText,
     ),
 
     titleLarge: GoogleFonts.workSans(

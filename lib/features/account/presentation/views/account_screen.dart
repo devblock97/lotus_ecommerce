@@ -3,6 +3,7 @@ import 'package:ecommerce_app/core/utils/utils.dart';
 import 'package:ecommerce_app/features/account/presentation/bloc/customer_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/presentation.dart';
+import 'package:ecommerce_app/features/theme/presentation/bloc/theme_bloc.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/theme/theme.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
@@ -23,7 +24,6 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   bool selected = false;
-  late ThemeMode _themeMode;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = context.watch<ThemeSelector>();
+    var theme = Theme.of(context);
     final WidgetStateProperty<Color?> overlayColor =
     WidgetStateProperty.resolveWith<Color?>(
           (Set<WidgetState> states) {
@@ -68,7 +68,8 @@ class _AccountScreenState extends State<AccountScreen> {
         body: MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => sl<AuthBloc>()..add(CheckSignedIn())),
-            BlocProvider(create: (_) => sl<CustomerBloc>()..add(const CustomerInfoRequest()))
+            BlocProvider(create: (_) => sl<CustomerBloc>()..add(const CustomerInfoRequest())),
+            // BlocProvider(create: (_) => sl<ThemeBloc>()..add(const GetThemeRequest()))
           ],
           child: SingleChildScrollView(
             child: Column(
@@ -113,37 +114,67 @@ class _AccountScreenState extends State<AccountScreen> {
                   onExpansionChanged: (value) {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const GroceryApp(selectedIndex: 2,)));
                   },
-                  leading: const Icon(Icons.shopping_bag_outlined),
-                  title: const Text('Đơn hàng'),
+                  leading: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Đơn hàng',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   textColor: primaryText,
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: const Icon(Icons.credit_card_outlined),
-                  title: const Text('Đơn hàng đã mua'),
+                  leading: Icon(
+                    Icons.credit_card_outlined,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Đơn hàng đã mua',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: const Icon(Icons.location_on_outlined),
-                  title: const Text('Địa chỉ giao hàng'),
+                  leading: Icon(
+                    Icons.location_on_outlined,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Địa chỉ giao hàng',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: const Icon(Icons.payments_outlined),
-                  title: const Text('Phương thức thanh toán'),
+                  leading: Icon(
+                    Icons.payments_outlined,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Phương thức thanh toán',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: const Icon(Icons.credit_score),
-                  title: const Text('Thẻ tín dụng'),
+                  leading: Icon(
+                    Icons.credit_score,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Thẻ tín dụng',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
@@ -153,39 +184,61 @@ class _AccountScreenState extends State<AccountScreen> {
                     //     MaterialPageRoute(builder: (_) => const NotificationScreen()));
                     showFeatureComingSoon(context);
                   },
-                  leading: const Icon(Icons.notifications_outlined),
-                  title: const Text('Thông báo'),
+                  leading: Icon(
+                    Icons.notifications_outlined,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Thông báo',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: const Icon(Icons.help_outline),
-                  title: const Text('Trợ giúp'),
+                  leading: Icon(
+                    Icons.help_outline,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Trợ giúp',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
                 ExpansionTile(
                   onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: const Icon(Icons.info_outline),
-                  title: const Text('Giới thiệu'),
+                  leading: Icon(
+                    Icons.info_outline,
+                    color: theme.iconTheme.color,
+                  ),
+                  title: Text(
+                    'Giới thiệu',
+                    style: theme.textTheme.titleSmall,
+                  ),
                   initiallyExpanded: true,
                   trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                SwitchListTile(
-                  title: const Text('Dark theme'),
-                  value: selected,
-                  trackColor: trackColor,
-                  overlayColor: overlayColor,
-                  onChanged: (value) {
-                    setState(() {
-                      if (value) {
-                        theme.themeMode = ThemeMode.dark;
-                      } else {
-                        theme.themeMode = ThemeMode.light;
-                      }
-                      selected = value;
-                    });
+                BlocBuilder<ThemeBloc, ThemeState>(
+                  builder: (context, state) {
+                    debugPrint('check theme bloc account: $state');
+                    return SwitchListTile(
+                      title: Text(
+                        'Dark theme',
+                        style: theme.textTheme.titleSmall,
+                      ),
+                      value: (state is SetThemeSuccess) ? state.theme == ThemeMode.dark : false,
+                      trackColor: trackColor,
+                      overlayColor: overlayColor,
+                      onChanged: (value) {
+                        debugPrint('Switch toggled: $value');
+                        context.read<ThemeBloc>().add(SetThemeRequest(
+                          theme: value ? ThemeMode.dark : ThemeMode.light,
+                        ));
+                      },
+                    );
                   },
                 ),
                 const Gap(10),

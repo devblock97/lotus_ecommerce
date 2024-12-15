@@ -271,13 +271,16 @@ class _CategorySingleListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-            children: productList!.map((e) {
-              return SizedBox(
-                  height: 280, width: 190, child: ProductCard(product: e));
-            }).toList()
-        )
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: productList!.map((e) {
+          return SizedBox(
+            height: 280,
+            width: 190,
+            child: ProductCard(product: e)
+          );
+        }).toList()
+      )
     );
   }
 }

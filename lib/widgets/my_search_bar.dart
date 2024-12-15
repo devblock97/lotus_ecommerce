@@ -23,6 +23,9 @@ class _EcommerceSearchBarState extends State<EcommerceSearchBar> {
           shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
           hintText: 'Nhập tìm kiếm...',
+          hintStyle: WidgetStatePropertyAll(
+            Theme.of(context).textTheme.titleMedium
+          ),
           onChanged: (_) => controller.openView(),
           leading: const Icon(Icons.search_outlined),
         );
