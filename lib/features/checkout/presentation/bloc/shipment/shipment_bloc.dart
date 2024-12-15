@@ -45,7 +45,7 @@ class ShipmentBloc extends Bloc<CheckOutEvent, ShippingState> {
       final userCached = AuthResponseModel(success: AuthResponseSuccess.fromJson(jsonDecode(userString!)));
       if (userCached.success != null) {
         emit(const ShippingLoading());
-        final response = await getRemoteCustomer(ParamCustomer(userId:1));
+        final response = await getRemoteCustomer(ParamCustomer(userId: userCached.success!.data!.id));
         response.fold(
             (error) {
               if (error is ServerFailure) {

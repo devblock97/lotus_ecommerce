@@ -24,6 +24,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(product: product)));
@@ -31,7 +32,7 @@ class ProductCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: theme.cardColor,
             border: Border.all(color: secondaryText),
             borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
@@ -52,7 +53,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Text(
                     'Giá gốc ${product.regularPrice}đ',
-                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                    style: theme.textTheme.titleSmall!.copyWith(fontSize: 10),
                   ),
                 )
                 : const SizedBox(),
@@ -75,7 +76,7 @@ class ProductCard extends StatelessWidget {
             // Product name
             Text(
               product.name!,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium,
             ),
 
             // Footer (price and add to cart)
@@ -84,7 +85,7 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   '${product.price}đ',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: theme.textTheme.bodyLarge,
                 ),
                 _AddProductButton(product: product)
               ],

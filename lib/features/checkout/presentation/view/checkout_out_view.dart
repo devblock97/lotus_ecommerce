@@ -202,13 +202,24 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               ),
               BlocConsumer<OrderBloc, OrderState>(
                 listener: (context, state) {
+                  if (state is OrderLoading) {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (_) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                    );
+                  }
                   if (state is OrderSuccess) {
-                    context.read<CartBloc>().add(DeleteAllItemEvent());
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const OrderSuccessScreen()));
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => const OrderSuccessScreen()),
+                            (route) => false);
                   }
                 },
                 builder: (context, state) {
-                  return  ElevatedButton(
+                  return ElevatedButton(
                     onPressed: () async {
                       List<LineItem> lineItems = widget.carts.item!.map((e) => LineItem(
                           productId: e.id!,
@@ -220,6 +231,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         lineItems: lineItems,
                       );
                       BlocProvider.of<OrderBloc>(context).add(TapOnPlaceOrder(order: order));
+                      context.read<CartBloc>().add(DeleteAllItemEvent());
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -230,7 +242,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     child: const Text('Đặt hàng', style: TextStyle(color: Colors.white),),
                   );
                 },
-              )
+              ),
             ],
           ),
         ),

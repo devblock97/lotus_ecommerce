@@ -75,7 +75,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           Uri.parse('${ApiConfig.apiUrl}${ApiConfig.cart}'),
           headers: ApiConfig.headerPersonal(token!, nonce)
       );
-      print('get cart nonce: $nonce; $token');
+      debugPrint('check trigger cart: ${response.statusCode}; $token; $nonce');
       if (response.statusCode == 200) {
         final secureStorage = SecureStorage();
         final value = parseNonceFromHeader(response.headers);

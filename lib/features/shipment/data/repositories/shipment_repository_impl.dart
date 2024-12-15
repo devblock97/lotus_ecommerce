@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/data/models/customer_model.dart';
@@ -18,7 +17,7 @@ class ShipmentRepositoryImpl implements ShipmentRepository {
   final ShipmentRemoteDataSourceImpl remoteDataSource;
 
   @override
-  Future<Either<Failure, Void>> createShippingAddress(Shipping address) {
+  Future<Either<Failure, void>> createShippingAddress(Shipping address) {
     throw UnimplementedError();
   }
 

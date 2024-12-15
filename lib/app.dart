@@ -26,7 +26,7 @@ class _EcommerceAppState extends State<GroceryApp> {
   final connectivity = InternetConnectionChecker();
   late StreamSubscription<InternetConnectionChecker> _connectivitySubscription;
 
-  List<Widget> screens = [
+  final List<Widget> screens = [
     const HomeScreen(),
     const ExploreScreen(),
     const CartScreen(),
@@ -48,56 +48,65 @@ class _EcommerceAppState extends State<GroceryApp> {
 
   @override
   Widget build(BuildContext context) {
-
+    final theme = Theme.of(context);
     return Scaffold(
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => sl<CartBloc>()..add(const GetCartEvent()))
-          ],
-          child: IndexedStack(
-            index: _selectedIndex,
-            children: screens,
-          ),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: screens,
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.shop_outlined,
-                color: _selectedIndex == 0 ? primaryButton : Colors.black,
+                color: _selectedIndex == 0
+                  ? primaryButton
+                  : theme.bottomNavigationBarTheme.backgroundColor,
               ),
               label: 'Sản phẩm',
             ),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.explore_outlined,
-                  color: _selectedIndex == 1 ? primaryButton : Colors.black,
-                ),
-                label: 'Khám phá'),
+              icon: Icon(
+                Icons.explore_outlined,
+                color: _selectedIndex == 1
+                  ? primaryButton
+                  : theme.bottomNavigationBarTheme.backgroundColor,
+              ),
+              label: 'Khám phá'
+            ),
             BottomNavigationBarItem(
-                icon: Stack(
-                  children: [
-                    Icon(
-                      Icons.shopping_cart_checkout,
-                      color: _selectedIndex == 2 ? primaryButton : Colors.black,
-                    ),
-                  ],
-                ),
-                label: 'Giỏ hàng'),
+              icon: Stack(
+                children: [
+                  Icon(
+                    Icons.shopping_cart_checkout,
+                    color: _selectedIndex == 2
+                      ? primaryButton
+                      : theme.bottomNavigationBarTheme.backgroundColor,
+                  ),
+                ],
+              ),
+              label: 'Giỏ hàng'
+            ),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.favorite_outline,
-                  color: _selectedIndex == 3 ? primaryButton : Colors.black,
-                ),
-                label: 'Yêu thích'),
+              icon: Icon(
+                Icons.favorite_outline,
+                color: _selectedIndex == 3
+                  ? primaryButton
+                  : theme.bottomNavigationBarTheme.backgroundColor,
+              ),
+              label: 'Yêu thích'
+            ),
             BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.people_outlined,
-                  color: _selectedIndex == 4 ? primaryButton : Colors.black,
-                ),
-                label: 'Tài khoản')
+              icon: Icon(
+                Icons.people_outlined,
+                color: _selectedIndex == 4
+                  ? primaryButton
+                  : theme.bottomNavigationBarTheme.backgroundColor,
+              ),
+              label: 'Tài khoản'
+            )
           ],
-          unselectedItemColor: Colors.black,
+          unselectedItemColor: theme.bottomNavigationBarTheme.backgroundColor,
           showUnselectedLabels: true,
           selectedItemColor: primaryButton,
           currentIndex: _selectedIndex,

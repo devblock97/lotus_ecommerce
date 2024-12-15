@@ -8,7 +8,7 @@ import 'package:ecommerce_app/features/notification/presentation/notify_screen.d
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -249,7 +249,7 @@ class _ImageSlider extends StatefulWidget {
 
 class _ImageSliderState extends State<_ImageSlider> {
   int _current = 0;
-  final CarouselController _controller = CarouselController();
+  final CarouselSliderController _controller = CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
