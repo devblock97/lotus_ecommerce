@@ -69,7 +69,6 @@ class _AccountScreenState extends State<AccountScreen> {
           providers: [
             BlocProvider(create: (_) => sl<AuthBloc>()..add(CheckSignedIn())),
             BlocProvider(create: (_) => sl<CustomerBloc>()..add(const CustomerInfoRequest())),
-            // BlocProvider(create: (_) => sl<ThemeBloc>()..add(const GetThemeRequest()))
           ],
           child: SingleChildScrollView(
             child: Column(
@@ -89,14 +88,20 @@ class _AccountScreenState extends State<AccountScreen> {
                           title: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(state.authResponseModel?.success?.data?.displayName ?? 'Chưa đăng nhập'),
+                              Text(
+                                state.authResponseModel?.success?.data?.displayName ?? 'Chưa đăng nhập',
+                                style: theme.textTheme.titleMedium,
+                              ),
                               const Icon(
                                 Icons.edit,
                                 color: primaryButton,
                               )
                             ],
                           ),
-                          subtitle: Text(state.authResponseModel?.success?.data?.email ?? ''),
+                          subtitle: Text(
+                            state.authResponseModel?.success?.data?.email ?? '',
+                            style: theme.textTheme.titleMedium,
+                          ),
                         );
                       }
                       return ListTile(
