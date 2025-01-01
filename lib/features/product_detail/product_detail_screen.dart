@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecommerce_app/core/extensions/currency.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/view/cart_screen.dart';
@@ -27,6 +28,8 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -46,22 +49,12 @@ class _DetailScreenState extends State<DetailScreen> {
                 children: [
                   Text(
                     widget.product.name!,
-                    style: const TextStyle(
-                        color: primaryText,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24),
+                    style: theme.textTheme.titleLarge,
                   ),
                   _AddFavorite(
                     product: widget.product,
                   )
                 ],
-              ),
-            ),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('${'cai'}, Price'),
               ),
             ),
             Padding(
@@ -104,11 +97,10 @@ class _DetailScreenState extends State<DetailScreen> {
                           ))
                     ],
                   ),
-                  Text('${widget.product.price} đ',
-                      style: const TextStyle(
-                          color: primaryText,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24))
+                  Text(
+                    widget.product.regularPrice!.format(code: 'đ'),
+                    style: theme.textTheme.titleLarge
+                  )
                 ],
               ),
             ),
@@ -116,23 +108,17 @@ class _DetailScreenState extends State<DetailScreen> {
               padding: const EdgeInsets.all(8.0),
               child: ExpansionTile(
                 trailing: const Icon(Icons.keyboard_arrow_down),
-                title: const Text('Product Detail'),
+                initiallyExpanded: true,
+                title: Text('Thông tin sản phẩm', style: theme.textTheme.titleLarge),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: HtmlWidget(widget.product.description!),
+                    child: HtmlWidget(
+                      widget.product.description!,
+                      textStyle: theme.textTheme.titleSmall,
+                    ),
                   )
                 ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: ExpansionTile(
-                trailing: Icon(Icons.keyboard_arrow_right),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('Nutritions'), Text('100gr')],
-                ),
               ),
             ),
             const _ProductRatingBar(),
@@ -208,6 +194,7 @@ class _ProductRatingBarState extends State<_ProductRatingBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ExpansionTile(
@@ -215,7 +202,7 @@ class _ProductRatingBarState extends State<_ProductRatingBar> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Review'),
+            Text('Đánh giá', style: theme.textTheme.titleMedium,),
             RatingBar.builder(
               itemSize: 20,
               initialRating: 3,
