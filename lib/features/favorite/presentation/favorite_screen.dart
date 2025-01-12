@@ -2,7 +2,7 @@ import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/screens/product_detail_screen.dart';
+import 'package:ecommerce_app/features/product_detail/product_detail_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
