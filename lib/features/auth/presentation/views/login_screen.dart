@@ -36,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocProvider(
       create: (_) => authBloc,
       child: BlocListener<AuthBloc, AuthState>(
@@ -103,9 +104,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   decoration: InputDecoration(
                     label: const Text('Email'),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)
-                    )
+                    hintStyle: theme.textTheme.labelSmall,
+                    labelStyle: theme.textTheme.labelLarge,
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black
+                      )
+                    ),
                   ),
                 ),
                 const Gap(20),
@@ -120,8 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   decoration: InputDecoration(
                     label: const Text('Password'),
+                    hintStyle: theme.textTheme.labelLarge,
+                    labelStyle: theme.textTheme.labelLarge,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8)
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)
                     )
                   ),
                   obscureText: true,

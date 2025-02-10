@@ -8,39 +8,29 @@ import 'package:ecommerce_app/features/cart/domain/use_cases/add_item.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/delete_all_items.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/delete_item.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/get_items.dart';
+import 'package:ecommerce_app/features/cart/domain/use_cases/get_items_local.dart';
 import 'package:ecommerce_app/features/cart/domain/use_cases/update_item.dart';
 import 'package:ecommerce_app/inject_container.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
 
-  final GetCart getCart;
-  final AddItemCart addItemCart;
-  final UpdateItem updateItem;
-  final DeleteItem deleteItem;
-  final DeleteAllItems deleteAllItems;
-
-  CartBloc(
-      this.getCart,
-      this.addItemCart,
-      this.updateItem,
-      this.deleteItem,
-      this.deleteAllItems)
-      : super (const CartInitialize()) {
-    on<AddItemEvent>((emit, state) => _onAddToCart(emit, state));
-    on<GetCartEvent>((emit, state) => _onGetCart(emit, state));
-    on<DeleteItemEvent>((emit, state) => _onDeleteItem(emit, state));
-    on<IncrementItemEvent>((emit, state) => _onIncrementItem(emit, state));
-    on<DecrementItemEvent>((emit, state) => _onDecrementItem(emit, state));
-    on<DeleteAllItemEvent>((emit,state) => _onDeleteAllItems(emit, state));
+  CartBloc() : super (const CartInitialize()) {
+    on<AddItemEvent>(_onAddToCart);
+    on<GetCartEvent>(_onGetCart);
+    on<DeleteItemEvent>(_onDeleteItem);
+    on<IncrementItemEvent>(_onIncrementItem);
+    on<DecrementItemEvent>(_onDecrementItem);
+    on<DeleteAllItemEvent>(_onDeleteAllItems);
   }
 
   Future<void> _onAddToCart(AddItemEvent event, Emitter<CartState> emit) async {
     try {
-      final response = await addItemCart(ParamAddItemCart(item: event.item));
+      final response = await sl<AddItemCart>().call(ParamAddItemCart(item: event.item));
       response.fold(
           (error) {
             emit(const CartError(message: 'Không thể thêm sản phẩm vào giở hàng'));
@@ -55,12 +45,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onGetCart(GetCartEvent event, Emitter<CartState> emit) async {
-    print('check cart screen trigger');
+    debugPrint('check cart screen trigger');
     try {
-      final response = await getCart(NoParams());
+      final response = await sl<GetCart>().call(NoParams());
       response.fold(
-          (error) {
-            emit(const CartError(message: 'Xin lỗi, không thể lấy giỏ hàng, vui lòng thử lại sau'));
+          (error) async {
+            final response = await sl<GetCartLocal>().call(NoParams());
+            response.fold(
+              (error) {
+                emit(const CartError(message: 'Xin lỗi, không thể lấy giỏ hàng, vui lòng thử lại sau'));
+              },
+              (carts) {
+                debugPrint('check local cart: ${carts?.item}');
+                emit(CartSuccess(cart: carts, dismiss: true));
+              }
+            );
           },
           (carts) {
             emit(CartSuccess(cart: carts, dismiss: true));
@@ -73,7 +72,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onDeleteItem(DeleteItemEvent event, Emitter<CartState> emit) async {
     try {
-      final response = await deleteItem(ParamPostDeleteItem(key: event.key));
+      final response = await sl<DeleteItem>().call(ParamPostDeleteItem(key: event.key));
       response.fold(
           (error) => emit(const CartDeleteError()),
           (carts) => emit(CartSuccess(cart: carts, dismiss: true))
@@ -85,7 +84,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onIncrementItem(IncrementItemEvent event, Emitter<CartState> emit) async {
     try {
-      final response = await updateItem(PostParamUpdateItem(key: event.key, quantity: event.quantity));
+      final response = await sl<UpdateItem>().call(PostParamUpdateItem(key: event.key, quantity: event.quantity));
       response.fold(
               (error) {
             if (error is NetworkFailure) {

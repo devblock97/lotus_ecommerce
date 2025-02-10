@@ -13,9 +13,9 @@ import 'package:http/http.dart' as http;
 
 abstract class CartRemoteDataSource {
   Future<Cart> getCarts() => throw UnimplementedError('Stub');
-  Future<Cart> addProductToCart(CartItemModel item) => throw UnimplementedError('Stub');
-  Future<Cart> removeItem(String key) => throw UnimplementedError('Stub');
-  Future<Cart> updateCart(String key, int quantity) => throw UnimplementedError('Stub');
+  Future<Cart> addItem(CartItemModel item) => throw UnimplementedError('Stub');
+  Future<Cart> deleteItem(String key) => throw UnimplementedError('Stub');
+  Future<Cart> updateItem(String key, int quantity) => throw UnimplementedError('Stub');
   Future<Cart> deleteAllItems() => throw UnimplementedError('Stub');
 }
 
@@ -26,7 +26,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   final http.Client client;
 
   @override
-  Future<Cart> addProductToCart(CartItemModel item) async {
+  Future<Cart> addItem(CartItemModel item) async {
     try {
       final secureStorage = SecureStorage();
       final token = await secureStorage.readToken();
@@ -50,10 +50,10 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       if (response.statusCode == 403) {
         debugPrint('check nonce add to card: ${response.headers}');
         secureStorage.writeNonce(parseNonceFromHeader(response.headers));
-        return addProductToCart(item);
+        return addItem(item);
       }
 
-      print('add to cart code: ${response.statusCode}');
+      debugPrint('add to cart code: ${response.statusCode}');
       return Cart.fromJson(jsonDecode(response.body));
 
     } on SocketException catch(e) {
@@ -97,7 +97,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<Cart> removeItem(String key) async {
+  Future<Cart> deleteItem(String key) async {
     try {
       final secureStorage = SecureStorage();
       final nonce = await secureStorage.readNonce();
@@ -120,7 +120,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<Cart> updateCart(String key, int quantity) async {
+  Future<Cart> updateItem(String key, int quantity) async {
     try {
       final secureStorage = SecureStorage();
       final token = await secureStorage.readToken();

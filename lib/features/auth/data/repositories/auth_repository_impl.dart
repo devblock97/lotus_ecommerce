@@ -64,7 +64,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, AuthResponseModel?>> getUserInfo() async {
     try {
       final user = await localDataSource.getUserInfo();
-      return Right(user);
+      if (user != null) {
+        return Right(user);
+      }
+      return Left(CacheException());
     } on CacheException {
       return Left(CacheFailure('Cache Failure'));
     }

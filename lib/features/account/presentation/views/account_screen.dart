@@ -42,7 +42,7 @@ class _AccountScreenState extends State<AccountScreen> {
         }
         // Material color when switch is disabled.
         if (states.contains(WidgetState.disabled)) {
-          return Colors.grey.shade400;
+          return Colors.black;
         }
         // Otherwise return null to set default material color
         // for remaining states such as when the switch is
@@ -115,116 +115,46 @@ class _AccountScreenState extends State<AccountScreen> {
                     },
                   ),
                 ),
-                ExpansionTile(
-                  onExpansionChanged: (value) {
+                _MenuItem(
+                  title: 'Đơn hàng',
+                  icon: Icons.shopping_bag_outlined,
+                  onTap: (value) {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const GroceryApp(selectedIndex: 2,)));
                   },
-                  leading: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Đơn hàng',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  textColor: primaryText,
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
                 ),
-                ExpansionTile(
-                  onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: Icon(
-                    Icons.credit_card_outlined,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Đơn hàng đã mua',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
+                _MenuItem(
+                  title: 'Đơn hàng đã mua',
+                  icon: Icons.credit_card_outlined,
+                  onTap: (value) => showFeatureComingSoon(context),
                 ),
-                ExpansionTile(
-                  onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: Icon(
-                    Icons.location_on_outlined,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Địa chỉ giao hàng',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
+                _MenuItem(
+                  title: 'Địa chỉ giao hàng',
+                  icon: Icons.location_on_outlined,
+                  onTap: (value) => showFeatureComingSoon(context),),
+                _MenuItem(
+                  title: 'Phương thức thanh toán',
+                  icon: Icons.payments_outlined,
+                  onTap: (value) => showFeatureComingSoon(context),
                 ),
-                ExpansionTile(
-                  onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: Icon(
-                    Icons.payments_outlined,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Phương thức thanh toán',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
+                _MenuItem(
+                  title: 'Thẻ tín dụng',
+                  icon: Icons.credit_score,
+                  onTap: (value) => showFeatureComingSoon(context),
                 ),
-                ExpansionTile(
-                  onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: Icon(
-                    Icons.credit_score,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Thẻ tín dụng',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
+                _MenuItem(
+                  title: 'Thông báo',
+                  icon: Icons.notifications_outlined,
+                  onTap: (value) => showFeatureComingSoon(context),
                 ),
-                ExpansionTile(
-                  onExpansionChanged: (value) {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (_) => const NotificationScreen()));
-                    showFeatureComingSoon(context);
-                  },
-                  leading: Icon(
-                    Icons.notifications_outlined,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Thông báo',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
+                _MenuItem(
+                  title: 'Trợ giúp',
+                  icon: Icons.help_outline,
+                  onTap: (value) => showFeatureComingSoon(context),
                 ),
-                ExpansionTile(
-                  onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: Icon(
-                    Icons.help_outline,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Trợ giúp',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
-                ),
-                ExpansionTile(
-                  onExpansionChanged: (value) => showFeatureComingSoon(context),
-                  leading: Icon(
-                    Icons.info_outline,
-                    color: theme.iconTheme.color,
-                  ),
-                  title: Text(
-                    'Giới thiệu',
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  initiallyExpanded: true,
-                  trailing: const Icon(Icons.keyboard_arrow_right),
+                _MenuItem(
+                  title: 'Giới thiệu',
+                  icon: Icons.info_outline,
+                  onTap: (value) => showFeatureComingSoon(context),
                 ),
                 BlocBuilder<ThemeBloc, ThemeState>(
                   builder: (context, state) {
@@ -284,6 +214,39 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
       ),
+    );
+  }
+
+}
+
+class _MenuItem extends StatelessWidget {
+  const _MenuItem({
+    super.key,
+    this.onTap,
+    required this.title,
+    required this.icon,
+  });
+
+  final Function(bool value)? onTap;
+  final String title;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return ExpansionTile(
+      onExpansionChanged: onTap,
+      leading: Icon(
+        icon,
+        color: theme.iconTheme.color,
+      ),
+      title: Text(
+        title,
+        style: theme.textTheme.titleSmall,
+      ),
+      initiallyExpanded: true,
+      trailing: Icon(Icons.keyboard_arrow_right, color: theme.iconTheme.color,),
     );
   }
 }
