@@ -26,7 +26,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    // sl<CartBloc>().add(const GetCartEvent());
   }
 
   @override
@@ -38,12 +37,6 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.keyboard_arrow_left,
-              color: secondaryButton,
-            )
-        ),
         title: Text(
           'Giỏ hàng',
           style: Theme
@@ -63,18 +56,24 @@ class _CartScreenState extends State<CartScreen> {
           }
         },
         builder: (context, state) {
+          debugPrint('check cart screen state: $state');
           if (state is CartSuccess) {
-            print('check cart state builder: ${state.cart.item?.length}');
-            return ListView.builder(
-              itemCount: state.cart.item!.length,
-              itemBuilder: (_, index) {
-                return CartItem(
-                  product: state.cart.item![index],
-                  quantity: state.cart.item![index].quantity!,
-                  prices: state.cart.item![index].prices,
-                );
-              },
-            );
+            debugPrint('check cart state builder: ${state.cart?.item?.length}');
+            if (state.cart != null) {
+              return ListView.builder(
+                itemCount: state.cart!.item!.length,
+                itemBuilder: (_, index) {
+                  return CartItem(
+                    product: state.cart!.item![index],
+                    quantity: state.cart!.item![index].quantity!,
+                    prices: state.cart!.item![index].prices,
+                  );
+                },
+              );
+            }
+          }
+          if (state is CartError) {
+            return Center(child: Text(state.message),);
           }
           return const ListCartSkeleton();
         },
@@ -82,27 +81,28 @@ class _CartScreenState extends State<CartScreen> {
       bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartSuccess) {
-            final totals = state.cart.totals;
-            return Padding(
-              padding: const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 14),
-              child: state.cart.item!.isEmpty
-                ? Padding(
+            if (state.cart != null) {
+              final totals = state.cart!.totals;
+              return Padding(
+                padding: const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 14),
+                child: state.cart!.item!.isEmpty
+                    ? Padding(
                   padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        'Không có sản phẩm nào trong giở hàng',
-                        textAlign: TextAlign.center,
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyMedium,
+                  child: Center(
+                    child: Text(
+                      'Không có sản phẩm nào trong giở hàng',
+                      textAlign: TextAlign.center,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium,
                     ),
                   ),
-            )
-                : ElevatedButton(
+                )
+                    : ElevatedButton(
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (_) => CheckOutScreen(carts: state.cart)));
+                          builder: (_) => CheckOutScreen(carts: state.cart!)));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: primaryButton,
@@ -123,22 +123,23 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         const Spacer(),
                         Flexible(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: const Color(0xFF489E67)),
-                            child: Text(
-                              totals!.totalPrice!.format(code: totals.currencyCode!),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          )
+                            flex: 2,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: const Color(0xFF489E67)),
+                              child: Text(
+                                totals!.totalPrice!.format(code: totals.currencyCode!),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            )
                         )
                       ],
                     )
-                  ),
-            );
+                ),
+              );
+            }
           }
           return const SizedBox();
         },
