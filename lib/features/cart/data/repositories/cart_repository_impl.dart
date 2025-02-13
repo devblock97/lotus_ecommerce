@@ -50,6 +50,7 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<Either<Failure, Cart>> deleteItemCart(String key) async {
     try {
+      debugPrint('check key here: $key');
       final response = await remoteDataSource.deleteItem(key);
       return Right(response);
     } catch (e) {

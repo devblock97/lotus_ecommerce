@@ -9,14 +9,23 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ListTile(
-      leading: Image.network(product.images![0].src!),
-      title: Text(product.name!),
+      leading: Image.network(
+        product.images![0].src!,
+        width: 60,
+        height: 60,
+      ),
+      title: Text(product.name!, style: theme.textTheme.labelMedium,),
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('SL: x${product.quantity}'),
-          Text(product.prices!.price!.format(code: product.prices!.currencyCode!))
+          Text('SL: x${product.quantity}', style: theme.textTheme.labelMedium,),
+          Text(
+            product.prices!.price!.format(code: product.prices!.currencyCode!),
+            style: theme.textTheme.labelMedium,
+          )
         ],
       ),
     );

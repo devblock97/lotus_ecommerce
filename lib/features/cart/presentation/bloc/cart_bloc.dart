@@ -77,7 +77,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           (error) => emit(const CartDeleteError()),
           (carts) => emit(CartSuccess(cart: carts, dismiss: true))
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('CartBloc [_onDeleteItem] stackTrace: [$stackTrace]');
       throw Exception(e);
     }
   }

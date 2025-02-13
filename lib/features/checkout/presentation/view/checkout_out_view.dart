@@ -1,4 +1,5 @@
 
+import 'package:ecommerce_app/core/data/models/customer_model.dart';
 import 'package:ecommerce_app/core/extensions/currency.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
@@ -47,6 +48,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final totals = widget.carts.totals;
     final shippingRates = widget.carts.shippingRates;
 
@@ -65,29 +68,38 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Thanh toán'),
+          title: Text('Thanh toán', style: theme.textTheme.headlineSmall),
           centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.chevron_left, color: theme.iconTheme.color,)
+          ),
+          backgroundColor: theme.scaffoldBackgroundColor,
         ),
-        backgroundColor: Colors.grey[200],
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: ListView(
           padding: const EdgeInsets.all(8),
           children: [
-            const Text('Địa chỉ giao hàng'),
+            Text('Địa chỉ giao hàng', style: theme.textTheme.titleMedium),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white
+                borderRadius: BorderRadius.circular(8),
+                color: theme.scaffoldBackgroundColor,
+                border: Border.all(color: theme.highlightColor)
               ),
               child: ShippingAddress(cart: widget.carts),
             ),
             const Gap(10),
-            const Text('Phương thức thanh toán'),
+            Text('Phương thức thanh toán', style: theme.textTheme.titleMedium,),
             Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white
+                borderRadius: BorderRadius.circular(8),
+                color: theme.scaffoldBackgroundColor,
+                border: Border.all(color: theme.highlightColor)
               ),
               child: Column(
                 children: widget.carts.paymentMethods!.map((pm) {
@@ -108,7 +120,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       break;
                   }
                   return RadioListTile(
-                    title: Text(method),
+                    activeColor: Colors.blue,
+                    title: Text(method, style: theme.textTheme.titleSmall),
                     value: payment,
                     groupValue: paymentMethod,
                     onChanged: (PaymentMethod? value) {
@@ -121,23 +134,36 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               ),
             ),
             const Gap(10),
-            const Text('Sản phẩm'),
+            Text('Sản phẩm', style: theme.textTheme.titleMedium),
             ListItemCheckOut(carts: widget.carts),
             const Gap(10),
-            const Text('Phương thức giao hàng'),
+            Text('Phương thức giao hàng', style: theme.textTheme.titleMedium),
             Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white
+                borderRadius: BorderRadius.circular(8),
+                color: theme.scaffoldBackgroundColor,
+                border: Border.all(color: theme.highlightColor)
               ),
               child: Column(
                 children: [
                   RadioListTile(
                     contentPadding: EdgeInsets.zero,
-                    value: 1, groupValue: 2, onChanged: (value) {}, title: const Text('Giao hàng tiết kiệm'),),
+                    value: 1, groupValue: 2,
+                    onChanged: (value) {
+
+                    },
+                    title: Text(
+                      'Giao hàng tiết kiệm',
+                      style: theme.textTheme.titleSmall,),),
                   RadioListTile(
                     contentPadding: EdgeInsets.zero,
-                    value: 1, groupValue: 2, onChanged: (value) {}, title: const Text('Giao hàng hỏa tốc'),),
+                    value: 1, groupValue: 2,
+                    onChanged: (value) {},
+                    title: Text(
+                      'Giao hàng hỏa tốc',
+                      style: theme.textTheme.titleSmall,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -145,15 +171,16 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8)
+                color: theme.scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: theme.highlightColor)
               ),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Tạm tính'),
+                      const Text('Tạm tính'),
                       Text(totals.totalPrice!.format(code: totals.currencyCode!))
                     ],
                   ),
@@ -161,23 +188,23 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Phí vận chuyển'),
+                      const Text('Phí vận chuyển'),
                       Text(shippingFee)
                     ],
                   ),
-                  Gap(5),
+                  const Gap(5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Khuyến mãi vận chuyển'),
+                      const Text('Khuyến mãi vận chuyển'),
                       Text('0'.format(code: totals.currencyCode!))
                     ],
                   ),
-                  Gap(5),
+                  const Gap(5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Giảm giá'),
+                      const Text('Giảm giá'),
                       Text(coupon)
                     ],
                   ),
@@ -188,7 +215,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         ),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.all(8),
-          color: Colors.white,
+          color: theme.scaffoldBackgroundColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -196,7 +223,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Tổng tiền'),
+                  Text('Tổng tiền', style: theme.textTheme.titleMedium,),
                   Text(totals.totalPrice!.format(code: totals.currencyCode!))
                 ],
               ),
@@ -251,7 +278,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   }
 }
 
-class ShippingAddress extends StatelessWidget {
+class ShippingAddress extends StatefulWidget {
   const ShippingAddress({
     super.key,
     required this.cart
@@ -260,22 +287,31 @@ class ShippingAddress extends StatelessWidget {
   final Cart cart;
 
   @override
+  State<ShippingAddress> createState() => _ShippingAddressState();
+}
+
+class _ShippingAddressState extends State<ShippingAddress> {
+  @override
   Widget build(BuildContext context) {
-    debugPrint('check address: ${cart.shippingAddress?.firstName}; ${cart.shippingAddress?.address1}');
-    if (cart.shippingAddress!.isEmpty()) {
+    final theme = Theme.of(context);
+
+    if (widget.cart.shippingAddress!.isEmpty()) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Bạn chưa có địa chỉ giao hàng'),
+          Text('Bạn chưa có địa chỉ giao hàng', style: theme.textTheme.titleMedium,),
           ElevatedButton(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) =>
-                  ShipmentScreen(isUpdate: false, cart: cart,)));
+                  ShipmentScreen(isUpdate: false, cart: widget.cart,)));
             },
+            style: const ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll<Color>(Colors.blue)
+            ),
             child: const Column(
               children: [
-                Icon(Icons.add),
-                Text('Thêm địa chỉ', style: TextStyle(fontSize: 10),)
+                Icon(Icons.add, color: Colors.white,),
+                Text('Thêm địa chỉ', style: TextStyle(color: Colors.white))
               ],
             )
           ),
@@ -288,21 +324,20 @@ class ShippingAddress extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('${cart.shippingAddress!.firstName} ${cart.shippingAddress!.lastName}'),
+            Text('${widget.cart.shippingAddress!.firstName} ${widget.cart.shippingAddress!.lastName}'),
             TextButton(
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MultiBlocProvider(
-                providers: [
-                  BlocProvider(create: (_) => sl<shipBloc.ShipmentBloc>()..add(const GetProvincesRequest())),
-                  BlocProvider(create: (_) => CityCubit(sl())),
-                  BlocProvider(create: (_) => WardCubit(sl()))
-                ],
-                child: ShipmentScreen(isUpdate: true, cart: cart,)))
-              ),
-              child: const Text('Thay đổi'),
+              onPressed: () async {
+                CustomerModel customer = await Navigator.push(context, MaterialPageRoute(builder: (_) => ShipmentScreen(isUpdate: true, cart: widget.cart,)));
+                debugPrint('customer name: ${customer.firstName} ${customer.lastName}; ${customer.shipping?.address1}');
+                setState(() {
+                  widget.cart.shippingAddress = customer.shipping;
+                });
+              },
+              child: Text('Thay đổi', style: theme.textTheme.titleMedium),
             )
           ],
         ),
-        Text(cart.shippingAddress!.address1),
+        Text(widget.cart.shippingAddress!.address1),
       ],
     );
   }
@@ -318,10 +353,12 @@ class ListItemCheckOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.white
+        color: theme.scaffoldBackgroundColor,
+        border: Border.all(color: theme.highlightColor)
       ),
       child: ListView.builder(
         shrinkWrap: true,
