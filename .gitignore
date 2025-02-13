@@ -47,3 +47,4 @@ app.*.map.json
 
 scripts/env/.env
 env.g.dart
+git
