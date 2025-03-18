@@ -2,8 +2,8 @@ import 'package:ecommerce_app/theme/color.dart';
 import 'package:flutter/material.dart';
 
 class EcommerceButton extends StatelessWidget {
-  EcommerceButton(
-      {super.key,
+  const EcommerceButton({
+    super.key,
       required this.title,
       this.backgroundColor,
       this.titleColor,
@@ -14,7 +14,7 @@ class EcommerceButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? titleColor;
   final double elevation;
-  VoidCallback? onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

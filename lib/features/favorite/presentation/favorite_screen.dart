@@ -16,6 +16,7 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     var favorite = context.watch<FavoriteRepositoryImpl>();
     // var cart = context.read<CartRepository>();
 
@@ -24,7 +25,7 @@ class FavoriteScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         title: Text(
           'Favorite',
           style: Theme.of(context).textTheme.headlineSmall,

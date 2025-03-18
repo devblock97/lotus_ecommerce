@@ -4,6 +4,7 @@ import 'package:ecommerce_app/core/extensions/currency.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/widget/cart_skeleton.dart';
 import 'package:ecommerce_app/theme/color.dart';
+import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:ecommerce_app/widgets/my_cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +36,8 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -45,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
               .headlineSmall,
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 1,
       ),
       body: BlocConsumer<CartBloc, CartState>(
@@ -99,45 +102,13 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                 )
-                    : ElevatedButton(
-                    onPressed: () {
+                : EcommerceButton(
+                    title: 'Thanh toán',
+                    onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                           builder: (_) => CheckOutScreen(carts: state.cart!)));
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryButton,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(19)),
-                        padding: const EdgeInsets.all(22)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Flexible(
-                          flex: 3,
-                          child: Text(
-                            'Thanh toán',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        Flexible(
-                            flex: 2,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: const Color(0xFF489E67)),
-                              child: Text(
-                                totals!.totalPrice!.format(code: totals.currencyCode!),
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            )
-                        )
-                      ],
-                    )
-                ),
+                    }
+                )
               );
             }
           }

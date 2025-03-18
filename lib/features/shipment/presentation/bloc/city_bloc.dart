@@ -10,14 +10,18 @@ class CityCubit extends Cubit<CityState> {
 
   Future<void> getCity(String parentCode) async {
     emit(state.copyWith(status: CityStatus.loading));
-    final response = await getCities(GetCitiesParam(parentCode: parentCode));
-    response.fold(
-      (error) => emit(state.copyWith(
+    try {
+      final response = await getCities(GetCitiesParam(parentCode: parentCode));
+      response.fold(
+        (error) => emit(state.copyWith(
         status: CityStatus.error,
         message: error.toString())),
-      (cities) => emit(state.copyWith(
+        (cities) => emit(state.copyWith(
         cities: cities,
         status: CityStatus.success))
-    );
+      );
+    } catch (e) {
+      emit(state.copyWith(status: CityStatus.error));
+    }
   }
 }

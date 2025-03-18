@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:ecommerce_app/core/constants/api_config.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 abstract class HomeRemoteDataSource {
@@ -23,6 +24,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         'Authorization': 'Basic ${base64Encode(utf8.encode('${ApiConfig.customer}:${ApiConfig.consumerSecret}'))}'
       };
       final response = await client.get(url, headers: ApiConfig.headerSystem);
+      debugPrint('check response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         List<ProductModel> allProducts = [];
         final body = jsonDecode(response.body) as List;

@@ -33,6 +33,7 @@ class EcommerceTheme {
         surface: white50Alpha060,
         onSurface: blue50Alpha060
       ),
+      scaffoldBackgroundColor: darkText,
       cardColor: lightCardBackground,
       brightness: Brightness.light,
       appBarTheme: AppBarTheme(
@@ -56,7 +57,7 @@ class EcommerceTheme {
         modalBackgroundColor: Colors.black.withOpacity(0.7)
       ),
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: black900,
+      scaffoldBackgroundColor: lightText,
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: darkText
       ),
