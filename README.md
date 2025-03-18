@@ -1,4 +1,4 @@
-# ecommerce_app
+# Lotus ecommerce
 
 A new Flutter project.
 
