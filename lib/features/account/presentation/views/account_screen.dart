@@ -10,6 +10,7 @@ import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -25,9 +26,12 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   bool selected = false;
 
+  String version = '';
+
   @override
   void initState() {
     super.initState();
+    _getAppVersion();
   }
 
   @override
@@ -177,6 +181,18 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
                 const Gap(10),
+                FutureBuilder(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasData) {
+                      return _MenuItem(title: 'Version: ${snapshot.data!.version}.${snapshot.data!.buildNumber}', icon: Icons.settings);
+                    }
+                    return const Text("Version info not available");
+                  }
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: BlocConsumer<AuthBloc, AuthState>(
@@ -215,6 +231,22 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
     );
+  }
+
+  void _getAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+
+    // String appName = packageInfo.appName;
+    // String packageName = packageInfo.packageName;
+    // String version = packageInfo.version;
+    // String buildNumber = packageInfo.buildNumber;
+    //
+    // debugPrint("App Name: $appName");
+    // debugPrint("Package Name: $packageName");
+    // debugPrint("Version: $version");
+    // debugPrint("Build Number: $buildNumber");
+
+    version = '${packageInfo.version}.${packageInfo.buildNumber}';
   }
 
 }
