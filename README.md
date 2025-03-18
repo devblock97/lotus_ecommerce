@@ -1,4 +1,7 @@
 # Lotus ecommerce
+## 📸 Screenshots
+![App Screenshot](screenshots/home.png)
+![App Screenshot](screenshots/detail.png)
 
 A new Flutter project.
 
