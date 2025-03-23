@@ -2,7 +2,7 @@ import 'package:ecommerce_app/app.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:ecommerce_app/features/home/data/models/product_model.dart';
 import 'package:ecommerce_app/features/cart/data/repositories/cart_repository_impl.dart';
-import 'package:ecommerce_app/screens/product_detail_screen.dart';
+import 'package:ecommerce_app/features/product_detail/product_detail_screen.dart';
 import 'package:ecommerce_app/theme/color.dart';
 import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     var favorite = context.watch<FavoriteRepositoryImpl>();
     // var cart = context.read<CartRepository>();
 
@@ -24,7 +25,7 @@ class FavoriteScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         title: Text(
           'Favorite',
           style: Theme.of(context).textTheme.headlineSmall,

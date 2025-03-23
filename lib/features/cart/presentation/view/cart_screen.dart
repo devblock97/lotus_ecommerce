@@ -4,6 +4,7 @@ import 'package:ecommerce_app/core/extensions/currency.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/widget/cart_skeleton.dart';
 import 'package:ecommerce_app/theme/color.dart';
+import 'package:ecommerce_app/widgets/my_button.dart';
 import 'package:ecommerce_app/widgets/my_cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    // sl<CartBloc>().add(const GetCartEvent());
   }
 
   @override
@@ -36,14 +36,10 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.keyboard_arrow_left,
-              color: secondaryButton,
-            )
-        ),
         title: Text(
           'Giỏ hàng',
           style: Theme
@@ -52,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
               .headlineSmall,
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 1,
       ),
       body: BlocConsumer<CartBloc, CartState>(
@@ -63,18 +59,24 @@ class _CartScreenState extends State<CartScreen> {
           }
         },
         builder: (context, state) {
+          debugPrint('check cart screen state: $state');
           if (state is CartSuccess) {
-            print('check cart state builder: ${state.cart.item?.length}');
-            return ListView.builder(
-              itemCount: state.cart.item!.length,
-              itemBuilder: (_, index) {
-                return CartItem(
-                  product: state.cart.item![index],
-                  quantity: state.cart.item![index].quantity!,
-                  prices: state.cart.item![index].prices,
-                );
-              },
-            );
+            debugPrint('check cart state builder: ${state.cart?.item?.length}');
+            if (state.cart != null) {
+              return ListView.builder(
+                itemCount: state.cart!.item!.length,
+                itemBuilder: (_, index) {
+                  return CartItem(
+                    product: state.cart!.item![index],
+                    quantity: state.cart!.item![index].quantity!,
+                    prices: state.cart!.item![index].prices,
+                  );
+                },
+              );
+            }
+          }
+          if (state is CartError) {
+            return Center(child: Text(state.message),);
           }
           return const ListCartSkeleton();
         },
@@ -82,63 +84,33 @@ class _CartScreenState extends State<CartScreen> {
       bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartSuccess) {
-            final totals = state.cart.totals;
-            return Padding(
-              padding: const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 14),
-              child: state.cart.item!.isEmpty
-                ? Padding(
+            if (state.cart != null) {
+              final totals = state.cart!.totals;
+              return Padding(
+                padding: const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 14),
+                child: state.cart!.item!.isEmpty
+                    ? Padding(
                   padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        'Không có sản phẩm nào trong giở hàng',
-                        textAlign: TextAlign.center,
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyMedium,
+                  child: Center(
+                    child: Text(
+                      'Không có sản phẩm nào trong giở hàng',
+                      textAlign: TextAlign.center,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium,
                     ),
                   ),
-            )
-                : ElevatedButton(
-                    onPressed: () {
+                )
+                : EcommerceButton(
+                    title: 'Thanh toán',
+                    onTap: () {
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (_) => CheckOutScreen(carts: state.cart)));
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryButton,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(19)),
-                        padding: const EdgeInsets.all(22)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Flexible(
-                          flex: 3,
-                          child: Text(
-                            'Thanh toán',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        Flexible(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: const Color(0xFF489E67)),
-                            child: Text(
-                              totals!.totalPrice!.format(code: totals.currencyCode!),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          )
-                        )
-                      ],
-                    )
-                  ),
-            );
+                          builder: (_) => CheckOutScreen(carts: state.cart!)));
+                    }
+                )
+              );
+            }
           }
           return const SizedBox();
         },

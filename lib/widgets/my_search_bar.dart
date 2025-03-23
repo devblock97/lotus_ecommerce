@@ -11,36 +11,36 @@ class EcommerceSearchBar extends StatefulWidget {
 class _EcommerceSearchBarState extends State<EcommerceSearchBar> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: SearchAnchor(builder: (context, controller) {
-        return SearchBar(
-          onTap: () {
-            controller.openView();
-          },
-          backgroundColor: const WidgetStatePropertyAll(secondaryBackground),
-          elevation: WidgetStateProperty.all(5),
-          shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-          hintText: 'Nhập tìm kiếm...',
-          hintStyle: WidgetStatePropertyAll(
-            Theme.of(context).textTheme.titleMedium
+    return SearchAnchor(builder: (context, controller) {
+      return SearchBar(
+        onTap: () {
+          controller.openView();
+        },
+        backgroundColor: const WidgetStatePropertyAll(secondaryBackground),
+        elevation: WidgetStateProperty.all(5),
+        shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+        hintText: 'Nhập tìm kiếm...',
+        textStyle: WidgetStatePropertyAll(
+          TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color)
+        ),
+        onChanged: (_) => controller.openView(),
+        leading: const Icon(Icons.search_outlined),
+      );
+    }, suggestionsBuilder: (context, suggester) {
+      return List<ListTile>.generate(10, (index) {
+        return ListTile(
+          title: Text(
+            'item $index',
+            style: Theme.of(context).textTheme.labelLarge,
           ),
-          onChanged: (_) => controller.openView(),
-          leading: const Icon(Icons.search_outlined),
+          onTap: () {
+            setState(() {
+              suggester.closeView('item $index');
+            });
+          },
         );
-      }, suggestionsBuilder: (context, suggestor) {
-        return List<ListTile>.generate(10, (index) {
-          return ListTile(
-            title: Text('item $index'),
-            onTap: () {
-              setState(() {
-                suggestor.closeView('item $index');
-              });
-            },
-          );
-        });
-      }),
-    );
+      });
+    });
   }
 }

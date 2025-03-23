@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 abstract class AuthRemoteDataSource {
   Future<AuthResponseModel> signIn(AuthModel body) => throw UnimplementedError('Stub');
   Future<UserModel> signUp(SignUpModel body) => throw UnimplementedError('Stub');
+  Future<void> signOut() => throw UnimplementedError('Stub');
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -63,6 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             'password': body.password
           })
       );
+      debugPrint('status code: ${response.statusCode}');
       if (response.statusCode >= 200 && response.statusCode <= 209) {
         return UserModel.fromJson(jsonDecode(response.body));
       } else {
@@ -75,6 +77,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (_) {
       rethrow;
     }
+  }
+
+  @override
+  Future<void> signOut() {
+    throw UnimplementedError('Stub');
   }
 
 }

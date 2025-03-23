@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:ecommerce_app/core/extensions/validator.dart';
+import 'package:ecommerce_app/core/widgets/lotus_market_form.dart';
 import 'package:ecommerce_app/features/auth/data/models/sign_up_model.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ecommerce_app/features/auth/presentation/presentation.dart';
@@ -16,6 +19,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../../../inject_container.dart';
 
+final isValidateNotifier = ValueNotifier<bool>(false);
+
 class SingUpScreen extends StatefulWidget {
   const SingUpScreen({super.key});
 
@@ -27,10 +32,10 @@ class _SingUpScreenState extends State<SingUpScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final username = TextEditingController();
-  final email = TextEditingController();
-  final password = TextEditingController();
-  final confirmPassword = TextEditingController();
+  final _username = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _confirmPassword = TextEditingController();
 
   bool isValidate = false;
 
@@ -38,8 +43,22 @@ class _SingUpScreenState extends State<SingUpScreen> {
 
   StringBuffer error = StringBuffer();
 
+  Timer? _debounce;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _username.dispose();
+    _email.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: BlocProvider(
         create: (_) => authBloc,
@@ -79,51 +98,44 @@ class _SingUpScreenState extends State<SingUpScreen> {
                   fit: BoxFit.contain,
                 ),
                 const Gap(30),
-                TextFormField(
-                  decoration: InputDecoration(
-                    label: const Text('Username'),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)
-                    )
-                  ),
+                LotusMarketForm(
+                  label: 'Username',
+                  controller: _username,
                   onChanged: (value) {
-                    setState(() {
-                      isValidate = username.text.isNotEmpty
-                          && email.text.isNotEmpty
-                          && confirmPassword.text.isNotEmpty
-                          && password.text.isNotEmpty;
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+                    _debounce = Timer(const Duration(microseconds: 500), () {
+                      setState(() {
+                        isValidate = _areFieldValid();
+                      });
                     });
                   },
-                  controller: username,
                 ),
                 const Gap(20),
-                TextFormField(
-                  decoration: InputDecoration(
-                    label: const Text('Email'),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)
-                    )
-                  ),
-                  validator: (email) => email!.isValidEmail() ? null : 'Email is invalid',
+                LotusMarketForm(
+                  label: 'Email',
+                  controller: _email,
+                  validator: (email) => email!.isValidEmail() ? null : 'Email không hợp lệ',
                   onChanged: (value) {
-                    setState(() {
-                      isValidate = username.text.isNotEmpty
-                          && email.text.isNotEmpty
-                          && confirmPassword.text.isNotEmpty
-                          && password.text.isNotEmpty;
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      setState(() {
+                        isValidate = _areFieldValid();
+                      });
                     });
                   },
-                  controller: email,
                 ),
                 const Gap(20),
-                TextFormField(
-                  decoration: InputDecoration(
-                    label: const Text('Password'),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)
-                    ),
-                    suffixIcon: const Icon(Icons.remove_red_eye)
-                  ),
+                LotusMarketForm(
+                  label: 'Mật khẩu',
+                  controller: _password,
+                  onChanged: (value) {
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      setState(() {
+                        isValidate = _areFieldValid();
+                      });
+                    });
+                  },
                   validator: (value) {
                     if (!value!.isValidPassword()) {
                       return 'Password must be at least 8 characters long and contain:\n'
@@ -134,38 +146,23 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     }
                     return null;
                   },
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onChanged: (value) {
-                    setState(() {
-                      isValidate = username.text.isNotEmpty
-                          && email.text.isNotEmpty
-                          && confirmPassword.text.isNotEmpty
-                          && password.text.isNotEmpty;
-                    });
-                  },
-                  controller: password,
                   obscureText: true,
                 ),
                 const Gap(20),
-                TextFormField(
-                  decoration: InputDecoration(
-                    label: const Text('Confirm password'),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)
-                    ),
-                    suffixIcon: const Icon(Icons.remove_red_eye),
-                  ),
-                  validator: (input) => input!.hasMatchPassword(password.text)
-                      ? null : 'Password has not matching',
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: confirmPassword,
-                  obscureText: true,
+                LotusMarketForm(
+                  label: 'Xác nhận lại mật khẩu',
+                  controller: _confirmPassword,
                   onChanged: (value) {
-                    isValidate = username.text.isNotEmpty
-                        && email.text.isNotEmpty
-                        && confirmPassword.text.isNotEmpty
-                        && password.text.isNotEmpty;
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      setState(() {
+                        isValidate = _areFieldValid();
+                      });
+                    });
                   },
+                  validator: (value) => value!.hasMatchPassword(_password.text)
+                      ? null : 'Mật khẩu không trùng khớp',
+                  obscureText: true,
                 ),
                 const Gap(10),
                 RichText(
@@ -190,9 +187,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                   onPressed: isValidate
                       ? () {
                           final body = SignUpModel(
-                            username: username.text.toString(),
-                            email: email.text.toString(),
-                            password: password.text.toString());
+                            username: _username.text.toString(),
+                            email: _email.text.toString(),
+                            password: _password.text.toString());
                           authBloc.add(SignUpRequest(body));
                           if (_formKey.currentState!.validate()) {
                             print('value valid: ${_formKey.currentState}');
@@ -211,9 +208,12 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       padding: const EdgeInsets.all(22),
+                      side: BorderSide(
+                        color: theme.colorScheme.primary
+                      ),
                       minimumSize: const Size.fromHeight(50),
                       backgroundColor: primaryButton),
-                  child: const Text('Sign Up'),
+                  child: Text('Sign Up', style: theme.textTheme.titleSmall,),
                 ),
                 const Gap(30),
                 GestureDetector(
@@ -238,5 +238,12 @@ class _SingUpScreenState extends State<SingUpScreen> {
         ),
       ),
     );
+  }
+
+  bool _areFieldValid() {
+    return _username.text.isNotEmpty
+        && _email.text.isNotEmpty
+        && _confirmPassword.text.isNotEmpty
+        && _password.text.isNotEmpty;
   }
 }

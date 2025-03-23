@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ecommerce_app/core/extensions/currency.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/view/cart_screen.dart';
@@ -15,140 +16,163 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 
 class DetailScreen extends StatefulWidget {
-  DetailScreen({super.key, required this.product});
+  const DetailScreen({super.key, required this.product});
 
   final ProductModel product;
-  var quantity = 1;
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+  bool _isCollapsed = false;
+
+  int quantity = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.offset >= MediaQuery.of(context).size.height * 0.33) {
+        setState(() {
+          _isCollapsed = true;
+        });
+      } else if (_scrollController.offset <= MediaQuery.of(context).size.height * 0.35) {
+        setState(() {
+          _isCollapsed = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            leading: IconButton(
+              icon: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            actions: _isCollapsed ? [_AddFavorite(product: widget.product,)] : null,
+            expandedHeight: MediaQuery.of(context).size.height * 0.4,
+            collapsedHeight: 100,
+            floating: false,
+            pinned: true,
+            flexibleSpace: _ImageSlider(product: widget.product),
           ),
-          backgroundColor: secondaryBackground,
-        ),
-        body: SingleChildScrollView(
-          child: Column(children: [
-            _ImageSlider(product: widget.product),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.product.name!,
-                    style: const TextStyle(
-                        color: primaryText,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24),
-                  ),
-                  _AddFavorite(
-                    product: widget.product,
-                  )
-                ],
-              ),
-            ),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('${'cai'}, Price'),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(
-                          onPressed: () {
-                            if (widget.quantity > 1) {
-                              setState(() {
-                                widget.quantity--;
-                              });
-                            }
-                          },
-                          icon: const Icon(Icons.remove)),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        margin: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border:
-                                Border.all(width: 1, color: secondaryButton),
-                            shape: BoxShape.rectangle),
-                        child: Text('${widget.quantity}'),
+                      Text(
+                        widget.product.name!,
+                        style: theme.textTheme.titleLarge,
                       ),
-                      IconButton(
-                          onPressed: () {
-                            if (widget.quantity < 10) {
-                              setState(() {
-                                widget.quantity++;
-                              });
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.add,
-                            color: primaryButton,
-                          ))
+                      _AddFavorite(
+                        product: widget.product,
+                      )
                     ],
                   ),
-                  Text('${widget.product.price} đ',
-                      style: const TextStyle(
-                          color: primaryText,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ExpansionTile(
-                trailing: const Icon(Icons.keyboard_arrow_down),
-                title: const Text('Product Detail'),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: HtmlWidget(widget.product.description!),
-                  )
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: ExpansionTile(
-                trailing: Icon(Icons.keyboard_arrow_right),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('Nutritions'), Text('100gr')],
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                if (quantity > 1) {
+                                  setState(() {
+                                    quantity--;
+                                  });
+                                }
+                              },
+                              icon: const Icon(Icons.remove)),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border:
+                                Border.all(width: 1, color: secondaryButton),
+                                shape: BoxShape.rectangle),
+                            child: Text('$quantity'),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                if (quantity < 10) {
+                                  setState(() {
+                                    quantity++;
+                                  });
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.add,
+                                color: primaryButton,
+                              ))
+                        ],
+                      ),
+                      Text(
+                          widget.product.regularPrice!.format(code: 'đ'),
+                          style: theme.textTheme.titleLarge
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ExpansionTile(
+                    trailing: const Icon(Icons.keyboard_arrow_down),
+                    initiallyExpanded: true,
+                    title: Text('Thông tin sản phẩm', style: theme.textTheme.titleLarge),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: HtmlWidget(
+                          widget.product.description!,
+                          textStyle: theme.textTheme.titleSmall,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ]
             ),
-            const _ProductRatingBar(),
-          ]),
-        ),
-        bottomNavigationBar: Padding(
+          )
+        ],
+      ),
+      bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(8.0),
           child: EcommerceButton(
             title: 'Thêm vào giỏ hàng',
             onTap: () {
               context.read<CartBloc>().add(AddItemEvent(
                   item: CartItemModel(
-                      product: widget.product, quantity: widget.quantity)));
+                      product: widget.product, quantity: quantity)));
             },
           ),
-        ));
+        )
+    );
   }
 }
 
@@ -208,6 +232,7 @@ class _ProductRatingBarState extends State<_ProductRatingBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ExpansionTile(
@@ -215,7 +240,7 @@ class _ProductRatingBarState extends State<_ProductRatingBar> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Review'),
+            Text('Đánh giá', style: theme.textTheme.titleMedium,),
             RatingBar.builder(
               itemSize: 20,
               initialRating: 3,
@@ -258,7 +283,7 @@ class _ImageSliderState extends State<_ImageSlider> {
       widget.product.images![0].src!,
     ];
     return Container(
-      height: 300,
+      height: MediaQuery.of(context).size.height * 0.4,
       decoration: const BoxDecoration(
           color: secondaryBackground,
           borderRadius: BorderRadius.only(

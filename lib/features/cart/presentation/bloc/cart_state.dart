@@ -13,7 +13,7 @@ class CartInitialize extends CartState {
 class CartSuccess extends CartState {
 
   const CartSuccess({required this.cart, this.dismiss});
-  final Cart cart;
+  final Cart? cart;
   final bool? dismiss;
 
   @override

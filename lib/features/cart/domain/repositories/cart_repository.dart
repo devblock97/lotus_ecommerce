@@ -9,12 +9,14 @@ abstract class CartRepository {
 
   Future<Either<Failure, Cart>> addItemCart(CartItemModel cart) => throw UnimplementedError('Stub');
 
-  Future<Either<Failure, Cart>> getCarts() => throw UnimplementedError('Stub');
+  Future<Either<Failure, Cart?>> getCarts() => throw UnimplementedError('Stub');
 
   Future<Either<Failure, Cart>> deleteItemCart(String key) => throw UnimplementedError('Stub');
 
   Future<Either<Failure, Cart>> updateItem(String key, int quantity) => throw UnimplementedError('Stub');
 
   Future<Either<Failure, Cart>> deleteAllItems() => throw UnimplementedError('Stub');
+
+  Future<Either<Failure, Cart>> getCartsLocal() => throw UnimplementedError('Stub');
 
 }
