@@ -56,7 +56,7 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 1
+        versionCode getIncrementedVersionCode()
         versionName "1.0"
 
         multiDexEnabled true
@@ -76,6 +76,32 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (variant.buildType.name == "release") {
+                // Get version name and version code from variant
+                def versionName = variant.versionName
+                def versionCode = variant.versionCode
+
+                // Rename APK to include both version and build number
+                output.outputFileName = "LotusMarket-v${versionName}.${versionCode}.apk"            }
+        }
+    }
+}
+
+// Function to read and increment versionCode
+def getIncrementedVersionCode() {
+    def propertiesFile = new File(rootProject.projectDir, "local.properties")
+    def properties = new Properties()
+    propertiesFile.withInputStream { properties.load(it) }
+
+    def versionCode = properties.getProperty("version.code", "1").toInteger()
+    versionCode += 1 // Auto-increment
+
+    properties.setProperty("version.code", versionCode.toString())
+    propertiesFile.withOutputStream { properties.store(it, null) }
+
+    return versionCode
 }
 
 flutter {

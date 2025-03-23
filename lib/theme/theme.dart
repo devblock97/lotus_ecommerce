@@ -24,7 +24,7 @@ class EcommerceTheme {
       ),
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
-        primary: lightChipBackground,
+        primary: Colors.black,
         onPrimary: blue50,
         secondary: blue100,
         onSecondary: blue200,

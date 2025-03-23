@@ -48,8 +48,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final response = await postSignIn!(ParamPostSignIn(event.authModel));
     response.fold(
       (l) {
+        if (l is ClientError) {
+          emit(AuthenticationError(l.error!, code: l.code!));
+        }
         if (l is ServerFailure) {
-          emit(const AuthenticationError(code: 500, 'Failed to response from server'));
+          emit(AuthenticationError(code: 500, l.error));
         }
         if (l is ConnectionFailure) {
           emit(const AuthenticationError(code: 503, 'Internet connection failure!'));
@@ -73,7 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     response.fold(
       (l) {
         if (l is ServerFailure) {
-          emit(const AuthenticationError(code: 500, 'Failed to response from server'));
+          emit(AuthenticationError(code: 500, l.error));
         }
         if (l is ConnectionFailure) {
           emit(const AuthenticationError(code: 503, 'Internet connection failure'));
