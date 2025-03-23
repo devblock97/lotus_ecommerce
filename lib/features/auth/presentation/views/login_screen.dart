@@ -103,14 +103,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   decoration: InputDecoration(
-                    label: const Text('Email'),
+                    label: const Text('Username'),
                     hintStyle: theme.textTheme.labelSmall,
                     labelStyle: theme.textTheme.labelLarge,
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black
-                      )
-                    ),
+                    disabledBorder: const OutlineInputBorder(),
+                    enabledBorder: const OutlineInputBorder(),
+                    focusedBorder: const OutlineInputBorder(),
+                    hintText: 'Vui lòng nhập username hoặc email'
                   ),
                 ),
                 const Gap(20),
@@ -125,14 +124,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   decoration: InputDecoration(
                     label: const Text('Password'),
-                    hintStyle: theme.textTheme.labelLarge,
+                    hintStyle: theme.textTheme.labelSmall,
                     labelStyle: theme.textTheme.labelLarge,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8)
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)
-                    )
+                    disabledBorder: const OutlineInputBorder(),
+                    enabledBorder: const OutlineInputBorder(),
+                    focusedBorder: const OutlineInputBorder(),
+                    hintText: 'Vui lòng nhập mật khẩu'
                   ),
                   obscureText: true,
                 ),
@@ -147,9 +147,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         backgroundColor: Colors.orange,
                       )
                     ),
-                    child: const Text(
+                    child: Text(
                       'Forget Password?',
                       textAlign: TextAlign.end,
+                      style: theme.textTheme.titleSmall,
                     ),
                   ),
                 ),
@@ -178,7 +179,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6)
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    side: BorderSide(
+                      color: theme.colorScheme.primary
                     ),
                     padding: const EdgeInsets.all(16)
                   ),
@@ -217,6 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6)
                       ),
+                      side: BorderSide(color: theme.colorScheme.primary),
                       padding: const EdgeInsets.all(16)
                     ),
                     child: Row(
@@ -253,13 +258,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.all(22),
                       minimumSize: const Size.fromHeight(50),
                       backgroundColor: primaryButton),
-                  child: const Text('Login'),
+                  child: const Text('Đăng nhập'),
                 ),
                 const Gap(30),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SingUpScreen()));
+                        MaterialPageRoute(builder: (context) => const SingUpScreen()));
                   },
                   child: RichText(
                     text: const TextSpan(

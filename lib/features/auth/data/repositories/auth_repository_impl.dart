@@ -94,11 +94,13 @@ class AuthRepositoryImpl implements AuthRepository {
         final response = await remoteDataSource.signUp(body);
         return Right(response);
       } on SocketException catch (e) {
+        debugPrint('sign up on socket exception');
         return Left(NetworkFailure('auth [SignUp] issue: ${e.message}'));
       } on HttpException catch (e) {
+        debugPrint('sign up on http exception');
         return Left(ServerFailure('auth [SignUp] issue: ${e.message}'));
-      } catch (e) {
-        return Left(ServerFailure('Failed during make http request to server!!!'));
+      } on ServerFailure catch(e) {
+        return Left(ServerFailure(e.error));
       }
     } else {
       return Left(ConnectionFailure('Internet connection failure'));

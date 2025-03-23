@@ -64,6 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             'password': body.password
           })
       );
+      debugPrint('status code: ${response.statusCode}');
       if (response.statusCode >= 200 && response.statusCode <= 209) {
         return UserModel.fromJson(jsonDecode(response.body));
       } else {

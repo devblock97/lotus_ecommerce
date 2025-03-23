@@ -3,6 +3,16 @@ import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {}
 
+class ClientError extends Failure {
+  final String? error;
+  final int? code;
+
+  ClientError({this.error, this.code});
+
+  @override
+  List<Object?> get props => [error, code];
+}
+
 class ServerFailure extends Failure {
 
   final String error;
