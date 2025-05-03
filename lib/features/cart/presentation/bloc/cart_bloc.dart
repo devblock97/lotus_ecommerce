@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/core/catchers/errors/failure.dart';
 import 'package:ecommerce_app/core/domain/usecase/usecase.dart';
@@ -85,6 +84,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onIncrementItem(IncrementItemEvent event, Emitter<CartState> emit) async {
     try {
+      debugPrint('trigger increment item: ${event.key}; ${event.quantity}');
       final response = await sl<UpdateItem>().call(PostParamUpdateItem(key: event.key, quantity: event.quantity));
       response.fold(
               (error) {
@@ -107,6 +107,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onDecrementItem(DecrementItemEvent event, Emitter<CartState> emit) async {
     try {
+      debugPrint('trigger decrement item: ${event.key}; ${event.quantity}');
       final response = await sl<UpdateItem>().call(PostParamUpdateItem(key: event.key, quantity: event.quantity));
       response.fold(
         (error) {
