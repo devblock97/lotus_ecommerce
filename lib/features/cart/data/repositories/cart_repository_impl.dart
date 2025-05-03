@@ -60,6 +60,7 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<Either<Failure, Cart>> updateItem(String key, int quantity) async {
+    debugPrint('trigger update item impl');
     final isConnected = await networkInfo.isConnected;
     if (isConnected) {
       try {

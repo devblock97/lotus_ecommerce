@@ -76,15 +76,17 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           headers: ApiConfig.headerPersonal(token!, nonce)
       );
       debugPrint('check trigger cart: ${response.statusCode}; $token; $nonce');
-      // if (response.statusCode == 200) {
-      //   final secureStorage = SecureStorage();
-      //   final value = parseNonceFromHeader(response.headers);
-      //   secureStorage.writeNonce(value);
-      // }
-      // if (response.statusCode == 403) {
-      //   debugPrint('check nonce: ${response.headers}');
-      // }
-      print('status code: ${response.statusCode} - ${response.body}');
+      if (response.statusCode == 200) {
+        final secureStorage = SecureStorage();
+        final value = parseNonceFromHeader(response.headers);
+        secureStorage.writeNonce(value);
+      }
+      if (response.statusCode == 403) {
+        final nonce = parseNonceFromHeader(response.headers);
+        secureStorage.writeNonce(nonce);
+        return getCarts();
+      }
+      debugPrint('status code: ${response.statusCode} - ${response.body}; nonce: ${parseNonceFromHeader(response.headers)}');
       final cart = Cart.fromJson(jsonDecode(response.body));
       return cart;
     } on SocketException catch (e) {
@@ -98,10 +100,12 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
 
   @override
   Future<Cart> deleteItem(String key) async {
+    debugPrint('trigger delete item');
     try {
       final secureStorage = SecureStorage();
       final nonce = await secureStorage.readNonce();
       final token = await secureStorage.readToken();
+      debugPrint('nonce key: $nonce');
       final response = await client.post(
         Uri.parse('${ApiConfig.apiUrl}${ApiConfig.removeItem}'),
           headers: ApiConfig.headerPersonal(token!, nonce!),
@@ -109,6 +113,15 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           'key': key
         })
       );
+      debugPrint('delete item status: ${response.statusCode}');
+      debugPrint('delete item response: ${response.body}');
+
+      if (response.statusCode == 403) {
+        debugPrint('check nonce add to card: ${response.headers}');
+        secureStorage.writeNonce(parseNonceFromHeader(response.headers));
+        return deleteItem(key);
+      }
+
       return Cart.fromJson(jsonDecode(response.body));
     } on SocketException catch(e) {
       throw NetworkFailure('cart [removeItem] issue [SocketException]: ${e.message}');
@@ -133,6 +146,8 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
           'quantity': quantity
         })
       );
+      debugPrint('request update item: key: $key; quantity: $quantity');
+      debugPrint('response update item: $response');
       return Cart.fromJson(jsonDecode(response.body));
     } on SocketException catch (e) {
       throw NetworkFailure('cart [updateCart] issue [SocketException]: ${e.message}');
