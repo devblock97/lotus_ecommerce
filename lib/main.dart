@@ -21,9 +21,27 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  
+  try {
+    // Try to get the default app
+    Firebase.app();
+    debugPrint('Firebase has already been initialized');
+  } catch (e) {
+    if (e is FirebaseException && e.code == 'no-app') {
+      // Firebase app doesn't exist, initialize it
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform
+        );
+        debugPrint('Firebase successfully initialized');
+      } catch (initError) {
+        debugPrint('Firebase initialization error: $initError');
+      }
+    } else {
+      // Handle other Firebase-related errors
+      debugPrint('Firebase error: $e');
+    }
+  }
 
   /// Local DB with Hive
   await Hive.initFlutter();
