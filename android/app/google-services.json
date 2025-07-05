@@ -2,12 +2,31 @@
   "project_info": {
     "project_number": "670503199228",
     "project_id": "senhong-37272",
-    "storage_bucket": "senhong-37272.appspot.com"
+    "storage_bucket": "senhong-37272.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:670503199228:android:4edc03a7df25d4e8749279",
+        "android_client_info": {
+          "package_name": "com.lotus.ecommerce_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2BA04dQkGpeG_rZvumDdgtsv-32ebNlI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670503199228:android:550baa2ac11c3474749279",
         "android_client_info": {
           "package_name": "com.lotus.ecommerce_app"
         }

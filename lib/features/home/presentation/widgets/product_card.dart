@@ -27,12 +27,12 @@ class ProductCard extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(product: product)));
       },
       child: Container(
-        margin: const EdgeInsets.all(3),
+        margin: const EdgeInsets.all(2),
         decoration: BoxDecoration(
             color: theme.cardColor,
             border: Border.all(color: secondaryText),
             borderRadius: BorderRadius.circular(6)),
-        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -57,7 +57,7 @@ class ProductCard extends StatelessWidget {
                 _AddFavorite(product: product)
               ],
             ),
-            const Gap(5),
+            const Gap(3),
 
             Center(
               child: Image.network(
