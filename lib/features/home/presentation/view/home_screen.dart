@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen>
         body: SafeArea(
           child: CustomScrollView(
             slivers: [
-
               const SliverAppBar(
                 flexibleSpace: EcommerceSearchBar(),
                 pinned: true,
@@ -68,12 +67,12 @@ class _HomeScreenState extends State<HomeScreen>
                   if (state is ProductError) {
                     return SliverToBoxAdapter(
                       child: ElevatedButton(
-                        onPressed: () {
-                          homeBloc.add(const GetProductRequest());
-                        },
-                        child: const Column(
-                          children: [Icon(Icons.refresh), Text('Tải lại')],
-                        )),
+                          onPressed: () {
+                            homeBloc.add(const GetProductRequest());
+                          },
+                          child: const Column(
+                            children: [Icon(Icons.refresh), Text('Tải lại')],
+                          )),
                     );
                   }
                   if (state is ProductSuccess) {
@@ -98,19 +97,19 @@ class _HomeScreenState extends State<HomeScreen>
                   if (state is ProductError) {
                     return SliverToBoxAdapter(
                       child: ElevatedButton(
-                        onPressed: () {
-                          homeBloc.add(const GetProductRequest());
-                        },
-                        child: const Column(
-                          children: [Icon(Icons.refresh), Text('Tải lại')],
-                        )),
+                          onPressed: () {
+                            homeBloc.add(const GetProductRequest());
+                          },
+                          child: const Column(
+                            children: [Icon(Icons.refresh), Text('Tải lại')],
+                          )),
                     );
                   }
                   if (state is ProductSuccess) {
                     return SliverGrid(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: 0.8),
+                              crossAxisCount: 2, childAspectRatio: 2 / 3),
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return ProductCard(product: state.productList[index]);
@@ -146,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen>
                     return SliverGrid(
                       gridDelegate:
                       const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, childAspectRatio: 0.8),
+                          crossAxisCount: 2, childAspectRatio: 2 / 3),
                       delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           return ProductCard(product: state.productList[index]);
